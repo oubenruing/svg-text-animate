@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+    <script src="./dist/svg-text-animate.js"></script>
+    <!-- <script src="./src/svg-text-animate.js"></script> -->
+    <script>
+      const ta = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf")
+      ta.setFont().then(function(){
+        ta.create("test sometext","#mysvg");
+      })
+    </script>
+  </head>
+  <body>
+    <div id = "mysvg" style="height:100%;width:100%;"></div>
+  </body>
+</html>

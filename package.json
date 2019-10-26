@@ -1,0 +1,28 @@
+{
+  "name": "svg-text-animate",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c -w"
+  },
+  "author": "oubenruing",
+  "license": "MIT",
+  "dependencies": {
+    "makerjs": "^0.17.0",
+    "opentype.js": "^1.1.0",
+    "regenerator-runtime": "^0.13.3",
+    "vivus": "^0.4.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "babel-loader": "^8.0.6",
+    "file-loader": "^4.2.0",
+    "rollup": "^1.25.2",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-license": "^0.12.1",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
