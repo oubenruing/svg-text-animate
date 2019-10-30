@@ -1,9 +1,9 @@
-var opentype = require('opentype.js');
-var makerjs = require('makerjs');
-var Vivus = require('vivus');
 // var opentype = require('opentype.js');
-// import makerjs from "makerjs"
-// import Vivus from "vivus"
+// var makerjs = require('makerjs');
+// var Vivus = require('vivus');
+import * as opentype from 'opentype.js';
+import makerjs from "makerjs"
+import Vivus from "vivus"
 
 export default class SVGTextAnimate {
   constructor(fontfile) {

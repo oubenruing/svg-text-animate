@@ -8,8 +8,8 @@ module.exports = {
     output: [
         {
             file: 'dist/svg-text-animate.js',
-            format: 'umd',
-            // format:"iife",
+            // format: 'umd',
+            format:"iife",
             name: 'SVGTextAnimate',
             sourcemap: true
         },
