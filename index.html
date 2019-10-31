@@ -3,16 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>My test page</title>
-    <script src="./dist/svg-text-animate.js"></script>
-    <!-- <script src="./src/svg-text-animate.js"></script> -->
-    <script>
-      const ta = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf")
-      ta.setFont().then(function(){
-        ta.create("test sometext","#mysvg");
-      })
-    </script>
   </head>
   <body>
     <div id = "mysvg" style="height:100%;width:100%;"></div>
+    <div id = "mysvg2" style="height:50%;width:100%;"></div>
   </body>
 </html>
+<script src="./dist/svg-text-animate.js"></script>
+<script>
+  const ta = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf")
+  ta.setFont().then(function(){
+    var controller = ta.create("Hello, World!","#mysvg");
+    controller.reset().play(1);
+  })
+
+  document.getElementById("mysvg").onclick = function(){
+    var controller = ta.create("new","#mysvg2");
+    ta.controllers[0].reset().play(1);
+    controller.reset().play(1);
+  }
+</script>

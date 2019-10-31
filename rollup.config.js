@@ -26,8 +26,7 @@ module.exports = {
         commonjs(),
         buble(),
         license({
-            banner: 'https:// | (c) Frederik De Bleser and other contributors | MIT License | Uses a by A' +
-            ' and b by B'
+            banner: 'https://github.com/oubenruing/svg-text-animate | (c) oubenruing 2019 | MIT License '
         })
     ],
     watch: {
