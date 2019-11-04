@@ -4,15 +4,15 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c -w"
+    "build": "rollup -c && uglifyjs dist/svg-text-animate.js -o dist/svg-text-animate.min.js -c -m",
+    "postbuild":"",
+    "dev": "rollup -c -w"
   },
   "author": "oubenruing",
   "license": "MIT",
   "dependencies": {
-    "makerjs": "^0.17.0",
     "opentype.js": "^1.1.0",
-    "regenerator-runtime": "^0.13.3",
-    "vivus": "^0.4.5"
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -23,6 +23,7 @@
     "rollup-plugin-buble": "^0.19.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-license": "^0.12.1",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "uglify-js": "^3.6.7"
   }
 }
