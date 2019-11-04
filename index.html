@@ -1,51 +1,51 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SVG text animate</title>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>My test page</title>
-</head>
-
-<body>
-  <div id="mysvg" style="height:100%;width:100%;"></div>
-  <div id="mysvg2" style="height:50%;width:100%;"></div>
-</body>
-
+  <body>
+    <div id="mysvg" style="height:100%;width:100%;"></div>
+    <div id="mysvg2" style="height:50%;width:100%;"></div>
+  </body>
 </html>
-<script src="./dist/svg-text-animate.min.js"></script>
+<script src="./dist/svg-text-animate.js"></script>
 <script>
-  window.addEventListener('load', async function () {
-    const ta2 = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf")
-    const ta = new SVGTextAnimate("./font/iconfont.ttf")
+  window.addEventListener("load", async function() {
+    const ta2 = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf");
+    const ta = new SVGTextAnimate("./font/iconfont.ttf");
     await ta2.setFont();
-    await ta.setFont()
-    var controller = ta.create(String.fromCharCode(0xe8ac), "#mysvg", {
-      "duration": 5000,
-      "timing-function": "ease",
-      "direction": "normal",
-      "fill-mode": "forwards",
-      "delay": 400,
-      "mode": "delay"
-    }, {
-      "stroke": "#005792",
-      "stroke-width": "5px"
-    });
-
-
-    document.getElementById("mysvg").onclick = function () {
-      var controller = ta2.create("new 测试很长的一个中文句子", "#mysvg2",{
-        "duration": 1000,
-        "direction": "normal",
+    await ta.setFont();
+    var controller = ta.setPathOptions({
+        duration: 5000,
+        "timing-function": "ease",
+        direction: "normal",
         "fill-mode": "forwards",
-        "delay": 400,
-        "mode": "onebyone"
-      }, {
-        "stroke": "#005792",
-        "stroke-width": "2px"
-      });
-      // ta.controllers[0].reset().play(1);
-      // controller.reset().play(1);
-    }
-  })
+        delay: 400,
+        mode: "delay"
+      }).setStroke({
+        stroke: "#005792",
+        "stroke-width": "5px"
+      }).create(
+      String.fromCharCode(0xe8ac),
+      "#mysvg"
+    );
 
+    document.getElementById("mysvg").onclick = function() {
+      var controller = ta2.setPathOptions({
+          duration: 1000,
+          direction: "normal",
+          "fill-mode": "forwards",
+          delay: 400,
+          mode: "onebyone"
+        }).setStroke({
+          stroke: "#005792",
+          "stroke-width": "2px"
+        }).create(
+        "new 测试很长的一个中文句子",
+        "#mysvg2"
+      );
+    };
+  });
 </script>

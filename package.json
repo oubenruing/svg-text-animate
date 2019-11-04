@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c && uglifyjs dist/svg-text-animate.js -o dist/svg-text-animate.min.js -c -m",
-    "postbuild":"",
+    "postbuild": "",
     "dev": "rollup -c -w"
   },
   "author": "oubenruing",

@@ -1,9 +1,28 @@
 import * as opentype from 'opentype.js';
 export default class SVGTextAnimate {
-  constructor(fontfile, fontsize) {
+  constructor(fontfile, fontsize, pathOptions, stroke, style) {
+    this.loaded = false;
     this.fontfile = fontfile;
-    this.fontsize = fontsize || 72;
-    this.controllers = [];
+    this.pathOptions = {
+      "duration": 1000,
+      "timing-function": "linear",
+      "iteration-count": 1,
+      "direction": "normal",
+      "fill-mode": "forwards",
+      "delay": 0,
+      "mode": "sync"
+    };
+    this.stroke = {
+      "stroke": "#000",
+      "stroke-width": "1px",
+    }
+    this.setFont(fontfile).then(()=>{
+      this.loaded=true;
+    });
+    this.setFontSize(fontsize);
+    this.setPathOptions(pathOptions);
+    this.setStroke(stroke);
+    this.setStyle(style);
   }
   setFont(fontfile) {
     const _this = this
@@ -21,7 +40,23 @@ export default class SVGTextAnimate {
   }
 
   setFontSize(fontsize) {
-    this.fontsize = fontsize;
+    this.fontsize = fontsize || 72;
+    return this;
+  }
+
+  setPathOptions(pathOptions){
+    Object.assign(this.pathOptions, pathOptions);
+    return this;
+  }
+
+  setStroke(stroke){
+    Object.assign(this.stroke, stroke);
+    return this;
+  }
+
+  setStyle(style){
+    this.style = style;
+    return this;
   }
 
   getBoundingBox(paths) {
@@ -33,18 +68,8 @@ export default class SVGTextAnimate {
     return { x1: 0, y1: 0, x2, y2 }
   }
 
-  animatePath(svgDom, options) {
-    const _options = {
-      "duration": 1000,
-      "timing-function": "linear",
-      "iteration-count": 1,
-      "direction": "normal",
-      "fill-mode": "forwards",
-      "delay": 0,
-      "mode": "sync"
-    }
-    Object.assign(_options, options);
-
+  animatePath(svgDom) {
+    const _options = this.pathOptions;
     let style = svgDom.querySelector("style");
     const paths = svgDom.querySelectorAll("path");
 
@@ -72,20 +97,18 @@ export default class SVGTextAnimate {
     })
   }
 
-  create(text, selector, options, style) {
+  create(text, selector) {
     const _this = this
-    const paths = _this.font.getPaths(text, 0, _this.fontsize, _this.fontsize);
-    const box = _this.getBoundingBox(paths);
-    console.log(box);
-    const _style = {
-      "stroke": "#000",
-      "stroke-width": "1px",
+    if(!_this.loaded){
+      console.err("Fontfile does not loaded");
+      return
     }
-    Object.assign(_style, style);
-    const end = _style["stroke-width"].search(/[A-Za-z]+$/);
-    const strokeWidth = Number(_style["stroke-width"].substring(0, end))
+    const paths = _this.font.getPaths(text, 0, _this.fontsize);
+    const box = _this.getBoundingBox(paths);
+    const end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
+    const strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end))
     const svg = `<svg width="${box.x2 - box.x1 + strokeWidth / 2}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth / 2} ${box.y2 + strokeWidth / 2}" xmlns="http://www.w3.org/2000/svg">\
-    <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="72px" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_style.stroke};stroke-width:${_style["stroke-width"]}"></g>\
+    <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="72px" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_this.stroke.stroke};stroke-width:${_this.stroke["stroke-width"]}"></g>\
     </svg>`
     const fatherdom = document.querySelector(selector);
     const _div = document.createElement("div")
@@ -98,7 +121,8 @@ export default class SVGTextAnimate {
       svgpath += path.toSVG(2)
     });
     group.innerHTML = svgpath;
-    _this.animatePath(svgDom, options);
+    _this.animatePath(svgDom);
     fatherdom.innerHTML = _div.innerHTML;
+    return _this;
   }
 }

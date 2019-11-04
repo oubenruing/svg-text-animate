@@ -14193,10 +14193,31 @@ function load(url, callback, opt) {
     });
 }
 
-var SVGTextAnimate = function SVGTextAnimate(fontfile, fontsize) {
+var SVGTextAnimate = function SVGTextAnimate(fontfile, fontsize, pathOptions, stroke, style) {
+  var this$1 = this;
+
+  this.loaded = false;
   this.fontfile = fontfile;
-  this.fontsize = fontsize || 72;
-  this.controllers = [];
+  this.pathOptions = {
+    "duration": 1000,
+    "timing-function": "linear",
+    "iteration-count": 1,
+    "direction": "normal",
+    "fill-mode": "forwards",
+    "delay": 0,
+    "mode": "sync"
+  };
+  this.stroke = {
+    "stroke": "#000",
+    "stroke-width": "1px",
+  };
+  this.setFont(fontfile).then(function (){
+    this$1.loaded=true;
+  });
+  this.setFontSize(fontsize);
+  this.setPathOptions(pathOptions);
+  this.setStroke(stroke);
+  this.setStyle(style);
 };
 SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
   var _this = this;
@@ -14214,7 +14235,23 @@ SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
 };
 
 SVGTextAnimate.prototype.setFontSize = function setFontSize (fontsize) {
-  this.fontsize = fontsize;
+  this.fontsize = fontsize || 72;
+  return this;
+};
+
+SVGTextAnimate.prototype.setPathOptions = function setPathOptions (pathOptions){
+  Object.assign(this.pathOptions, pathOptions);
+  return this;
+};
+
+SVGTextAnimate.prototype.setStroke = function setStroke (stroke){
+  Object.assign(this.stroke, stroke);
+  return this;
+};
+
+SVGTextAnimate.prototype.setStyle = function setStyle (style){
+  this.style = style;
+  return this;
 };
 
 SVGTextAnimate.prototype.getBoundingBox = function getBoundingBox (paths) {
@@ -14226,18 +14263,8 @@ SVGTextAnimate.prototype.getBoundingBox = function getBoundingBox (paths) {
   return { x1: 0, y1: 0, x2: x2, y2: y2 }
 };
 
-SVGTextAnimate.prototype.animatePath = function animatePath (svgDom, options) {
-  var _options = {
-    "duration": 1000,
-    "timing-function": "linear",
-    "iteration-count": 1,
-    "direction": "normal",
-    "fill-mode": "forwards",
-    "delay": 0,
-    "mode": "sync"
-  };
-  Object.assign(_options, options);
-
+SVGTextAnimate.prototype.animatePath = function animatePath (svgDom) {
+  var _options = this.pathOptions;
   var style = svgDom.querySelector("style");
   var paths = svgDom.querySelectorAll("path");
 
@@ -14265,19 +14292,17 @@ SVGTextAnimate.prototype.animatePath = function animatePath (svgDom, options) {
   });
 };
 
-SVGTextAnimate.prototype.create = function create (text, selector, options, style) {
+SVGTextAnimate.prototype.create = function create (text, selector) {
   var _this = this;
-  var paths = _this.font.getPaths(text, 0, _this.fontsize, _this.fontsize);
+  if(!_this.loaded){
+    console.err("Fontfile does not loaded");
+    return
+  }
+  var paths = _this.font.getPaths(text, 0, _this.fontsize);
   var box = _this.getBoundingBox(paths);
-  console.log(box);
-  var _style = {
-    "stroke": "#000",
-    "stroke-width": "1px",
-  };
-  Object.assign(_style, style);
-  var end = _style["stroke-width"].search(/[A-Za-z]+$/);
-  var strokeWidth = Number(_style["stroke-width"].substring(0, end));
-  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth / 2) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth / 2) + " " + (box.y2 + strokeWidth / 2) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" fill-rule=\"evenodd\" font-size=\"72px\" stroke=\"#000\" stroke-width=\"1px\" fill=\"none\" style=\"fill:none; stroke:" + (_style.stroke) + ";stroke-width:" + (_style["stroke-width"]) + "\"></g>    </svg>";
+  var end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
+  var strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end));
+  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth / 2) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth / 2) + " " + (box.y2 + strokeWidth / 2) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" fill-rule=\"evenodd\" font-size=\"72px\" stroke=\"#000\" stroke-width=\"1px\" fill=\"none\" style=\"fill:none; stroke:" + (_this.stroke.stroke) + ";stroke-width:" + (_this.stroke["stroke-width"]) + "\"></g>    </svg>";
   var fatherdom = document.querySelector(selector);
   var _div = document.createElement("div");
   _div.innerHTML = svg;
@@ -14289,8 +14314,9 @@ SVGTextAnimate.prototype.create = function create (text, selector, options, styl
     svgpath += path.toSVG(2);
   });
   group.innerHTML = svgpath;
-  _this.animatePath(svgDom, options);
+  _this.animatePath(svgDom);
   fatherdom.innerHTML = _div.innerHTML;
+  return _this;
 };
 
 export default SVGTextAnimate;
