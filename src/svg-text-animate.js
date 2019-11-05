@@ -49,7 +49,7 @@ export default class SVGTextAnimate {
     return new Promise(function (resove, reject) {
       opentype.load(fontfile || _this.fontfile, function (err, openfont) {
         if (err) {
-          console.err('the font' + fontfile || _this.fontfile + 'could not be loaded :(');
+          console.error('font could not be loaded :(');
           reject();
         } else {
           _this.font = openfont
@@ -110,7 +110,7 @@ export default class SVGTextAnimate {
    */
   getBounding(paths) {
     if(paths.length==0){
-      console.err("path does not exist");
+      console.error("path does not exist");
       return {x1: 0, y1: 0, x2: 0, y2: 0 }
     }
     const x2 = paths[paths.length - 1].getBoundingBox().x2
@@ -169,12 +169,12 @@ export default class SVGTextAnimate {
   create(text, selector) {
     const _this = this
     if (!_this.loaded) {
-      console.err("Fontfile does not loaded");
+      console.error("Fontfile does not loaded");
       return
     }
     const fatherdom = document.querySelector(selector);
     if(fatherdom == null){
-      console.err("no such element");
+      console.error("no such element");
       return
     }
     const paths = _this.font.getPaths(text, 0, _this.options["font-size"]);
@@ -193,7 +193,7 @@ export default class SVGTextAnimate {
       svgpath += path.toSVG(2)
     });
     group.innerHTML = svgpath;
-    fatherdom.innerHTML = _this.animatePath(svgDom);
+    fatherdom.appendChild(_this.animatePath(svgDom));
     return _this;
   }
 }

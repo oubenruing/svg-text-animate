@@ -10,13 +10,13 @@
     <div id="mysvg2" style="height:50%;width:100%;"></div>
   </body>
 </html>
-<script src="./dist/svg-text-animate.js"></script>
+<script src="../dist/svg-text-animate.js"></script>
 <script>
   window.onload=async function() {
-    const ta = new SVGTextAnimate("./font/iconfont.ttf");
+    const ta = new SVGTextAnimate("../font/iconfont.ttf");
     await ta.setFont();
 
-    const ta2 = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf",{
+    const ta2 = new SVGTextAnimate("../font/SourceHanSansSC-Normal.otf",{
           duration: 1000,
           direction: "normal",
           "fill-mode": "forwards",
