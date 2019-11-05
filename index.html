@@ -12,12 +12,23 @@
 </html>
 <script src="./dist/svg-text-animate.js"></script>
 <script>
-  window.addEventListener("load", async function() {
-    const ta2 = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf");
+  window.onload=async function() {
     const ta = new SVGTextAnimate("./font/iconfont.ttf");
-    await ta2.setFont();
     await ta.setFont();
-    var controller = ta.setPathOptions({
+
+    const ta2 = new SVGTextAnimate("./font/SourceHanSansSC-Normal.otf",{
+          duration: 1000,
+          direction: "normal",
+          "fill-mode": "forwards",
+          delay: 400,
+          mode: "onebyone"
+        },{
+          stroke: "#005792",
+          "stroke-width": "2px"
+    });
+    await ta2.setFont();
+
+    ta.setOptions({
         duration: 5000,
         "timing-function": "ease",
         direction: "normal",
@@ -33,19 +44,9 @@
     );
 
     document.getElementById("mysvg").onclick = function() {
-      var controller = ta2.setPathOptions({
-          duration: 1000,
-          direction: "normal",
-          "fill-mode": "forwards",
-          delay: 400,
-          mode: "onebyone"
-        }).setStroke({
-          stroke: "#005792",
-          "stroke-width": "2px"
-        }).create(
+      ta2.create(
         "new 测试很长的一个中文句子",
-        "#mysvg2"
-      );
+        "#mysvg2");
     };
-  });
+  }
 </script>
