@@ -14198,13 +14198,6 @@ function load(url, callback, opt) {
 * @author oubenruing
 * @version 1.0.0
 */
-
-/**
- * 
- *
- * @class SVGTextAnimate
- */
-
 var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, style) {
   this.loaded = false;
   this.fontfile = fontfile;
@@ -14232,8 +14225,8 @@ var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, style) {
  * Asynchronous method
  *
  * @param {String} fontfile
- * @returns Promise
- * @memberof SVGTextAnimate
+ * @returns {Promise} A promise Object
+ * 
  */
 SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
   var _this = this;
@@ -14256,8 +14249,8 @@ SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
  * set options of current instance
  *
  * @param {Object} options
- * @returns current instance
- * @memberof SVGTextAnimate
+ * @returns {SVGTextAnimate} current instance
+ * 
  */
 SVGTextAnimate.prototype.setOptions = function setOptions (options) {
   Object.assign(this.options, options);
@@ -14269,8 +14262,8 @@ SVGTextAnimate.prototype.setOptions = function setOptions (options) {
  * set stroke of current instance
  *
  * @param {Object} stroke
- * @returns current instance
- * @memberof SVGTextAnimate
+ * @returns {SVGTextAnimate} current instance
+ * 
  */
 SVGTextAnimate.prototype.setStroke = function setStroke (stroke) {
   Object.assign(this.stroke, stroke);
@@ -14282,8 +14275,8 @@ SVGTextAnimate.prototype.setStroke = function setStroke (stroke) {
  * set stroke of current instance
  *
  * @param {String} style
- * @returns current instance
- * @memberof SVGTextAnimate
+ * @returns {SVGTextAnimate} current instance
+ * 
  */
 SVGTextAnimate.prototype.setStyle = function setStyle (style) {
   this.style = style;
@@ -14295,8 +14288,9 @@ SVGTextAnimate.prototype.setStyle = function setStyle (style) {
  * Calculate the image boundary of a given path array
  *
  * @param {Array<Path>} paths
- * @returns boundary
+ * @returns {Object} boundary{x1, y1, x2, y2}
  * @memberof SVGTextAnimate
+ * 
  */
 SVGTextAnimate.prototype.getBounding = function getBounding (paths) {
   if(paths.length==0){
@@ -14316,7 +14310,7 @@ SVGTextAnimate.prototype.getBounding = function getBounding (paths) {
  * Add animation to svgDom according to current instance's options and stoke
  *
  * @param {DOM} svgDom
- * @memberof SVGTextAnimate
+ * @returns {DOM} svgDom
  */
 SVGTextAnimate.prototype.animatePath = function animatePath (svgDom) {
   var _options = this.options;
@@ -14344,6 +14338,7 @@ SVGTextAnimate.prototype.animatePath = function animatePath (svgDom) {
     }
     path.style.cssText = stroke + animation;
   });
+  return svgDom
 };
 
 /**
@@ -14352,8 +14347,8 @@ SVGTextAnimate.prototype.animatePath = function animatePath (svgDom) {
  *
  * @param {String} text 
  * @param {String} selector
- * @returns current instance
- * @memberof SVGTextAnimate
+ * @returns {SVGTextAnimate} current instance
+ * 
  */
 SVGTextAnimate.prototype.create = function create (text, selector) {
   var _this = this;
@@ -14380,8 +14375,7 @@ SVGTextAnimate.prototype.create = function create (text, selector) {
     svgpath += path.toSVG(2);
   });
   group.innerHTML = svgpath;
-  _this.animatePath(svgDom);
-  fatherdom.innerHTML = _div.innerHTML;
+  fatherdom.innerHTML = _this.animatePath(svgDom);
   return _this;
 };
 

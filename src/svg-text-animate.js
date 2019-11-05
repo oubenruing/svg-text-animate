@@ -5,21 +5,14 @@
 */
 
 import * as opentype from 'opentype.js';
-
-/**
- * 
- *
- * @class SVGTextAnimate
- */
-
-class SVGTextAnimate {
+export default class SVGTextAnimate {
   /**
    *Creates an instance of SVGTextAnimate.
    * @param {String} fontfile Path of fontfile
    * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}
    * @param {Object} stroke   {stroke,stroke-width}
-   * @param {String} style    A styles string
-   * @memberof SVGTextAnimate
+   * @param {String} style    A style string
+   * 
    */
   constructor(fontfile, options, stroke, style) {
     this.loaded = false;
@@ -48,8 +41,8 @@ class SVGTextAnimate {
    * Asynchronous method
    *
    * @param {String} fontfile
-   * @returns Promise
-   * @memberof SVGTextAnimate
+   * @returns {Promise} A promise Object
+   * 
    */
   setFont(fontfile) {
     const _this = this
@@ -72,8 +65,8 @@ class SVGTextAnimate {
    * set options of current instance
    *
    * @param {Object} options
-   * @returns current instance
-   * @memberof SVGTextAnimate
+   * @returns {SVGTextAnimate} current instance
+   * 
    */
   setOptions(options) {
     Object.assign(this.options, options);
@@ -85,8 +78,8 @@ class SVGTextAnimate {
    * set stroke of current instance
    *
    * @param {Object} stroke
-   * @returns current instance
-   * @memberof SVGTextAnimate
+   * @returns {SVGTextAnimate} current instance
+   * 
    */
   setStroke(stroke) {
     Object.assign(this.stroke, stroke);
@@ -98,8 +91,8 @@ class SVGTextAnimate {
    * set stroke of current instance
    *
    * @param {String} style
-   * @returns current instance
-   * @memberof SVGTextAnimate
+   * @returns {SVGTextAnimate} current instance
+   * 
    */
   setStyle(style) {
     this.style = style;
@@ -111,8 +104,9 @@ class SVGTextAnimate {
    * Calculate the image boundary of a given path array
    *
    * @param {Array<Path>} paths
-   * @returns boundary
+   * @returns {Object} boundary{x1, y1, x2, y2}
    * @memberof SVGTextAnimate
+   * 
    */
   getBounding(paths) {
     if(paths.length==0){
@@ -132,7 +126,7 @@ class SVGTextAnimate {
    * Add animation to svgDom according to current instance's options and stoke
    *
    * @param {DOM} svgDom
-   * @memberof SVGTextAnimate
+   * @returns {DOM} svgDom
    */
   animatePath(svgDom) {
     const _options = this.options;
@@ -160,6 +154,7 @@ class SVGTextAnimate {
       }
       path.style.cssText = stroke + animation
     })
+    return svgDom
   }
 
   /**
@@ -168,8 +163,8 @@ class SVGTextAnimate {
    *
    * @param {String} text 
    * @param {String} selector
-   * @returns current instance
-   * @memberof SVGTextAnimate
+   * @returns {SVGTextAnimate} current instance
+   * 
    */
   create(text, selector) {
     const _this = this
@@ -198,9 +193,7 @@ class SVGTextAnimate {
       svgpath += path.toSVG(2)
     });
     group.innerHTML = svgpath;
-    _this.animatePath(svgDom);
-    fatherdom.innerHTML = _div.innerHTML;
+    fatherdom.innerHTML = _this.animatePath(svgDom);
     return _this;
   }
 }
-export default SVGTextAnimate

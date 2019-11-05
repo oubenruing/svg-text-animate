@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>SVGTextAnimate<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>SVGTextAnimate<span class="signature">(fontfile, options, stroke, style)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,19 +41,141 @@
     
 
     
-    <h4 class="name" id="SVGTextAnimate"><span class="type-signature"></span>new SVGTextAnimate<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="SVGTextAnimate"><span class="type-signature"></span>new SVGTextAnimate<span class="signature">(fontfile, options, stroke, style)</span><span class="type-signature"></span></h4>
     
 
     
 
 
 
+<div class="description">
+    Creates an instance of SVGTextAnimate.
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fontfile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path of fontfile</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">{duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stroke</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">{stroke,stroke-width}</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>style</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A style string</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -89,7 +211,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line9">line 9</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -126,13 +248,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="SVGTextAnimate.SVGTextAnimate.html">SVGTextAnimate</a></dt>
-            <dd></dd>
-        </dl>
     
 
     
@@ -253,7 +368,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line137">line 137</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -289,7 +404,7 @@
     
 
     
-    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">(text, selector)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">(text, selector)</span><span class="type-signature"> &rarr; {<a href="SVGTextAnimate.html">SVGTextAnimate</a>}</span></h4>
     
 
     
@@ -413,7 +528,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line174">line 174</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -447,6 +562,18 @@
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="SVGTextAnimate.html">SVGTextAnimate</a></span>
+
+
+    </dd>
+</dl>
+
     
 
 
@@ -459,7 +586,7 @@
     
 
     
-    <h4 class="name" id="getBounding"><span class="type-signature"></span>getBounding<span class="signature">(paths)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getBounding"><span class="type-signature"></span>getBounding<span class="signature">(paths)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -560,7 +687,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line117">line 117</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -589,10 +716,22 @@
 
         
 <div class="param-desc">
-    boundary
+    boundary{x1, y1, x2, y2}
 </div>
 
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -606,7 +745,7 @@
     
 
     
-    <h4 class="name" id="setFont"><span class="type-signature"></span>setFont<span class="signature">(fontfile)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setFont"><span class="type-signature"></span>setFont<span class="signature">(fontfile)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -707,7 +846,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line54">line 54</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -736,10 +875,22 @@
 
         
 <div class="param-desc">
-    Promise
+    A promise Object
 </div>
 
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -753,7 +904,7 @@
     
 
     
-    <h4 class="name" id="setOptions"><span class="type-signature"></span>setOptions<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setOptions"><span class="type-signature"></span>setOptions<span class="signature">(options)</span><span class="type-signature"> &rarr; {<a href="SVGTextAnimate.html">SVGTextAnimate</a>}</span></h4>
     
 
     
@@ -854,7 +1005,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line78">line 78</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -888,6 +1039,18 @@
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="SVGTextAnimate.html">SVGTextAnimate</a></span>
+
+
+    </dd>
+</dl>
+
     
 
 
@@ -900,7 +1063,7 @@
     
 
     
-    <h4 class="name" id="setStroke"><span class="type-signature"></span>setStroke<span class="signature">(stroke)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setStroke"><span class="type-signature"></span>setStroke<span class="signature">(stroke)</span><span class="type-signature"> &rarr; {<a href="SVGTextAnimate.html">SVGTextAnimate</a>}</span></h4>
     
 
     
@@ -1001,7 +1164,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line91">line 91</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -1035,6 +1198,18 @@
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="SVGTextAnimate.html">SVGTextAnimate</a></span>
+
+
+    </dd>
+</dl>
+
     
 
 
@@ -1047,7 +1222,7 @@
     
 
     
-    <h4 class="name" id="setStyle"><span class="type-signature"></span>setStyle<span class="signature">(style)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setStyle"><span class="type-signature"></span>setStyle<span class="signature">(style)</span><span class="type-signature"> &rarr; {<a href="SVGTextAnimate.html">SVGTextAnimate</a>}</span></h4>
     
 
     
@@ -1148,7 +1323,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line104">line 104</a>
+        <a href="svg-text-animate.js.html">svg-text-animate.js</a>, <a href="svg-text-animate.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -1182,6 +1357,18 @@
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="SVGTextAnimate.html">SVGTextAnimate</a></span>
+
+
+    </dd>
+</dl>
+
     
 
 
@@ -1204,13 +1391,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="SVGTextAnimate.html">SVGTextAnimate</a></li><li><a href="SVGTextAnimate.SVGTextAnimate.html">SVGTextAnimate</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="SVGTextAnimate.html">SVGTextAnimate</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 05 2019 16:07:27 GMT+0800 (GMT+08:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 05 2019 17:13:28 GMT+0800 (GMT+08:00)
 </footer>
 
 <script> prettyPrint(); </script>
