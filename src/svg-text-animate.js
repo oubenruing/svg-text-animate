@@ -161,12 +161,12 @@ export default class SVGTextAnimate {
       console.error("no such element");
       return
     }
-    const paths = _this.font.getPaths(text, 0, 0,_this.options["font-size"]);
+    const paths = _this.font.getPaths(text, 0, _this.options["font-size"], _this.options["font-size"]);
     const box = _this.getBounding(paths);
     const end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
     const strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end))
-    const svg = `<svg width="${box.x2 - box.x1 + strokeWidth / 2}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth / 2} ${box.y2 + strokeWidth / 2}" xmlns="http://www.w3.org/2000/svg">\
-    <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="72px" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_this.stroke.stroke};stroke-width:${_this.stroke["stroke-width"]};"></g>\
+    const svg = `<svg width="${box.x2 - box.x1 + strokeWidth}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 + strokeWidth}" xmlns="http://www.w3.org/2000/svg">\
+    <g id="svgGroup" stroke-linecap="round" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_this.stroke.stroke};stroke-width:${_this.stroke["stroke-width"]};"></g>\
     </svg>`
     const _div = document.createElement("div")
     _div.innerHTML = svg

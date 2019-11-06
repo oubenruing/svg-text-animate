@@ -5,56 +5,80 @@
   <meta charset="utf-8" />
   <title>SVG text animate</title>
   <style>
-    #mysvg2{
+    #page{
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width:100%;
+    }
+    .whitefont{
       filter: drop-shadow(2px 4px 3px black);
+    }
+    .whiteshadow{
+      filter: drop-shadow(2px 4px 3px #aaaaaa);
     }
   </style>
 </head>
 
 <body>
-  <div id="mysvg" style="height:100%;width:100%;"></div>
-  <div id="mysvg2" style="height:50%;width:100%;"></div>
+  <section id="page">
+    <div id="logo" style="height:100%;width:auto"></div>
+    <div id="name" class="whiteshadow" style="height:100%;width:auto"></div>
+    <div id="des" style="height:100%;width:auto"></div>
+  </section>
 </body>
 </html>
-<script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.0/dist/svg-text-animate.min.js"></script>
-<!-- <script src="../dist/svg-text-animate.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.0/dist/svg-text-animate.min.js"></script> -->
+<script src="../dist/svg-text-animate.js"></script>
 <script>
   window.onload = async function () {
-    const ta = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.0/docs/fonts/iconfont.ttf");
+    // const ta = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.1/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
+    var ta = new SVGTextAnimate("../docs/fonts/Font Awesome 5 Free-Regular-400.otf");
     await ta.setFont();
-    
-    const ta2 = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.0/docs/fonts/SourceHanSansCN-Normal.ttf", {
-      "duration": 1000,
+    // var ta2 = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.1/docs/fonts/SourceHanSansCN-Normal.ttf", {
+      var ta2 = new SVGTextAnimate("../docs/fonts/OpenSans-Regular-webfont.woff", {
+      "duration": 500,
       "direction": "normal",
       "fill-mode": "forwards",
-      "delay": 400,
-      "mode": "onebyone",
-      "font-size": 20
+      "delay": 300,
+      "mode": "delay",
+      "font-size": 55
     }, {
-      "stroke": "#ffffff",
+      "stroke": "#005792",
       "stroke-width": "2px"
-    },"background:black;");
+    });
     await ta2.setFont();
 
     ta.setOptions({
-      "duration": 5000,
-      "timing-function": "ease",
+      "duration": 7000,
+      "timing-function": "linear",
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 400,
       "mode": "delay"
     }).setStroke({
-      "stroke": "#005792",
-      "stroke-width": "5px"
-    }).create(
-      String.fromCharCode(0xe8ac),
-      "#mysvg"
-    );
+      "stroke": "#5db4f2",
+      "stroke-width": "2px"
+    })
+    
+    ta.create(String.fromCharCode(0xf25b),"#logo");
+    ta2.create("svg-text-animate","#name");
 
-    document.getElementById("mysvg").onclick = function () {
-      ta2.create(
-        "a你好！",
-        "#mysvg2");
-    };
+    ta2.setOptions({
+      "duration": 200,
+      "timing-function": "linear",
+      "direction": "normal",
+      "fill-mode": "forwards",
+      "delay": 100,
+      "mode": "delay",
+      "font-size": 30
+    }).setStroke({
+      "stroke": "#5db4f2",
+      "stroke-width": "2px"
+    })
+    setTimeout(function(){
+      ta2.create("A Javascript tool for convert text to SVG stroke animations in the browser.","#des");
+    },4000)
   }
 </script>
