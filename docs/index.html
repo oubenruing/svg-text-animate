@@ -1,49 +1,66 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>SVG text animate</title>
-  </head>
 
-  <body>
-    <div id="mysvg" style="height:100%;width:100%;"></div>
-    <div id="mysvg2" style="height:50%;width:100%;"></div>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>SVG text animate</title>
+  <style>
+    /*声明 WebFont*/
+    @font-face {
+      font-family: 'SourceHanSansCN';
+      src: url('./fonts/SourceHanSansCN-Normal.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /*使用选择器指定字体*/
+    #words {
+      font-family: 'SourceHanSansCN';
+    }
+  </style>
+</head>
+
+<body>
+  <div id="words" style="opacity: 0;">你好！</div>
+  <div id="mysvg" style="height:100%;width:100%;"></div>
+  <div id="mysvg2" style="height:50%;width:100%;"></div>
+</body>
+
 </html>
 <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@1.0.0/dist/svg-text-animate.min.js"></script>
 <script>
-  window.onload=async function() {
+  window.onload = async function () {
     const ta = new SVGTextAnimate("./fonts/iconfont.ttf");
     await ta.setFont();
 
-    const ta2 = new SVGTextAnimate("./fonts/SourceHanSansSC-Normal.otf",{
-          duration: 1000,
-          direction: "normal",
-          "fill-mode": "forwards",
-          delay: 400,
-          mode: "onebyone"
-        },{
-          stroke: "#005792",
-          "stroke-width": "2px"
+    const ta2 = new SVGTextAnimate("./fonts/.font-spider/SourceHanSansCN-Normal.ttf", {
+      duration: 1000,
+      direction: "normal",
+      "fill-mode": "forwards",
+      delay: 400,
+      mode: "onebyone"
+    }, {
+      stroke: "#005792",
+      "stroke-width": "2px"
     });
     await ta2.setFont();
 
     ta.setOptions({
-        duration: 5000,
-        "timing-function": "ease",
-        direction: "normal",
-        "fill-mode": "forwards",
-        delay: 400,
-        mode: "delay"
-      }).setStroke({
-        stroke: "#005792",
-        "stroke-width": "5px"
-      }).create(
+      duration: 5000,
+      "timing-function": "ease",
+      direction: "normal",
+      "fill-mode": "forwards",
+      delay: 400,
+      mode: "delay"
+    }).setStroke({
+      stroke: "#005792",
+      "stroke-width": "5px"
+    }).create(
       String.fromCharCode(0xe8ac),
       "#mysvg"
     );
 
-    document.getElementById("mysvg").onclick = function() {
+    document.getElementById("mysvg").onclick = function () {
       ta2.create(
         "new 测试很长的一个中文句子",
         "#mysvg2");
