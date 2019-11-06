@@ -14346,7 +14346,7 @@ SVGTextAnimate.prototype.create = function create (text, selector) {
     console.error("no such element");
     return
   }
-  var paths = _this.font.getPaths(text, 0, _this.options["font-size"]);
+  var paths = _this.font.getPaths(text, 0, 0,_this.options["font-size"]);
   var box = _this.getBounding(paths);
   var end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
   var strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end));

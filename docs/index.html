@@ -22,13 +22,14 @@
   window.onload = async function () {
     const ta = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.1/docs/fonts/iconfont.ttf");
     await ta.setFont();
-
+    
     const ta2 = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.0.1/docs/fonts/SourceHanSansCN-Normal.ttf", {
       "duration": 1000,
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 400,
-      "mode": "onebyone"
+      "mode": "onebyone",
+      "font-size": 20
     }, {
       "stroke": "#ffffff",
       "stroke-width": "2px"

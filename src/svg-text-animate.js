@@ -161,7 +161,7 @@ export default class SVGTextAnimate {
       console.error("no such element");
       return
     }
-    const paths = _this.font.getPaths(text, 0, _this.options["font-size"]);
+    const paths = _this.font.getPaths(text, 0, 0,_this.options["font-size"]);
     const box = _this.getBounding(paths);
     const end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
     const strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end))
