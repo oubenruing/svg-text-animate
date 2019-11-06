@@ -11,13 +11,11 @@ export default class SVGTextAnimate {
    * @param {String} fontfile Path of fontfile
    * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}
    * @param {Object} stroke   {stroke,stroke-width}
-   * @param {String} style    A style string
    * 
    */
-  constructor(fontfile, options, stroke, style) {
+  constructor(fontfile, options, stroke) {
     this.loaded = false;
     this.fontfile = fontfile;
-    this.style = style || "";
     this.options = {
       "duration": 1000,
       "timing-function": "linear",
@@ -85,20 +83,6 @@ export default class SVGTextAnimate {
     Object.assign(this.stroke, stroke);
     return this;
   }
-
-  
-  /**
-   * set stroke of current instance
-   *
-   * @param {String} style
-   * @returns {SVGTextAnimate} current instance
-   * 
-   */
-  setStyle(style) {
-    this.style = style;
-    return this;
-  }
-
 
   /**
    * Calculate the image boundary of a given path array
@@ -182,7 +166,7 @@ export default class SVGTextAnimate {
     const end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
     const strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end))
     const svg = `<svg width="${box.x2 - box.x1 + strokeWidth / 2}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth / 2} ${box.y2 + strokeWidth / 2}" xmlns="http://www.w3.org/2000/svg">\
-    <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="72px" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_this.stroke.stroke};stroke-width:${_this.stroke["stroke-width"]}; ${_this.style}"></g>\
+    <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="72px" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_this.stroke.stroke};stroke-width:${_this.stroke["stroke-width"]};"></g>\
     </svg>`
     const _div = document.createElement("div")
     _div.innerHTML = svg

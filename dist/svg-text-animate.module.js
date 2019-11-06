@@ -14198,10 +14198,9 @@ function load(url, callback, opt) {
 * @author oubenruing
 * @version 1.0.0
 */
-var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, style) {
+var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke) {
   this.loaded = false;
   this.fontfile = fontfile;
-  this.style = style || "";
   this.options = {
     "duration": 1000,
     "timing-function": "linear",
@@ -14269,20 +14268,6 @@ SVGTextAnimate.prototype.setStroke = function setStroke (stroke) {
   Object.assign(this.stroke, stroke);
   return this;
 };
-
-  
-/**
- * set stroke of current instance
- *
- * @param {String} style
- * @returns {SVGTextAnimate} current instance
- * 
- */
-SVGTextAnimate.prototype.setStyle = function setStyle (style) {
-  this.style = style;
-  return this;
-};
-
 
 /**
  * Calculate the image boundary of a given path array
@@ -14365,7 +14350,7 @@ SVGTextAnimate.prototype.create = function create (text, selector) {
   var box = _this.getBounding(paths);
   var end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
   var strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end));
-  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth / 2) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth / 2) + " " + (box.y2 + strokeWidth / 2) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" fill-rule=\"evenodd\" font-size=\"72px\" stroke=\"#000\" stroke-width=\"1px\" fill=\"none\" style=\"fill:none; stroke:" + (_this.stroke.stroke) + ";stroke-width:" + (_this.stroke["stroke-width"]) + "; " + (_this.style) + "\"></g>    </svg>";
+  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth / 2) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth / 2) + " " + (box.y2 + strokeWidth / 2) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" fill-rule=\"evenodd\" font-size=\"72px\" stroke=\"#000\" stroke-width=\"1px\" fill=\"none\" style=\"fill:none; stroke:" + (_this.stroke.stroke) + ";stroke-width:" + (_this.stroke["stroke-width"]) + ";\"></g>    </svg>";
   var _div = document.createElement("div");
   _div.innerHTML = svg;
   var svgDom = _div.querySelector("svg");

@@ -14,18 +14,17 @@
     }
 
     /*使用选择器指定字体*/
-    #words {
+    #chinesewords {
       font-family: 'SourceHanSansCN';
     }
   </style>
 </head>
 
 <body>
-  <div id="words" style="opacity: 0;">你好！</div>
+  <div id="chinesewords" style="opacity: 0; height:0px;">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ你好！</div>
   <div id="mysvg" style="height:100%;width:100%;"></div>
   <div id="mysvg2" style="height:50%;width:100%;"></div>
 </body>
-
 </html>
 <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@1.0.1/dist/svg-text-animate.min.js"></script>
 <script>
@@ -34,26 +33,26 @@
     await ta.setFont();
 
     const ta2 = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf", {
-      duration: 1000,
-      direction: "normal",
+      "duration": 1000,
+      "direction": "normal",
       "fill-mode": "forwards",
-      delay: 400,
-      mode: "onebyone"
+      "delay": 400,
+      "mode": "onebyone"
     }, {
-      stroke: "#005792",
+      "stroke": "#ffffff",
       "stroke-width": "2px"
-    });
+    },"background:black;");
     await ta2.setFont();
 
     ta.setOptions({
-      duration: 5000,
+      "duration": 5000,
       "timing-function": "ease",
-      direction: "normal",
+      "direction": "normal",
       "fill-mode": "forwards",
-      delay: 400,
-      mode: "delay"
+      "delay": 400,
+      "mode": "delay"
     }).setStroke({
-      stroke: "#005792",
+      "stroke": "#005792",
       "stroke-width": "5px"
     }).create(
       String.fromCharCode(0xe8ac),
@@ -62,7 +61,7 @@
 
     document.getElementById("mysvg").onclick = function () {
       ta2.create(
-        "你好！",
+        "a你好！",
         "#mysvg2");
     };
   }
