@@ -10,8 +10,7 @@
   "author": "oubenruing",
   "license": "MIT",
   "dependencies": {
-    "opentype.js": "^1.1.0",
-    "regenerator-runtime": "^0.13.3"
+    "opentype.js": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
