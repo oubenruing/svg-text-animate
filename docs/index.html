@@ -147,7 +147,7 @@
   <section id="page">
     <div id="logo" style="height:100px;"></div>
     <div id="name" class="whiteshadow" style="height:72px;"></div>
-    <div id="des" style="height:30px;width: 90%;display: flex;"></div>
+    <div id="des" style="height:30px;width: 90%;text-align: center;"></div>
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
       <div class="info b">1.Enter a string in the input box below; 2.Click the "Try it" button.</div>
       <div style="width: 100%;display: flex;align-items: center;justify-content: center; height: 70px;"><input class="input" value="Hello World!" />
@@ -210,13 +210,15 @@
 </body>
 
 </html>
-<script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script> -->
+<script src="../dist/svg-text-animate.js"></script>
 <script>
   window.onload = async function () {
     var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
-    await fontawesome.setFont();
+    var res = await fontawesome.setFont();
+  
     var chinese = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/SourceHanSansCN-Normal.ttf");
-    await chinese.setFont();
+    var res = await chinese.setFont();
     var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
       "duration": 300,
       "direction": "normal",
@@ -228,7 +230,7 @@
       "stroke": "#005792",
       "stroke-width": "2px"
     });
-    await opensans.setFont();
+    var res = await opensans.setFont();
 
     fontawesome.setOptions({
       "duration": 4000,

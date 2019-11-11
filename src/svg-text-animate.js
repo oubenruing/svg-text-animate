@@ -54,10 +54,10 @@ export default class SVGTextAnimate {
           _this.loaded = true
           resove(true);
         }
-      }).catch(function(reason) {
-       console.log('catch:', reason);
-      });
-    })
+      })
+    }).catch(function(reason) {
+      console.log('catch:', reason);
+    });
   }
 
 
