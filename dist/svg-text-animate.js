@@ -14242,6 +14242,8 @@ var SVGTextAnimate = (function () {
 	        _this.loaded = true;
 	        resove(true);
 	      }
+	    }).catch(function(reason) {
+	     console.log('catch:', reason);
 	    });
 	  })
 	};

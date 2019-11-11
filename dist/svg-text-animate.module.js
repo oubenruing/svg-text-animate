@@ -14239,6 +14239,8 @@ SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
         _this.loaded = true;
         resove(true);
       }
+    }).catch(function(reason) {
+     console.log('catch:', reason);
     });
   })
 };
