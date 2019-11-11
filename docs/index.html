@@ -210,17 +210,14 @@
 </body>
 
 </html>
-<!-- <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.1/dist/svg-text-animate.min.js"></script> -->
-<!-- <script type="module" src="../dist/svg-text-animate.module.js"></script> -->
-<script type="module">
-  import SVGTextAnimate from "../dist/svg-text-animate.module.js";
+<script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
+<script>
   window.onload = async function () {
-    // const ta = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
-    var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
+    var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
     await fontawesome.setFont();
-    var chinese = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/SourceHanSansCN-Normal.ttf");
+    var chinese = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/SourceHanSansCN-Normal.ttf");
     await chinese.setFont();
-    var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/OpenSans-Regular-webfont.woff", {
+    var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
       "duration": 300,
       "direction": "normal",
       "fill-mode": "forwards",
