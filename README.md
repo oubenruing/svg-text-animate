@@ -117,10 +117,10 @@ returns current instance
 create a svg animation from the given string and inserts it into the DOM of the selector.
 returns current instance
 
-Name|Type|Default value|Description
----|:--:|:--:|---
-text|String| |The text you want to animate
-selector|String| |The DOM selector you want to insert into
+Name|Type|Description
+---|:--:|---
+text|String|The text you want to animate
+selector|String|The DOM selector you want to insert into
 
 ```
     opensans.create("svg-text-animate", "#name");

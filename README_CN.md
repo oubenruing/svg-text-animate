@@ -117,10 +117,10 @@ stroke-width|String|1px|描边宽度
 根据text字符串创建svg动画，并插入到selector确定的DOM中
 返回当前实例
 
-属性名|类型|默认值|说明
----|:--:|:--:|---
-text|String| |待转换的字符串
-selector|String| |要插入的DOM的css选择器
+属性名|类型|说明
+---|:--:|---
+text|String|待转换的字符串
+selector|String|要插入的DOM的css选择器
 
 ```
     opensans.create("svg-text-animate", "#name");
