@@ -1,12 +1,16 @@
 # svg-text-animate.js
-Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
+
+[中文](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)
+[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)
+
+Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.<br>
 See [svg-text-animate](https://oubenruing.github.io/svg-text-animate/) for a live demo.
 
 ## Usage
 
 ### Download
 
-Download latest files from [releases](https://github.com/oubenruing/svg-text-animate/releases) These are compiled.
+Download latest files from [releases](https://github.com/oubenruing/svg-text-animate/releases) These are compiled.<br>
 Using svg-text-animate.js or minimum svg-text-animate.min.js like this
 
     <script src="YOURPATH/svg-text-animate.js"></script>
@@ -32,7 +36,7 @@ Creates an instance of SVGTextAnimate.
 
 `SVGTextAnimate(fontfile, options, stroke)`
 
-  * @param {String} fontfile Path of font file
+  * @param {String} fontfile Path of font file with WOFF, OTF, TTF (both with TrueType glyf and PostScript cff outlines)
   * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}
   * @param {Object} stroke   {stroke,stroke-width}
 
@@ -53,7 +57,7 @@ var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-te
 ```
 
 ### options
-A Object for controlling animation
+An Object for controlling animation
 
 Name|Type|Default value|Description
 ---|:--:|:--:|---
@@ -67,17 +71,68 @@ mode|String|sync|"**sync**":All symbols appear at the same time; <br>"**onebyone
 delay|Number|0|Only work with mode:"**delay**"
 
 ### stroke
-A Object for controlling stroke
+An Object for controlling stroke
 
 Name|Type|Default value|Description
 ---|:--:|:--:|---
 stroke|String|#000000|The hex color of stroke
-stroke-width|String|1px|The width of stroke with a unit
+stroke-width|String|1px|The width of stroke
 
 ## Methods
 
 ### setfont()
-An Asynchronous method to load a font file from a given path.<br>
+An asynchronous method for loading font files passed in from the constructor.<br>
 This method will returns a Promise. <br>
-Using *.then()* after *setfont()* or using *await*;<br>
 Each font just needs to be loaded only once.<br>
+
+```
+  await opensans.setFont();
+```
+or
+```
+  opensans.setFont().then();
+```
+
+### setOptions(options)
+
+set an Object for controlling animation, same as [options](#options)<br>
+returns *this*
+
+### setStroke(stroke)
+
+set an Object for controlling animation, same as [stroke](#stroke)
+returns *this*
+
+### create(text,selector)
+
+create a svg animation from the given string and inserts it into the DOM of the selector.
+returns *this*
+
+Name|Type|Default value|Description
+---|:--:|:--:|---
+text|String| |The text you want to animate
+selector|String| |The DOM selector you want to insert into
+
+```
+    opensans.create("svg-text-animate", "#name");
+
+    opensans.setOptions({
+      "duration": 500,
+      "timing-function": "linear",
+      "direction": "normal",
+      "fill-mode": "forwards",
+      "delay": 50,
+      "mode": "sync",
+      "font-size": 23
+    }).setStroke({
+      "stroke": "white",
+      "stroke-width": "2px"
+    }).create("Try it", ".button");
+```
+
+## Thanks 
+
+[opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. 
+
+---
+(c) oubenruing 2019 | MIT License

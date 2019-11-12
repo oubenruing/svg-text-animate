@@ -1,5 +1,5 @@
 /**
-* @fileOverview SVGTextAnimate is a Javascript tool for convert text to SVG stroke animations in the browser.
+* @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
 * @author oubenruing
 * @version 1.0.0
 */

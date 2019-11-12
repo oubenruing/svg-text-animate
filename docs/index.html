@@ -215,10 +215,10 @@
 <script>
   window.onload = async function () {
     var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
-    var res = await fontawesome.setFont();
+    await fontawesome.setFont();
   
     var chinese = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/SourceHanSansCN-Normal.ttf");
-    var res = await chinese.setFont();
+    await chinese.setFont();
     var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
       "duration": 300,
       "direction": "normal",
@@ -230,7 +230,7 @@
       "stroke": "#005792",
       "stroke-width": "2px"
     });
-    var res = await opensans.setFont();
+    await opensans.setFont();
 
     fontawesome.setOptions({
       "duration": 4000,
