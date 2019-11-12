@@ -6,6 +6,7 @@
 Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.<br>
 See [svg-text-animate](https://oubenruing.github.io/svg-text-animate/) for a live demo.
 
+---
 ## Usage
 
 ### Download
@@ -31,6 +32,7 @@ To use via a CDN, include the following code in your html:
 
     <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
 
+---
 ## constructor
 Creates an instance of SVGTextAnimate.
 
@@ -78,6 +80,7 @@ Name|Type|Default value|Description
 stroke|String|#000000|The hex color of stroke
 stroke-width|String|1px|The width of stroke
 
+---
 ## Methods
 
 ### setfont()
@@ -93,20 +96,26 @@ or
   opensans.setFont().then();
 ```
 
+
+
 ### setOptions(options)
 
 set an Object for controlling animation, same as [options](#options)<br>
-returns *this*
+returns current instance
+
+
 
 ### setStroke(stroke)
 
 set an Object for controlling animation, same as [stroke](#stroke)
-returns *this*
+returns current instance
+
+
 
 ### create(text,selector)
 
 create a svg animation from the given string and inserts it into the DOM of the selector.
-returns *this*
+returns current instance
 
 Name|Type|Default value|Description
 ---|:--:|:--:|---
@@ -130,6 +139,7 @@ selector|String| |The DOM selector you want to insert into
     }).create("Try it", ".button");
 ```
 
+---
 ## Thanks 
 
 [opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. 

@@ -31,6 +31,7 @@ ES6 风格 svg-text-animate.module.js
 
     <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
 
+---
 ## 构造函数
 创建 SVGTextAnimate实例
 
@@ -78,6 +79,7 @@ delay|Number|0|:仅在mode为**delay**模式下生效，单位毫秒
 stroke|String|#000000|十六进制颜色值的描边颜色
 stroke-width|String|1px|描边宽度
 
+---
 ## 方法
 
 ### setfont()
@@ -93,20 +95,25 @@ stroke-width|String|1px|描边宽度
   opensans.setFont().then();
 ```
 
+
 ### setOptions(options)
 
 设置动画参数, 同 [options](#options)<br>
-返回 *this*
+返回当前实例
+
+
 
 ### setStroke(stroke)
 
-设置描边参数，同 [stroke](#stroke)
-返回 *this*
+设置描边参数，同 [stroke](#stroke)<br>
+返回当前实例
+
+
 
 ### create(text,selector)
 
 根据text字符串创建svg动画，并插入到selector确定的DOM中
-返回 *this*
+返回当前实例
 
 属性名|类型|默认值|说明
 ---|:--:|:--:|---
@@ -130,6 +137,8 @@ selector|String| |要插入的DOM的css选择器
     }).create("Try it", ".button");
 ```
 
+
+---
 ## 感谢 
 
 [opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. 
