@@ -6,6 +6,8 @@
 Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画的工具<br>
 在线预览 [svg-text-animate](https://oubenruing.github.io/svg-text-animate/)
 
+注意：中文字体使用前，可以先进行字体压缩，否则字体文件过大加载会比较慢
+
 ## 使用方法
 
 ### 下载使用
