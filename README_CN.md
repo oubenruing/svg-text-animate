@@ -10,7 +10,7 @@ Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画
 
 ### 下载使用
 
-从 [releases](https://github.com/oubenruing/svg-text-animate/releases) 中下载zip包并解压，在dist文件夹，通过以下方式使用<br>
+从 [releases](https://github.com/oubenruing/svg-text-animate/releases) 中下载zip包并解压，在dist文件夹下找到编译好的js文件，通过以下方式使用<br>
 svg-text-animate.js 或 svg-text-animate.min.js
 
     <script src="YOURPATH/svg-text-animate.js"></script>
