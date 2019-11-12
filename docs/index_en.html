@@ -6,18 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>SVG text animate</title>
   <style>
-    /* @font-face {
-      font-family: 'source';
-      src: url("./fonts/SourceHanSansCN-Normal.ttf") format('truetype');
-    } */
-    /* @font-face {
+    @font-face {
       font-family: OpenSans;
       src: url("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/OpenSans-Regular-webfont.woff") format("woff");
-    } */
-    
-    html{
-      font-family: 'source';
     }
+    
     html,
     body {
       width: 100%;
@@ -61,7 +54,6 @@
       font-style: oblique;
       color: grey;
       width: 70%;
-      text-align: center;
     }
     .b{
       color:#333333;
@@ -148,6 +140,7 @@
         transform: translateY(0);
       }
     }
+
     nav{
       position:absolute;
       top:10px;
@@ -170,16 +163,17 @@
   <section id="page">
     <div id="logo" style="height:100px;"></div>
     <div id="name" class="whiteshadow" style="height:72px;"></div>
-    <div id="des" style="margin-top:10px;height:40px;width: 90%;text-align: center;"></div>
+    <div id="des" style="height:30px;width: 90%;text-align: center;"></div>
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
-      <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div>
+      <div class="info b">1.Enter a string in the input box below; 2.Click the "Try it" button.</div>
       <div style="width: 100%;display: flex;align-items: center;justify-content: center; height: 70px;"><input class="input" value="Hello World!" />
-        <button class="button"><text>开始</text></button></div>
+        <button class="button"><text>Try it</text></button></div>
     </div>
-    <div class="info delayshow">本demo中为了方便预览，使用了一个开源英文字体，<b style="color:black;">上方输入框仅能使用英文字符</b>.
-      <br>svg-text-animate 当然也支持中文字体的导入<text id="chinese" class="whitefont"></text>,
-      符号字体也支持<text id="symbols" class="whitefont"></text><text id="symbols2" class="whitefont"></text>.
-      <a href="https://github.com/oubenruing/svg-text-animate">了解更多</a></div>
+    <div class="info delayshow">This demo uses an open-source English font, so you can only input English
+      letters, numbers and common punctuation marks.
+      <br>The svg-text-animate also supports other fonts, such as Chinese<text id="chinese" class="whitefont"></text>,
+      or even special symbols<text id="symbols" class="whitefont"></text><text id="symbols2" class="whitefont"></text>.
+      <a href="https://github.com/oubenruing/svg-text-animate">Learn more</a></div>
     <div class="playbox delayshow"></div>
     <div class="footer">
       Copyright © 2019 Rui Chen - MIT License.
@@ -239,7 +233,7 @@
     var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
     await fontawesome.setFont();
   
-    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf");
+    var chinese = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/SourceHanSansCN-Normal.ttf");
     await chinese.setFont();
     var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
       "duration": 300,
@@ -267,18 +261,18 @@
     }).create(String.fromCharCode(0xf25b), "#logo");
 
     opensans.create("svg-text-animate", "#name");
-    chinese.setOptions({
-      "duration": 1500,
+    opensans.setOptions({
+      "duration": 500,
       "timing-function": "linear",
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 50,
-      "mode": "onebyone",
+      "mode": "sync",
       "font-size": 23
     }).setStroke({
       "stroke": "white",
       "stroke-width": "2px"
-    }).create("开始", ".inputbox .button");
+    }).create("Try it", ".inputbox .button");
 
     chinese.setOptions({
       "duration": 2000,
@@ -308,18 +302,11 @@
       .create(String.fromCharCode(0xf164), "#symbols2");
 
     setTimeout(function () {
-      chinese.setOptions({
-        "duration": 1500,
-        "timing-function": "linear",
-        "direction": "normal",
-        "fill-mode": "forwards",
-        "iteration-count": "1",
-        "delay": 50,
-        "mode": "sync",
-        "font-size": 32
+      opensans.setOptions({
+        "font-size": 30
       }).setStroke({
         "stroke": "#5db4f2"
-      }).create("svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具", "#des");
+      }).create("A Javascript library for convert text to SVG stroke animations in the browser.", "#des");
     }, 3000)
 
     opensans.setOptions({
