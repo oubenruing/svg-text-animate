@@ -1,7 +1,7 @@
 # svg-text-animate.js
 
-[中文](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)
-[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)
+[[中文](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)]
+[[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)]
 
 Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.<br>
 See [svg-text-animate](https://oubenruing.github.io/svg-text-animate/) for a live demo.

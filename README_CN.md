@@ -1,7 +1,7 @@
 # svg-text-animate.js
 
-[中文](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)
-[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)
+[[中文](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)]
+[[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)]
 
 Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画的工具<br>
 在线预览 [svg-text-animate](https://oubenruing.github.io/svg-text-animate/)
