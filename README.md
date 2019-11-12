@@ -138,11 +138,42 @@ selector|String| |The DOM selector you want to insert into
       "stroke-width": "2px"
     }).create("Try it", ".button");
 ```
+---
+## Special fonts
+
+  * Fonts with a large number of characters, such as chinese.
+  * Fonts exported from icons, for example the fonts download from [fontawesom](https://fontawesome.com/).
+
+In the first case, I recommend compressing the font first. Try [font-spider](https://github.com/aui/font-spider) or other font compress tools;<br>
+
+In the second case, you can use like this
+
+```
+    fontawesome.setOptions({
+      "duration": 2000,
+      "timing-function": "linear",
+      "direction": "alternate",
+      "delay": 500,
+      "iteration-count": "infinite",
+      "mode": "sync",
+      "font-size": 22
+    }).setStroke({
+      "stroke": "white",
+      "stroke-width": "1px"
+    }).create(String.fromCharCode(0xf581), "#symbols")
+      .create(String.fromCharCode(0xf164), "#symbols2");
+
+      //you can find hex code on the website where you downloaded the iconfont.
+      //Using String.fromCharCode(hexcode) as "create" method`s first parameter.
+```
+
 
 ---
 ## Thanks 
 
-[opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. 
+[opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. <br>
+[fontawesom](https://fontawesome.com/) The iconic SVG, font, and CSS toolkit. <br>
+[font-spider](https://github.com/aui/font-spider) Smart webfont compression and format conversion tool. 
 
 ---
 (c) oubenruing 2019 | MIT License
