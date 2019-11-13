@@ -43,15 +43,16 @@ export default class SVGTextAnimate {
    * 
    */
   setFont(fontfile) {
-    const _this = this
-    return new Promise(function (resove, reject) {
-      opentype.load(fontfile || _this.fontfile, function (err, openfont) {
+    console.log(this)
+    return new Promise(function (resove, reject){
+      console.log(this)
+      opentype.load(fontfile || this.fontfile, (err, openfont) => {
         if (err) {
           console.error('font could not be loaded :(');
           reject();
         } else {
-          _this.font = openfont
-          _this.loaded = true
+          this.font = openfont
+          this.loaded = true
           resove(true);
         }
       })
@@ -153,8 +154,7 @@ export default class SVGTextAnimate {
    * 
    */
   create(text, selector) {
-    const _this = this
-    if (!_this.loaded) {
+    if (!this.loaded) {
       console.error("Fontfile does not loaded");
       return
     }
@@ -163,12 +163,12 @@ export default class SVGTextAnimate {
       console.error("no such element");
       return
     }
-    const paths = _this.font.getPaths(text, 0, _this.options["font-size"], _this.options["font-size"]);
-    const box = _this.getBounding(paths);
-    const end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
-    const strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end))
+    const paths = this.font.getPaths(text, 0, this.options["font-size"], this.options["font-size"]);
+    const box = this.getBounding(paths);
+    const end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
+    const strokeWidth = Number(this.stroke["stroke-width"].substring(0, end))
     const svg = `<svg width="${box.x2 - box.x1 + strokeWidth}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 + strokeWidth}" xmlns="http://www.w3.org/2000/svg">\
-    <g id="svgGroup" stroke-linecap="round" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${_this.stroke.stroke};stroke-width:${_this.stroke["stroke-width"]};"></g>\
+    <g id="svgGroup" stroke-linecap="round" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${this.stroke.stroke};stroke-width:${this.stroke["stroke-width"]};"></g>\
     </svg>`
     const _div = document.createElement("div")
     _div.innerHTML = svg
@@ -179,7 +179,7 @@ export default class SVGTextAnimate {
       svgpath += path.toSVG(2)
     });
     group.innerHTML = svgpath;
-    fatherdom.appendChild(_this.animatePath(svgDom));
-    return _this;
+    fatherdom.appendChild(this.animatePath(svgDom));
+    return this;
   }
 }

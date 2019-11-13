@@ -14194,9 +14194,9 @@ function load(url, callback, opt) {
 }
 
 /**
-* @fileOverview SVGTextAnimate is a Javascript tool for convert text to SVG stroke animations in the browser.
+* @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
 * @author oubenruing
-* @version 1.0.0
+* @version 1.1.0
 */
 var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke) {
   this.loaded = false;
@@ -14228,15 +14228,18 @@ var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke) {
  * 
  */
 SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
-  var _this = this;
-  return new Promise(function (resove, reject) {
-    load(fontfile || _this.fontfile, function (err, openfont) {
+  console.log(this);
+  return new Promise(function (resove, reject){
+      var this$1 = this;
+
+    console.log(this);
+    load(fontfile || this.fontfile, function (err, openfont) {
       if (err) {
         console.error('font could not be loaded :(');
         reject();
       } else {
-        _this.font = openfont;
-        _this.loaded = true;
+        this$1.font = openfont;
+        this$1.loaded = true;
         resove(true);
       }
     });
@@ -14338,8 +14341,7 @@ SVGTextAnimate.prototype.animatePath = function animatePath (svgDom) {
  * 
  */
 SVGTextAnimate.prototype.create = function create (text, selector) {
-  var _this = this;
-  if (!_this.loaded) {
+  if (!this.loaded) {
     console.error("Fontfile does not loaded");
     return
   }
@@ -14348,11 +14350,11 @@ SVGTextAnimate.prototype.create = function create (text, selector) {
     console.error("no such element");
     return
   }
-  var paths = _this.font.getPaths(text, 0, _this.options["font-size"], _this.options["font-size"]);
-  var box = _this.getBounding(paths);
-  var end = _this.stroke["stroke-width"].search(/[A-Za-z]+$/);
-  var strokeWidth = Number(_this.stroke["stroke-width"].substring(0, end));
-  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 + strokeWidth) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" stroke-width=\"1px\" fill=\"none\" style=\"fill:none; stroke:" + (_this.stroke.stroke) + ";stroke-width:" + (_this.stroke["stroke-width"]) + ";\"></g>    </svg>";
+  var paths = this.font.getPaths(text, 0, this.options["font-size"], this.options["font-size"]);
+  var box = this.getBounding(paths);
+  var end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
+  var strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
+  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 + strokeWidth) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" stroke-width=\"1px\" fill=\"none\" style=\"fill:none; stroke:" + (this.stroke.stroke) + ";stroke-width:" + (this.stroke["stroke-width"]) + ";\"></g>    </svg>";
   var _div = document.createElement("div");
   _div.innerHTML = svg;
   var svgDom = _div.querySelector("svg");
@@ -14362,8 +14364,8 @@ SVGTextAnimate.prototype.create = function create (text, selector) {
     svgpath += path.toSVG(2);
   });
   group.innerHTML = svgpath;
-  fatherdom.appendChild(_this.animatePath(svgDom));
-  return _this;
+  fatherdom.appendChild(this.animatePath(svgDom));
+  return this;
 };
 
 export default SVGTextAnimate;

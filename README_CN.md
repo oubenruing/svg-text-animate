@@ -1,7 +1,7 @@
 # svg-text-animate.js
 
 [[中文](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)]
-[[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_CN.md)]
+[[English](https://github.com/oubenruing/svg-text-animate/blob/master/README.md)]
 
 Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画的工具<br>
 在线预览 [svg-text-animate](https://oubenruing.github.io/svg-text-animate/)
@@ -171,7 +171,7 @@ selector|String|要插入的DOM的css选择器
 ---
 ## 感谢 
 
-[opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. <br>
+[opentype.js](https://github.com/opentypejs/opentype.js) Read and write OpenType fonts using JavaScript. <br>
 [fontawesom](https://fontawesome.com/) The iconic SVG, font, and CSS toolkit. <br>
 [font-spider](https://github.com/aui/font-spider) Smart webfont compression and format conversion tool.  
 

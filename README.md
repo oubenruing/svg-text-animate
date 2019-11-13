@@ -171,7 +171,7 @@ In the second case, you can use like this
 ---
 ## Thanks 
 
-[opentype.js]([#stroke](https://github.com/opentypejs/opentype.js)) Read and write OpenType fonts using JavaScript. <br>
+[opentype.js](https://github.com/opentypejs/opentype.js) Read and write OpenType fonts using JavaScript. <br>
 [fontawesom](https://fontawesome.com/) The iconic SVG, font, and CSS toolkit. <br>
 [font-spider](https://github.com/aui/font-spider) Smart webfont compression and format conversion tool. 
 
