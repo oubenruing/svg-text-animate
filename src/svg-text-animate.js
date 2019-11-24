@@ -1,37 +1,32 @@
 /**
 * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
 * @author oubenruing
-* @version 1.1.0
+* @version 1.2.0
 */
 
 import * as opentype from 'opentype.js';
+import CSSCreator from './creator/CSSCreator';
+import Tools from "./tools/tools.js"
+import {DEFAULT_STROKE} from "./config/config.js" 
 export default class SVGTextAnimate {
   /**
    *Creates an instance of SVGTextAnimate.
    * @param {String} fontfile Path of fontfile
-   * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}
-   * @param {Object} stroke   {stroke,stroke-width}
+   * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
+   * @param {Object} stroke   {stroke,stroke-width,font-size}
+   * @param {String} creator  The mode of animation, use CSSCreator by default.
    * 
    */
-  constructor(fontfile, options, stroke) {
+  constructor(fontfile, options, stroke, creator) {
     this.loaded = false;
     this.fontfile = fontfile;
-    this.options = {
-      "duration": 1000,
-      "timing-function": "linear",
-      "iteration-count": 1,
-      "direction": "normal",
-      "fill-mode": "forwards",
-      "font-size": 72,
-      "delay": 0,
-      "mode": "sync"
-    };
-    this.stroke = {
-      "stroke": "#000",
-      "stroke-width": "1px",
+    switch(creator){
+      case "svg": this.creator = new SVGCreator(options);break;
+      default: this.creator = new CSSCreator(options);
     }
-    this.setOptions(options);
+    this.stroke =  Tools.deepCopy(DEFAULT_STROKE);
     this.setStroke(stroke);
+    this.fatherdom = null
   }
 
   /**
@@ -43,9 +38,7 @@ export default class SVGTextAnimate {
    * 
    */
   setFont(fontfile) {
-    console.log(this)
-    return new Promise(function (resove, reject){
-      console.log(this)
+    return new Promise((resove, reject)=>{
       opentype.load(fontfile || this.fontfile, (err, openfont) => {
         if (err) {
           console.error('font could not be loaded :(');
@@ -70,7 +63,18 @@ export default class SVGTextAnimate {
    * 
    */
   setOptions(options) {
-    Object.assign(this.options, options);
+    this.creator.setOptions(options);
+    return this;
+  }
+
+  /**
+   * Set the DOM to insert
+   *
+   * @param {DOM} dom
+   * @returns {SVGTextAnimate} current instance
+   */
+  setFatherDom(dom) {
+    this.fatherdom=dom;
     return this;
   }
 
@@ -108,45 +112,9 @@ export default class SVGTextAnimate {
     return { x1: 0, y1: 0, x2, y2 }
   }
 
-
-  /**
-   * Add animation to svgDom according to current instance's options and stoke
-   *
-   * @param {DOM} svgDom
-   * @returns {DOM} svgDom
-   */
-  animatePath(svgDom) {
-    const _options = this.options;
-    let style = svgDom.querySelector("style");
-    const paths = svgDom.querySelectorAll("path");
-
-    if (style != null) {
-      style.innerHTML = "";
-    }
-    else {
-      style = document.createElement("style");
-    }
-    style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0}}"
-    svgDom.appendChild(style);
-
-
-    paths.forEach((path, i) => {
-      const pathLength = Math.ceil(path.getTotalLength());
-      const stroke = `stroke-dasharray:${pathLength - 1} ${pathLength + 1};stroke-dashoffset:${pathLength};`
-      let animation = ""
-      switch (_options.mode) {
-        case "sync": animation = `animation: STAdraw ${_options["duration"]}ms ${_options["timing-function"]} 0ms ${_options["fill-mode"]} ${_options["direction"]} ${_options["iteration-count"]}`; break;
-        case "delay": animation = `animation: STAdraw ${_options["duration"]}ms ${_options["timing-function"]} ${_options.delay * i}ms ${_options["fill-mode"]} ${_options["direction"]} ${_options["iteration-count"]}`; break;
-        case "onebyone": animation = `animation: STAdraw ${_options["duration"]}ms ${_options["timing-function"]} ${_options["duration"] * i}ms ${_options["fill-mode"]} ${_options["direction"]} ${_options["iteration-count"]}`; break;
-      }
-      path.style.cssText = stroke + animation
-    })
-    return svgDom
-  }
-
   /**
    *  Generate svg animation from the stroked path of the given string 
-   *  and inserts it into the DOM of the selector 
+   *  and replace the contents of the selector DOM
    *
    * @param {String} text 
    * @param {String} selector
@@ -158,28 +126,68 @@ export default class SVGTextAnimate {
       console.error("Fontfile does not loaded");
       return
     }
-    const fatherdom = document.querySelector(selector);
+    const fatherdom = this.fatherdom || document.querySelector(selector)  ;
     if(fatherdom == null){
-      console.error("no such element");
+      console.error("no such fatherdom");
       return
     }
-    const paths = this.font.getPaths(text, 0, this.options["font-size"], this.options["font-size"]);
+    const svgDom = this.createSVGDom(text);
+    fatherdom.innerHTML(svgDom);
+    return this;
+  }
+
+  /**
+   *
+   * Generate svg animation from the stroked path of the given string 
+   *  and inserts it into the DOM of the selector 
+   *
+   * @param {String} text 
+   * @param {String} selector
+   * @returns {SVGTextAnimate} current instance
+   */
+  add(text, selector) {
+    if (!this.loaded) {
+      console.error("Fontfile does not loaded");
+      return
+    }
+    const fatherdom = this.fatherdom || document.querySelector(selector)  ;
+    if(fatherdom == null){
+      console.error("no such fatherdom");
+      return
+    }
+    const svgDom = this.createSVGDom(text);
+    fatherdom.appendChild(svgDom);
+    return this;
+  }
+
+
+  /**
+   *
+   *
+   * @param {Sting} text
+   * @returns {DOM} svgDom
+   */
+  createSVGDom(text){
+    let svgDom = null
+    let svgpath = "";
+    const _div = document.createElement("div")
+    const paths = this.font.getPaths(text, 0, this.stroke["font-size"], this.stroke["font-size"]);
     const box = this.getBounding(paths);
+    //remove the unit;
     const end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
     const strokeWidth = Number(this.stroke["stroke-width"].substring(0, end))
+
     const svg = `<svg width="${box.x2 - box.x1 + strokeWidth}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 + strokeWidth}" xmlns="http://www.w3.org/2000/svg">\
-    <g id="svgGroup" stroke-linecap="round" stroke="#000" stroke-width="1px" fill="none" style="fill:none; stroke:${this.stroke.stroke};stroke-width:${this.stroke["stroke-width"]};"></g>\
+    <g id="svgGroup" stroke-linecap="round" stroke="#000" fill="none" style="fill:none; stroke:${this.stroke.stroke};stroke-width:${this.stroke["stroke-width"]};"></g>\
     </svg>`
-    const _div = document.createElement("div")
+    
     _div.innerHTML = svg
-    const svgDom = _div.querySelector("svg");
-    const group = svgDom.querySelector("g");
-    let svgpath = "";
+    svgDom = _div.querySelector("svg");
+    
     paths.forEach(path => {
       svgpath += path.toSVG(2)
     });
-    group.innerHTML = svgpath;
-    fatherdom.appendChild(this.animatePath(svgDom));
-    return this;
+    svgDom.querySelector("g").innerHTML = svgpath;
+    return this.creator.create(svgDom);
   }
 }
