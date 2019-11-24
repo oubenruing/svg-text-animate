@@ -15,7 +15,6 @@ Download latest files from [releases](https://github.com/oubenruing/svg-text-ani
 Using svg-text-animate.js or minimum svg-text-animate.min.js like this
 
     <script src="YOURPATH/svg-text-animate.js"></script>
-    or
     <script src="YOURPATH/svg-text-animate.min.js"></script>
     <script>
       var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
