@@ -40,8 +40,10 @@ ES6 风格 svg-text-animate.module.js
 `SVGTextAnimate(fontfile, options, stroke)`
 
   * @param {String} 字体文件路径，支持格式：WOFF, OTF, TTF (包含TrueType glyf 和 PostScript cff outlines)
-  * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}
-  * @param {Object} stroke   {stroke,stroke-width}
+  * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,delay, mode}
+  * @param {Object} stroke   {stroke,stroke-width,font-size}
+  * @param {String} creator  The mode of animation, use CSSCreator by default.
+  ***font-size 在1.2.0版本中 从 options 移至 stroke***
 
 例:
 
@@ -51,11 +53,11 @@ var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-te
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 150,
-      "mode": "delay",
-      "font-size": 55
+      "mode": "delay"
     }, {
       "stroke": "#005792",
-      "stroke-width": "2px"
+      "stroke-width": "2px",
+      "font-size": 55
     });
 ```
 
@@ -113,8 +115,11 @@ stroke-width|String|1px|描边宽度
 
 
 ### create(text,selector)
+### add(text,selector)
 
-根据text字符串创建svg动画，并插入到selector确定的DOM中
+`create`：根据text字符串创建svg动画，先清空selector然后将svg插入到selector确定的DOM中
+`add`：根据text字符串创建svg动画，并直接插入到selector确定的DOM中
+
 返回当前实例
 
 属性名|类型|说明
@@ -131,11 +136,11 @@ selector|String|要插入的DOM的css选择器
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 50,
-      "mode": "sync",
-      "font-size": 23
+      "mode": "sync"
     }).setStroke({
       "stroke": "white",
-      "stroke-width": "2px"
+      "stroke-width": "2px",
+      "font-size": 23
     }).create("Try it", ".button");
 ```
 
@@ -156,11 +161,11 @@ selector|String|要插入的DOM的css选择器
       "direction": "alternate",
       "delay": 500,
       "iteration-count": "infinite",
-      "mode": "sync",
-      "font-size": 22
+      "mode": "sync"
     }).setStroke({
       "stroke": "white",
-      "stroke-width": "1px"
+      "stroke-width": "1px"，
+      "font-size": 22
     }).create(String.fromCharCode(0xf581), "#symbols")
       .create(String.fromCharCode(0xf164), "#symbols2");
 

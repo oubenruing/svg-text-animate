@@ -39,8 +39,11 @@ Creates an instance of SVGTextAnimate.
 `SVGTextAnimate(fontfile, options, stroke)`
 
   * @param {String} fontfile Path of font file with WOFF, OTF, TTF (both with TrueType glyf and PostScript cff outlines)
-  * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,font-size,delay,mode}
-  * @param {Object} stroke   {stroke,stroke-width}
+  * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
+  * @param {Object} stroke   {stroke,stroke-width,font-size}
+  * @param {String} creator  The mode of animation, use CSSCreator by default.
+
+***Font-size moved from ‘options’ to ‘stroke’ in version 1.2.0***
 
 For example:
 
@@ -50,11 +53,11 @@ var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-te
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 150,
-      "mode": "delay",
-      "font-size": 55
+      "mode": "delay"
     }, {
       "stroke": "#005792",
-      "stroke-width": "2px"
+      "stroke-width": "2px",
+      "font-size": 55
     });
 ```
 
@@ -110,12 +113,14 @@ returns current instance
 set an Object for controlling animation, same as [stroke](#stroke)
 returns current instance
 
-
-
 ### create(text,selector)
+### add(text,selector)
 
-create a svg animation from the given string and inserts it into the DOM of the selector.
+`create` a svg animation from the given string. Clear the selector first, then insert SVG into the DOM of delector.
+`add` a svg animation from the given string and inserts it into the DOM of the selector.
+
 returns current instance
+
 
 Name|Type|Description
 ---|:--:|---
@@ -131,11 +136,11 @@ selector|String|The DOM selector you want to insert into
       "direction": "normal",
       "fill-mode": "forwards",
       "delay": 50,
-      "mode": "sync",
-      "font-size": 23
+      "mode": "sync"
     }).setStroke({
       "stroke": "white",
-      "stroke-width": "2px"
+      "stroke-width": "2px",
+      "font-size": 23
     }).create("Try it", ".button");
 ```
 ---
@@ -155,11 +160,11 @@ In the second case, you can use like this
       "direction": "alternate",
       "delay": 500,
       "iteration-count": "infinite",
-      "mode": "sync",
-      "font-size": 22
+      "mode": "sync"
     }).setStroke({
       "stroke": "white",
-      "stroke-width": "1px"
+      "stroke-width": "1px",
+      "font-size": 22
     }).create(String.fromCharCode(0xf581), "#symbols")
       .create(String.fromCharCode(0xf164), "#symbols2");
 

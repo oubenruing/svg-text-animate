@@ -14479,17 +14479,6 @@ var SVGTextAnimate = (function () {
 	};
 
 	/**
-	 * Set the DOM to insert
-	 *
-	 * @param {DOM} dom
-	 * @returns {SVGTextAnimate} current instance
-	 */
-	SVGTextAnimate.prototype.setFatherDom = function setFatherDom (dom) {
-	  this.fatherdom = dom;
-	  return this;
-	};
-
-	/**
 	 * set stroke of current instance
 	 *
 	 * @param {Object} stroke
@@ -14525,7 +14514,7 @@ var SVGTextAnimate = (function () {
 
 	/**
 	 *Generate svg animation from the stroked path of the given string
-	 *and replace the contents of the selector DOM
+	 *clear selector and inserts it into the DOM of the selector
 	 *
 	 * @param {String} text
 	 * @param {String} selector
@@ -14537,11 +14526,7 @@ var SVGTextAnimate = (function () {
 	    console.error("Fontfile does not loaded");
 	    return;
 	  }
-	  var fatherdom = this.fatherdom || document.querySelector(selector);
-	  if (fatherdom == null) {
-	    console.error("no such fatherdom");
-	    return;
-	  }
+	  var fatherdom =document.querySelector(selector);
 	  var svgDom = this.createSVGDom(text);
 	  fatherdom.innerHTML = "";
 	  fatherdom.appendChild(svgDom);
@@ -14562,7 +14547,7 @@ var SVGTextAnimate = (function () {
 	    console.error("Fontfile does not loaded");
 	    return;
 	  }
-	  var fatherdom = this.fatherdom || document.querySelector(selector);
+	  var fatherdom = document.querySelector(selector);
 	  if (fatherdom == null) {
 	    console.error("no such fatherdom");
 	    return;
