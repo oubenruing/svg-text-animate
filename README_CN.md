@@ -71,7 +71,6 @@ timing-function|String|linear|同CSS属性animation-timing-function.
 iteration-count|Number|1|同CSS属性animation-iteration-count.
 direction|String|normal|同CSS属性animation-direction.
 fill-mode|String|forwards|同CSS属性animation-fill-mode.
-font-size|Number|72|输出字符的大小.
 mode|String|sync|"**sync**":所有文字同时绘制; <br>"**onebyone**":一个接一个绘制;<br>"**delay**":一个字符绘制之后延迟n秒绘制下一个，**n**取自下一个参数delay
 delay|Number|0|:仅在mode为**delay**模式下生效，单位毫秒
 
@@ -82,6 +81,7 @@ delay|Number|0|:仅在mode为**delay**模式下生效，单位毫秒
 ---|:--:|:--:|---
 stroke|String|#000000|十六进制颜色值的描边颜色
 stroke-width|String|1px|描边宽度
+font-size|Number|72|输出字符的大小.
 
 ---
 ## 方法

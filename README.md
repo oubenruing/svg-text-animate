@@ -71,7 +71,6 @@ timing-function|String|linear|Same as the animation-timing-function CSS property
 iteration-count|Number|1|Same as the animation-iteration-count CSS property.
 direction|String|normal|Same as the animation-direction CSS property.
 fill-mode|String|forwards|Same as the animation-fill-mode CSS property.
-font-size|Number|72|Output font size.
 mode|String|sync|"**sync**":All symbols appear at the same time; <br>"**onebyone**":a symbol appears after the last symbol animation;<br>"**delay**":a symbol appears n milliseconds later when the last symbol starts drawing.(The value of n is taken from the next option)
 delay|Number|0|Only work with mode:"**delay**"
 
@@ -82,6 +81,7 @@ Name|Type|Default value|Description
 ---|:--:|:--:|---
 stroke|String|#000000|The hex color of stroke
 stroke-width|String|1px|The width of stroke
+font-size|Number|72|Output font size.
 
 ---
 ## Methods
