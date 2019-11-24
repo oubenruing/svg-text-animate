@@ -174,7 +174,7 @@
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
       <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div>
       <div style="width: 100%;display: flex;align-items: center;justify-content: center; height: 70px;"><input class="input" value="Hello World!" />
-        <button class="button"><text>开始</text></button></div>
+        <button class="button"><text>开始</text><text id ="tsvg" style="display: inline-block;"></text></button></div>
     </div>
     <div class="info delayshow">本demo中为了方便预览，使用了一个开源英文字体，<b style="color:black;">上方输入框仅能使用英文字符</b>.
       <br>svg-text-animate 当然也支持中文字体的导入<text id="chinese" class="whitefont"></text>,
@@ -232,8 +232,8 @@
 </body>
 
 </html>
-<!-- <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script> -->
-<script src="../dist/svg-text-animate.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
+<!-- <script src="../dist/svg-text-animate.js"></script> -->
 <script>
   window.onload = async function () {
     var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
@@ -280,7 +280,7 @@
       "stroke": "white",
       "stroke-width": "2px",
       "font-size": 23
-    }).create("开始", ".inputbox .button");
+    }).create("开始", ".inputbox .button #tsvg");
 
     chinese.setOptions({
       "duration": 2000,
@@ -330,7 +330,6 @@
     }).create(document.querySelector(".input").value, ".playbox")
 
     document.querySelector(".button").addEventListener("click", function () {
-      document.querySelector(".playbox").innerHTML = "";
       opensans.setStroke({
         "stroke": "#333333",
         "font-size": 60

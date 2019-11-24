@@ -167,7 +167,7 @@
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
       <div class="info b">1.Enter a string in the input box below; 2.Click the "Try it" button.</div>
       <div style="width: 100%;display: flex;align-items: center;justify-content: center; height: 70px;"><input class="input" value="Hello World!" />
-        <button class="button"><text>Try it</text></button></div>
+        <button class="button"><text>Try it</text><text id ="tsvg" style="display: inline-block;"></text></button></div>
     </div>
     <div class="info delayshow">This demo uses an open-source English font, so you can only input English
       letters, numbers and common punctuation marks.
@@ -272,7 +272,7 @@
     }).setStroke({
       "stroke": "white",
       "stroke-width": "2px"
-    }).create("Try it", ".inputbox .button");
+    }).create("Try it", ".inputbox .button #tsvg");
 
     chinese.setOptions({
       "duration": 2000,
@@ -316,7 +316,6 @@
     }).create(document.querySelector(".input").value, ".playbox")
 
     document.querySelector(".button").addEventListener("click", function () {
-      document.querySelector(".playbox").innerHTML = "";
       opensans.setOptions({
         "font-size": 60
       }).setStroke({

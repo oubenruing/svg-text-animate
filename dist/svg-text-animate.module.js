@@ -14194,19 +14194,19 @@ function load(url, callback, opt) {
 }
 
 var DEFAULT_OPTIONS = {
-  "duration": 1000,
+  duration: 1000,
   "timing-function": "linear",
   "iteration-count": 1,
-  "direction": "normal",
+  direction: "normal",
   "fill-mode": "forwards",
-  "delay": 0,
-  "mode": "sync"
+  delay: 0,
+  mode: "sync"
 };
 
 var DEFAULT_STROKE = {
-  "stroke": "#000",
+  stroke: "#000",
   "stroke-width": "1px",
-  "font-size":72
+  "font-size": 72
 };
 
 var Tools = function Tools () {};
@@ -14308,7 +14308,6 @@ AnimationCreator.prototype.setPathStroke = function setPathStroke (path) {
   path.style.cssText += stroke;
 };
 
-
 /**
  * Function to set the SVG animation , you need to implement in the inheritance class
  *
@@ -14319,7 +14318,6 @@ AnimationCreator.prototype.setSVGAnimation = function setSVGAnimation () {
     this.constructor.name + " do not have setSVGAnimation method."
   );
 };
-
 
 /**
  * Function to set the path animation , you need to implement in the inheritance class
@@ -14334,7 +14332,6 @@ AnimationCreator.prototype.setPathAnimation = function setPathAnimation (path, i
   );
 };
 
-
 /**
  * Function to format Options ,using default options
  *
@@ -14344,12 +14341,11 @@ AnimationCreator.prototype.formatOptions = function formatOptions () {
   //console.log(this.constructor.name + " using default options.");
 };
 
-
 /**
  *
  *
  * @param {DOM} svgDom
- * @returns {DOM} Animated svgDom 
+ * @returns {DOM} Animated svgDom
  * @memberof AnimationCreator
  */
 
@@ -14377,24 +14373,21 @@ var CSSCreator = /*@__PURE__*/(function (AnimationCreator) {
   CSSCreator.prototype = Object.create( AnimationCreator && AnimationCreator.prototype );
   CSSCreator.prototype.constructor = CSSCreator;
 
-
   /**
    * Function to set the SVG animation , using CSS animation
    *
    * @memberof CSSCreator
    */
-  CSSCreator.prototype.setSVGAnimation = function setSVGAnimation (){
+  CSSCreator.prototype.setSVGAnimation = function setSVGAnimation () {
     var style = this.svgDom.querySelector("style");
     if (style != null) {
       style.innerHTML = "";
-    }
-    else {
+    } else {
       style = document.createElement("style");
     }
     style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0}}";
     this.svgDom.appendChild(style);
   };
-
 
   /**
    * Function to set the path animation , using CSS animation
@@ -14403,13 +14396,19 @@ var CSSCreator = /*@__PURE__*/(function (AnimationCreator) {
    * @param {Number} i Index of paths
    * @memberof CSSCreator
    */
-  CSSCreator.prototype.setPathAnimation = function setPathAnimation (path,i){
+  CSSCreator.prototype.setPathAnimation = function setPathAnimation (path, i) {
     var animation = "";
     var _options = this.options;
     switch (_options.mode) {
-      case "sync": animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " 0ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";"; break;
-      case "delay": animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " " + (_options.delay * i) + "ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";"; break;
-      case "onebyone": animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " " + (_options["duration"] * i) + "ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";"; break;
+      case "sync":
+        animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " 0ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";";
+        break;
+      case "delay":
+        animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " " + (_options.delay * i) + "ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";";
+        break;
+      case "onebyone":
+        animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " " + (_options["duration"] * i) + "ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";";
+        break;
     }
     path.style.cssText += animation;
   };
@@ -14418,18 +14417,21 @@ var CSSCreator = /*@__PURE__*/(function (AnimationCreator) {
 }(AnimationCreator));
 
 /**
-* @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
-* @author oubenruing
-* @version 1.2.0
-*/
+ * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
+ * @author oubenruing
+ * @version 1.2.0
+ */
 var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, creator) {
   this.loaded = false;
   this.fontfile = fontfile;
-  switch(creator){
-    case "svg": this.creator = new SVGCreator(options);break;
-    default: this.creator = new CSSCreator(options);
+  switch (creator) {
+    case "svg":
+      this.creator = new SVGCreator(options);
+      break;
+    default:
+      this.creator = new CSSCreator(options);
   }
-  this.stroke =Tools.deepCopy(DEFAULT_STROKE);
+  this.stroke = Tools.deepCopy(DEFAULT_STROKE);
   this.setStroke(stroke);
   this.fatherdom = null;
 };
@@ -14440,15 +14442,15 @@ var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, creator)
  *
  * @param {String} fontfile
  * @returns {Promise} A promise Object
- * 
+ *
  */
 SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
     var this$1 = this;
 
-  return new Promise(function (resove, reject){
+  return new Promise(function (resove, reject) {
     load(fontfile || this$1.fontfile, function (err, openfont) {
       if (err) {
-        console.error('font could not be loaded :(');
+        console.error("font could not be loaded :(");
         reject();
       } else {
         this$1.font = openfont;
@@ -14457,17 +14459,16 @@ SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
       }
     });
   }).catch(function(reason) {
-    console.log('catch:', reason);
+    console.log("catch:", reason);
   });
 };
-
 
 /**
  * set options of current instance
  *
  * @param {Object} options
  * @returns {SVGTextAnimate} current instance
- * 
+ *
  */
 SVGTextAnimate.prototype.setOptions = function setOptions (options) {
   this.creator.setOptions(options);
@@ -14481,17 +14482,16 @@ SVGTextAnimate.prototype.setOptions = function setOptions (options) {
  * @returns {SVGTextAnimate} current instance
  */
 SVGTextAnimate.prototype.setFatherDom = function setFatherDom (dom) {
-  this.fatherdom=dom;
+  this.fatherdom = dom;
   return this;
 };
-
 
 /**
  * set stroke of current instance
  *
  * @param {Object} stroke
  * @returns {SVGTextAnimate} current instance
- * 
+ *
  */
 SVGTextAnimate.prototype.setStroke = function setStroke (stroke) {
   Object.assign(this.stroke, stroke);
@@ -14504,69 +14504,70 @@ SVGTextAnimate.prototype.setStroke = function setStroke (stroke) {
  * @param {Array<Path>} paths
  * @returns {Object} boundary{x1, y1, x2, y2}
  * @memberof SVGTextAnimate
- * 
+ *
  */
 SVGTextAnimate.prototype.getBounding = function getBounding (paths) {
-  if(paths.length==0){
+  if (paths.length == 0) {
     console.error("path does not exist");
-    return {x1: 0, y1: 0, x2: 0, y2: 0 }
+    return { x1: 0, y1: 0, x2: 0, y2: 0 };
   }
   var x2 = paths[paths.length - 1].getBoundingBox().x2;
-  var y2 = paths.reduce(
-    function (r, c) {
+  var y2 = paths
+    .reduce(function (r, c) {
       return r.getBoundingBox().y2 >= c.getBoundingBox().y2 ? r : c;
-    }).getBoundingBox().y2;
-  return { x1: 0, y1: 0, x2: x2, y2: y2 }
+    })
+    .getBoundingBox().y2;
+  return { x1: 0, y1: 0, x2: x2, y2: y2 };
 };
 
 /**
- *Generate svg animation from the stroked path of the given string 
+ *Generate svg animation from the stroked path of the given string
  *and replace the contents of the selector DOM
  *
- * @param {String} text 
+ * @param {String} text
  * @param {String} selector
  * @returns {SVGTextAnimate} current instance
- * 
+ *
  */
 SVGTextAnimate.prototype.create = function create (text, selector) {
   if (!this.loaded) {
     console.error("Fontfile does not loaded");
-    return
+    return;
   }
   var fatherdom = this.fatherdom || document.querySelector(selector);
-  if(fatherdom == null){
+  if (fatherdom == null) {
     console.error("no such fatherdom");
-    return
+    return;
   }
   var svgDom = this.createSVGDom(text);
-  fatherdom.innerHTML(svgDom);
+  fatherdom.innerHTML = "";
+  fatherdom.appendChild(svgDom);
   return this;
 };
 
 /**
  *
- * Generate svg animation from the stroked path of the given string 
- *and inserts it into the DOM of the selector 
+ * Generate svg animation from the stroked path of the given string
+ *and inserts it into the DOM of the selector
  *
- * @param {String} text 
+ * @param {String} text
  * @param {String} selector
  * @returns {SVGTextAnimate} current instance
  */
 SVGTextAnimate.prototype.add = function add (text, selector) {
   if (!this.loaded) {
     console.error("Fontfile does not loaded");
-    return
+    return;
   }
   var fatherdom = this.fatherdom || document.querySelector(selector);
-  if(fatherdom == null){
+  if (fatherdom == null) {
     console.error("no such fatherdom");
-    return
+    return;
   }
   var svgDom = this.createSVGDom(text);
   fatherdom.appendChild(svgDom);
   return this;
 };
-
 
 /**
  *
@@ -14574,21 +14575,29 @@ SVGTextAnimate.prototype.add = function add (text, selector) {
  * @param {Sting} text
  * @returns {DOM} svgDom
  */
-SVGTextAnimate.prototype.createSVGDom = function createSVGDom (text){
+SVGTextAnimate.prototype.createSVGDom = function createSVGDom (text) {
   var svgDom = null;
   var svgpath = "";
   var _div = document.createElement("div");
-  var paths = this.font.getPaths(text, 0, this.stroke["font-size"], this.stroke["font-size"]);
+  var paths = this.font.getPaths(
+    text,
+    0,
+    this.stroke["font-size"],
+    this.stroke["font-size"]
+  );
   var box = this.getBounding(paths);
   //remove the unit;
   var end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
   var strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
 
-  var svg = "<svg width=\"" + (box.x2 - box.x1 + strokeWidth) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 + strokeWidth) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; stroke:" + (this.stroke.stroke) + ";stroke-width:" + (this.stroke["stroke-width"]) + ";\"></g>    </svg>";
-    
+  var svg = "<svg width=\"" + (box.x2 -
+    box.x1 +
+    strokeWidth) + "\" height=\"" + (box.y2 - box.y1) + "\" viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +
+    strokeWidth) + "\" xmlns=\"http://www.w3.org/2000/svg\">    <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; stroke:" + (this.stroke.stroke) + ";stroke-width:" + (this.stroke["stroke-width"]) + ";\"></g>    </svg>";
+
   _div.innerHTML = svg;
   svgDom = _div.querySelector("svg");
-    
+
   paths.forEach(function (path) {
     svgpath += path.toSVG(2);
   });

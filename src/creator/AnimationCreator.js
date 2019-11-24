@@ -68,7 +68,6 @@ export default class AnimationCreator {
     path.style.cssText += stroke;
   }
 
-
   /**
    * Function to set the SVG animation , you need to implement in the inheritance class
    *
@@ -79,7 +78,6 @@ export default class AnimationCreator {
       this.constructor.name + " do not have setSVGAnimation method."
     );
   }
-
 
   /**
    * Function to set the path animation , you need to implement in the inheritance class
@@ -94,7 +92,6 @@ export default class AnimationCreator {
     );
   }
 
-
   /**
    * Function to format Options ,using default options
    *
@@ -104,12 +101,11 @@ export default class AnimationCreator {
     //console.log(this.constructor.name + " using default options.");
   }
 
-
   /**
    *
    *
    * @param {DOM} svgDom
-   * @returns {DOM} Animated svgDom 
+   * @returns {DOM} Animated svgDom
    * @memberof AnimationCreator
    */
 
