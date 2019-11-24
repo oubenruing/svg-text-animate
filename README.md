@@ -15,6 +15,7 @@ Download latest files from [releases](https://github.com/oubenruing/svg-text-ani
 Using svg-text-animate.js or minimum svg-text-animate.min.js like this
 
     <script src="YOURPATH/svg-text-animate.js"></script>
+    or
     <script src="YOURPATH/svg-text-animate.min.js"></script>
     <script>
       var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
@@ -39,9 +40,9 @@ Creates an instance of SVGTextAnimate.
 `SVGTextAnimate(fontfile, options, stroke)`
 
   * @param {String} fontfile Path of font file with WOFF, OTF, TTF (both with TrueType glyf and PostScript cff outlines)
-  * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
-  * @param {Object} stroke   {stroke,stroke-width,font-size}
-  * @param {String} creator  The mode of animation, use CSSCreator by default.
+  * @param {Object} options: {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
+  * @param {Object} stroke: {stroke,stroke-width,font-size}
+  * @param {String} creator: The mode of animation, use CSSCreator by default.
 
 ***Font-size moved from ‘options’ to ‘stroke’ in version 1.2.0***
 

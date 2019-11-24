@@ -16,6 +16,7 @@ Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画
 svg-text-animate.js 或 svg-text-animate.min.js
 
     <script src="YOURPATH/svg-text-animate.js"></script>
+    or
     <script src="YOURPATH/svg-text-animate.min.js"></script>
     <script>
       var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
@@ -40,9 +41,9 @@ ES6 风格 svg-text-animate.module.js
 `SVGTextAnimate(fontfile, options, stroke)`
 
   * @param {String} 字体文件路径，支持格式：WOFF, OTF, TTF (包含TrueType glyf 和 PostScript cff outlines)
-  * @param {Object} options  {duration,timing-function,iteration-count,direction,fill-mode,delay, mode}
-  * @param {Object} stroke   {stroke,stroke-width,font-size}
-  * @param {String} creator  The mode of animation, use CSSCreator by default.
+  * @param {Object} options: {duration,timing-function,iteration-count,direction,fill-mode,delay, mode}
+  * @param {Object} stroke:  {stroke,stroke-width,font-size}
+  * @param {String} creator: 动画生成器，默认使用 CSSCreator 生成css动画.
   ***font-size 在1.2.0版本中 从 options 移至 stroke***
 
 例:
