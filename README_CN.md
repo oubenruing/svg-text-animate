@@ -16,6 +16,7 @@ Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画
 svg-text-animate.js 或 svg-text-animate.min.js
 
     <script src="YOURPATH/svg-text-animate.js"></script>
+    or
     <script src="YOURPATH/svg-text-animate.min.js"></script>
     <script>
       var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
