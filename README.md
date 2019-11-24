@@ -37,12 +37,12 @@ To use via a CDN, include the following code in your html:
 ## constructor
 Creates an instance of SVGTextAnimate.
 
-`SVGTextAnimate(fontfile, options, stroke)`
+`SVGTextAnimate(fontfile, options, stroke, cretor)`
 
-  * @param {String} fontfile Path of font file with WOFF, OTF, TTF (both with TrueType glyf and PostScript cff outlines)
-  * @param {Object} options: {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
-  * @param {Object} stroke: {stroke,stroke-width,font-size}
-  * @param {String} creator: The mode of animation, use CSSCreator by default.
+  * @param {String} `Required` fontfile: Path of font file with WOFF, OTF, TTF (both with TrueType glyf and PostScript cff outlines)
+  * @param {Object} `Required` options: {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
+  * @param {Object} `Required` stroke: {stroke,stroke-width,font-size}
+  * @param {String} `Optional` creator: The mode of animation, use CSSCreator by default.
 
 ***Font-size moved from ‘options’ to ‘stroke’ in version 1.2.0***
 
@@ -114,11 +114,10 @@ returns current instance
 set an Object for controlling animation, same as [stroke](#stroke)
 returns current instance
 
-### create(text,selector)
-### add(text,selector)
+### create(text,selector)  add(text,selector)
 
 `create` a svg animation from the given string. Clear the selector first, then insert SVG into the DOM of delector.
-`add` a svg animation from the given string and inserts it into the DOM of the selector.
+`add`(v1.2.0) a svg animation from the given string and inserts it into the DOM of the selector.
 
 returns current instance
 

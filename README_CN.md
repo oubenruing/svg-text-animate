@@ -38,13 +38,13 @@ ES6 风格 svg-text-animate.module.js
 ## 构造函数
 创建 SVGTextAnimate实例
 
-`SVGTextAnimate(fontfile, options, stroke)`
+`SVGTextAnimate(fontfile, options, stroke, creator)`
 
-  * @param {String} 字体文件路径，支持格式：WOFF, OTF, TTF (包含TrueType glyf 和 PostScript cff outlines)
-  * @param {Object} options: {duration,timing-function,iteration-count,direction,fill-mode,delay, mode}
-  * @param {Object} stroke:  {stroke,stroke-width,font-size}
-  * @param {String} creator: 动画生成器，默认使用 CSSCreator 生成css动画.
-  
+  * @param {String} `必填` 字体文件路径，支持格式：WOFF, OTF, TTF (包含TrueType glyf 和 PostScript cff outlines)
+  * @param {Object} `必填` options: {duration,timing-function,iteration-count,direction,fill-mode,delay, mode}
+  * @param {Object} `必填` stroke:  {stroke,stroke-width,font-size}
+  * @param {String} `可选` creator: 动画生成器，默认使用 CSSCreator 生成css动画.
+
   ***font-size 在1.2.0版本中 从 options 移至 stroke***
 
 例:
@@ -116,11 +116,11 @@ font-size|Number|72|输出字符的大小.
 
 
 
-### create(text,selector)
-### add(text,selector)
+### create(text,selector) add(text,selector)
 
-`create`：根据text字符串创建svg动画，先清空selector然后将svg插入到selector确定的DOM中
-`add`：根据text字符串创建svg动画，并直接插入到selector确定的DOM中
+`create`：根据text字符串创建svg动画，先清空selector然后将svg插入到selector确定的DOM中。
+
+`add`(v1.2.0)：根据text字符串创建svg动画，并直接插入到selector确定的DOM中
 
 返回当前实例
 
