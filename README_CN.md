@@ -44,6 +44,7 @@ ES6 风格 svg-text-animate.module.js
   * @param {Object} options: {duration,timing-function,iteration-count,direction,fill-mode,delay, mode}
   * @param {Object} stroke:  {stroke,stroke-width,font-size}
   * @param {String} creator: 动画生成器，默认使用 CSSCreator 生成css动画.
+  
   ***font-size 在1.2.0版本中 从 options 移至 stroke***
 
 例:
