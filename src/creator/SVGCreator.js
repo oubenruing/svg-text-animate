@@ -58,8 +58,15 @@ export default class SVGCreator extends AnimationCreator {
    * @memberof SVGCreator
    */
   formatOptions(options) {
-    options["timing-function"]="linear"
-    options["fill-mode"]=options["fill-mode"]=="forwards"?"freeze":"remove"
+    if(options["timing-function"]){
+      options["timing-function"]="linear";
+    }
+    debugger;
+    if(!options["fill-mode"] || options["fill-mode"]=="forwards"){
+      options["fill-mode"]="freeze"
+    }else{
+      options["fill-mode"]="remove"
+    }
     return options;
   }
 }

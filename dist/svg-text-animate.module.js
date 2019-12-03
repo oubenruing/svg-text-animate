@@ -14255,7 +14255,7 @@ Tools.deepCopy = function deepCopy (obj, cache) {
 var AnimationCreator = function AnimationCreator(options) {
   this.options = Tools.deepCopy(this.formatOptions(DEFAULT_OPTIONS));
   this.svgDom = null;
-  this.setOptions(this.formatOptions(options));
+  this.setOptions(options);
 };
 
 /**
@@ -14277,7 +14277,7 @@ AnimationCreator.prototype.setSVGDom = function setSVGDom (svgDom) {
  * @memberof AnimationCreator
  */
 AnimationCreator.prototype.setOptions = function setOptions (options) {
-  Object.assign(this.options, options);
+  Object.assign(this.options, this.formatOptions(options));
   return this;
 };
 
@@ -14486,8 +14486,15 @@ var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
    * @memberof SVGCreator
    */
   SVGCreator.prototype.formatOptions = function formatOptions (options) {
-    options["timing-function"]="linear";
-    options["fill-mode"]=options["fill-mode"]=="forwards"?"freeze":"remove";
+    if(options["timing-function"]){
+      options["timing-function"]="linear";
+    }
+    debugger;
+    if(!options["fill-mode"] || options["fill-mode"]=="forwards"){
+      options["fill-mode"]="freeze";
+    }else{
+      options["fill-mode"]="remove";
+    }
     return options;
   };
 

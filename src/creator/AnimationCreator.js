@@ -17,7 +17,7 @@ export default class AnimationCreator {
   constructor(options) {
     this.options = Tools.deepCopy(this.formatOptions(DEFAULT_OPTIONS));
     this.svgDom = null;
-    this.setOptions(this.formatOptions(options));
+    this.setOptions(options);
   }
 
   /**
@@ -39,7 +39,7 @@ export default class AnimationCreator {
    * @memberof AnimationCreator
    */
   setOptions(options) {
-    Object.assign(this.options, options);
+    Object.assign(this.options, this.formatOptions(options));
     return this;
   }
 

@@ -163,10 +163,6 @@
 </head>
 
 <body>
-  <nav>
-    <li><a href="https://oubenruing.github.io/svg-text-animate/index.html">中文</a></li>
-    <li><a href="https://oubenruing.github.io/svg-text-animate/index_en.html">English</a></li>
-  </nav>
   <section id="page">
     <div id="logo" style="height:100px;"></div>
     <div id="name" class="whiteshadow" style="height:72px;"></div>
@@ -174,7 +170,9 @@
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
       <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div>
       <div style="width: 100%;display: flex;align-items: center;justify-content: center; height: 70px;"><input class="input" value="Hello World!" />
-        <button class="button"><text>开始</text></button><button class="download"><text>下载</text></button></div>
+        <button class="button"><text>开始</text></button>
+        <!-- <button class="download"><text>下载</text></button> -->
+      </div>
     </div>
     <div class="info delayshow">本demo中为了方便预览，使用了一个开源英文字体，<b style="color:black;">上方输入框仅能使用英文字符</b>.
       <br>svg-text-animate 当然也支持中文字体的导入<text id="chinese" class="whitefont"></text>,
@@ -236,109 +234,70 @@
 <script src="../dist/svg-text-animate.js"></script>
 <script>
   window.onload = async function () {
-    var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
-    await fontawesome.setFont();
-  
-    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf");
+    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf",{},{},"svg");
     await chinese.setFont();
     var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
       "duration": 300,
       "direction": "normal",
-      "fill-mode": "freeze",
+      "fill-mode": "forwards",
       "delay": 150,
       "mode": "delay",
-      "font-size": 55
     }, {
       "stroke": "#005792",
-      "stroke-width": "2px"
-    });
+      "stroke-width": "2px",
+      "font-size": 55
+    },"svg");
     await opensans.setFont();
 
-    fontawesome.setOptions({
-      "duration": 4000,
-      "timing-function": "linear",
-      "direction": "normal",
-      "fill-mode": "freeze",
-      "delay": 400,
-      "mode": "delay"
-    }).setStroke({
-      "stroke": "#5db4f2",
-      "stroke-width": "2px"
-    }).create(String.fromCharCode(0xf25b), "#logo");
-
     opensans.create("svg-text-animate", "#name");
-    chinese.setOptions({
-      "duration": 1500,
-      "timing-function": "linear",
-      "direction": "normal",
-      "fill-mode": "remove",
-      "delay": 50,
-      "mode": "onebyone",
-      "font-size": 23
-    }).setStroke({
-      "stroke": "white",
-      "stroke-width": "2px"
-    }).create("开始", ".inputbox .button");
+    // chinese.setOptions({
+    //   "duration": 1500,
+    //   "timing-function": "linear",
+    //   "direction": "normal",
+    //   "fill-mode": "remove",
+    //   "delay": 50,
+    //   "mode": "onebyone"
+    // }).setStroke({
+    //   "stroke": "white",
+    //   "stroke-width": "2px",
+    //   "font-size": 23
+    // }).create("开始", ".inputbox .button");
 
-    chinese.setOptions({
-      "duration": 2000,
-      "timing-function": "linear",
-      "direction": "alternate",
-      "delay": 500,
-      "iteration-count": "infinite",
-      "mode": "sync",
-      "font-size": 22
-    }).setStroke({
-      "stroke": "white",
-      "stroke-width": "1px"
-    }).create("你好", "#chinese");
-
-    fontawesome.setOptions({
-      "duration": 2000,
-      "timing-function": "linear",
-      "direction": "alternate",
-      "delay": 500,
-      "iteration-count": "infinite",
-      "mode": "sync",
-      "font-size": 22
-    }).setStroke({
-      "stroke": "white",
-      "stroke-width": "1px"
-    }).create(String.fromCharCode(0xf581), "#symbols")
-      .create(String.fromCharCode(0xf164), "#symbols2");
 
     setTimeout(function () {
       chinese.setOptions({
         "duration": 1500,
         "timing-function": "linear",
         "direction": "normal",
-        "fill-mode": "freeze",
+        "fill-mode": "forwards",
         "iteration-count": "1",
         "delay": 50,
-        "mode": "sync",
-        "font-size": 32
+        "mode": "sync"
       }).setStroke({
-        "stroke": "#5db4f2"
+        "stroke": "#5db4f2",
+        "font-size": 32
       }).create("svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具", "#des");
     }, 3000)
 
     opensans.setOptions({
-      "font-size": 60
+      
     }).setStroke({
-      "stroke": "#333333"
+      "stroke": "#333333",
+      "font-size": 60
     }).create(document.querySelector(".input").value, ".playbox")
 
     document.querySelector(".button").addEventListener("click", function () {
       document.querySelector(".playbox").innerHTML = "";
       opensans.setOptions({
-        "font-size": 60
+        
       }).setStroke({
-        "stroke": "#333333"
+        "stroke": "#333333",
+        "font-size": 60
       }).create(document.querySelector(".input").value, ".playbox")
     })
-    document.querySelector(".download").addEventListener("click", function () {
-      debugger;
-      opensans.download();
-    })
+    // document.querySelector(".download").addEventListener("click", function () {
+    //   debugger;
+    //   opensans.download();
+    // })
   }
 </script>
