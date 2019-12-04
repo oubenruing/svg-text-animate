@@ -71,61 +71,64 @@
     }
 
     .inputbox .input {
-      height: 32px;
-      width: 60%;
-      border-radius: 30px;
+      height: 340px;
+      width: 70%;
+      border-radius: 10px;
       outline: none;
-      font-size: 28px;
+      font-size: 15px;
       padding: 0 10px;
-      border: #333333 2px solid;
+      border: #333333 1px solid;
       color: #333333;
     }
 
     .inputbox .button {
-      height: 32px;
-      width: 100px;
-      margin-left: 20px;
+      height: 24px;
+      width: 60px;
       background: none;
       border: #005792 2px solid;
-      line-height: 24px;
       border-radius: 20px;
       outline: none;
       color: #005792;
-      font-size: 23px;
+      font-size: 15px;
       font-family: OpenSans;
     }
 
-    .inputbox .button:hover text {
+    /* .inputbox .button:hover text {
       transition: all 500ms linear;
       display: none;
-    }
+    } */
 
     .inputbox .button:hover {
       transition: all 500ms linear;
       background: #005792;
+      color:white;
     }
 
-    .inputbox .button svg {
+    /* .inputbox .button svg {
       display: none;
     }
 
     .inputbox .button:hover svg {
       display: inline;
-    }
+    } */
 
+    .left{
+      height:70%;
+      width:50%;
+    }
     .playbox {
       margin: 30px;
       height: 200px;
       width: 80%;
       text-align: center;
       overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
-      border-radius: 20px;
-      border: #333333 solid 2px;
-      line-height: 200px;
+      border-radius: 10px;
+      border: #333333 solid 1px;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-wrap: wrap;
+      align-content: flex-start;
     }
 
     .delayshow {
@@ -164,23 +167,22 @@
 
 <body>
   <section id="page">
-    <div id="logo" style="height:100px;"></div>
-    <div id="name" class="whiteshadow" style="height:72px;"></div>
-    <div id="des" style="margin-top:10px;height:40px;width: 90%;text-align: center;"></div>
+    <div id="name" class="whiteshadow" style="margin-top:72px;height:72px;max-width: 100%;"></div>
+    <div id="des" style="margin-top:10px;max-width: 90%;text-align: center;display: flex;flex-wrap: wrap;"></div>
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
-      <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div>
-      <div style="width: 100%;display: flex;align-items: center;justify-content: center; height: 70px;"><input class="input" value="Hello World!" />
-        <button class="button"><text>开始</text></button>
-        <!-- <button class="download"><text>下载</text></button> -->
+      <!-- <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div> -->
+      <div style="width: 100%;display: flex;align-items: center;justify-content: center;">
+        <div class="left">
+          <textarea class="input">Hello World!</textarea>
+          <button class="button"><text>开始</text></button>
+          <button class="download button"><text>复制</text></button>
+        </div>
+        <div class="playbox delayshow right"></div>
       </div>
     </div>
-    <div class="info delayshow">本demo中为了方便预览，使用了一个开源英文字体，<b style="color:black;">上方输入框仅能使用英文字符</b>.
-      <br>svg-text-animate 当然也支持中文字体的导入<text id="chinese" class="whitefont"></text>,
-      符号字体也支持<text id="symbols" class="whitefont"></text><text id="symbols2" class="whitefont"></text>.
-      <a href="https://github.com/oubenruing/svg-text-animate">了解更多</a></div>
-    <div class="playbox delayshow"></div>
+    
     <div class="footer">
-      Copyright © 2019 Rui Chen - MIT License.
+      Copyright © 2019 oubenruing - MIT License.
     </div>
   </section>
   <a href="https://github.com/oubenruing/svg-text-animate" class="github-corner" aria-label="View source on GitHub"><svg
@@ -276,28 +278,35 @@
       }).setStroke({
         "stroke": "#5db4f2",
         "font-size": 32
-      }).create("svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具", "#des");
+      })
+      var text = "svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具"
+      text.split("").forEach(e=>{
+        chinese.add(e, "#des");
+      })
     }, 3000)
 
-    opensans.setOptions({
-      
-    }).setStroke({
+    opensans.setStroke({
       "stroke": "#333333",
-      "font-size": 60
+      "font-size": 36
     }).create(document.querySelector(".input").value, ".playbox")
 
     document.querySelector(".button").addEventListener("click", function () {
       document.querySelector(".playbox").innerHTML = "";
-      opensans.setOptions({
-        
-      }).setStroke({
+      opensans.setStroke({
         "stroke": "#333333",
-        "font-size": 60
-      }).create(document.querySelector(".input").value, ".playbox")
+        "font-size": 36
+      })
+      document.querySelector(".input").value.split("").forEach((e,i)=>{
+        opensans.setOptions({"delay":100*i,"mode": "delay"}).add(e, ".playbox");
+      })
     })
-    // document.querySelector(".download").addEventListener("click", function () {
-    //   debugger;
-    //   opensans.download();
-    // })
+    document.addEventListener('copy', function(e){
+      const html = document.querySelector(".playbox").innerHTML;
+      e.clipboardData.setData('text/html', html);
+      e.preventDefault();
+    })
+    document.querySelector(".download").addEventListener("click", function () {
+      document.execCommand('copy')
+    })
   }
 </script>

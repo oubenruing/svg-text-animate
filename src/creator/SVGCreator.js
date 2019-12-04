@@ -43,7 +43,7 @@ export default class SVGCreator extends AnimationCreator {
     animation+=" fill=" + _options["fill-mode"]
     switch (_options.mode) {
       case "sync": animation+=" begin="+ "0ms"; break;
-      case "delay": animation+=" begin="+ _options.delay * i+"ms"; break;
+      case "delay": animation+=" begin="+ _options.delay * (i+1)+"ms"; break;
       case "onebyone": animation+=" begin="+ _options["duration"] * i + "ms"; break;
       default :animation+=" begin="+ _options.mode; break;
     }
@@ -61,7 +61,6 @@ export default class SVGCreator extends AnimationCreator {
     if(options["timing-function"]){
       options["timing-function"]="linear";
     }
-    debugger;
     if(!options["fill-mode"] || options["fill-mode"]=="forwards"){
       options["fill-mode"]="freeze"
     }else{

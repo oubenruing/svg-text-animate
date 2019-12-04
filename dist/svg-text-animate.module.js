@@ -14471,7 +14471,7 @@ var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
     animation+=" fill=" + _options["fill-mode"];
     switch (_options.mode) {
       case "sync": animation+=" begin="+ "0ms"; break;
-      case "delay": animation+=" begin="+ _options.delay * i+"ms"; break;
+      case "delay": animation+=" begin="+ _options.delay * (i+1)+"ms"; break;
       case "onebyone": animation+=" begin="+ _options["duration"] * i + "ms"; break;
       default :animation+=" begin="+ _options.mode; break;
     }
@@ -14489,7 +14489,6 @@ var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
     if(options["timing-function"]){
       options["timing-function"]="linear";
     }
-    debugger;
     if(!options["fill-mode"] || options["fill-mode"]=="forwards"){
       options["fill-mode"]="freeze";
     }else{
@@ -14504,7 +14503,7 @@ var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
 /**
  * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
  * @author oubenruing
- * @version 1.2.0
+ * @version 1.3.0
  */
 var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, creator) {
   this.loaded = false;
@@ -14661,7 +14660,7 @@ SVGTextAnimate.prototype.createSVGDom = function createSVGDom (text) {
   var strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
 
   var svg = 
-    "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; \n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
+    "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\" data-copyright=\"https://github.com/oubenruing\">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; \n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
 
   _div.innerHTML = svg;
   svgDom = _div.querySelector("svg");

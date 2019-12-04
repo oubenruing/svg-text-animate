@@ -1,7 +1,7 @@
 /**
  * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
  * @author oubenruing
- * @version 1.2.0
+ * @version 1.3.0
  */
 
 import * as opentype from "opentype.js";
@@ -174,7 +174,7 @@ export default class SVGTextAnimate {
       `<svg width="${box.x2 - box.x1 +strokeWidth}" 
             height="${box.y2 - box.y1}" 
             viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 +strokeWidth}"
-            xmlns="http://www.w3.org/2000/svg">
+            xmlns="http://www.w3.org/2000/svg" data-copyright="https://github.com/oubenruing">
           <g id="svgGroup" stroke-linecap="round" stroke="#000" fill="none" style="fill:none; 
             stroke:${this.stroke.stroke};
             stroke-width:${this.stroke["stroke-width"]};">
