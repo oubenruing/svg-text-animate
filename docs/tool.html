@@ -8,15 +8,6 @@
   <title>SVG text animate</title>
   <script src="https://cdn.bootcss.com/jscolor/2.0.4/jscolor.min.js"></script>
   <style>
-    /* @font-face {
-      font-family: 'source';
-      src: url("./fonts/SourceHanSansCN-Normal.ttf") format('truetype');
-    } */
-    /* @font-face {
-      font-family: OpenSans;
-      src: url("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/OpenSans-Regular-webfont.woff") format("woff");
-    } */
-
     html {
       font-family: 'source';
     }
@@ -37,8 +28,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
+      width: 70%;
       height: 100%;
+      margin:0 auto;
       overflow: hidden;
       position: relative;
     }
@@ -113,14 +105,6 @@
       background: #005792;
       color: white;
     }
-
-    /* .inputbox .button svg {
-      display: none;
-    }
-
-    .inputbox .button:hover svg {
-      display: inline;
-    } */
     .main {
       width: 90%;
       display: flex;
@@ -134,15 +118,13 @@
 
     .playbox {
       height: 450px;
-      text-align: center;
+      text-align: left;
       overflow-x: hidden;
       overflow-y: auto;
       position: relative;
       border-radius: 10px;
       border: #333333 solid 1px;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
+      display: block;
       padding: 2px;
     }
 
@@ -168,6 +150,7 @@
       justify-content: space-around;
       align-items: center;
       margin:0 20px;
+      font-size:12px;
     }
     .setting li label{
       text-align: right;
@@ -184,6 +167,7 @@
     }
     .setting li span input[type="file"]{
       width: 55%;
+      min-width: 70px;
     }
 
     @keyframes delayshow {
@@ -205,54 +189,81 @@
       display: inline-block;
       margin-right: 10px;
     }
+    .loading{
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0,0,0,0.6);
+      text-align: center;
+      width: 300px;
+      height: 200px;
+      line-height: 200px;
+      color: white;
+      position: absolute;
+    }
   </style>
 </head>
 
 <body>
   <section id="page">
-    <div id="name" class="whiteshadow" style="margin-top:72px;height:72px;max-width: 100%;"></div>
+    <div id="name" class="whiteshadow" style="margin-top:30px;height:72px;max-width: 100%;"></div>
     <div id="des" style="margin-top:10px;max-width: 90%;text-align: center;display: flex;flex-wrap: wrap;"></div>
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
       <!-- <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div> -->
       <div class="main">
         <div class="child">
-          <textarea class="input">Hello World!</textarea>
+          <textarea class="input">使用说明：
+1.在此处输入你想要动画的文本
+2.右方选项选择你的字体文件（支持WOFF, OTF, TTF格式）
+3.点击生成
+4.点击复制
+5.在公众号编辑器直接粘贴
+
+特别说明：
+重复次数选项处填"infinite",动画将永久循环。
+空格字符的间距跟微信编辑器中的字体大小有关。
+生成的动画排版也会自动换行。
+
+有任何问题欢迎提issue
+或邮件联系oubenruing@gmail.com
+          </textarea>
         </div>
         <div class="child">
           <div class="setting">
             <h4>字体设置</h4>
-            <li><label>字体</label><span><input type="file" value="opensans"></span></li>
+            <li><label>字体</label><span><input id="ifont" type="file" value="opensans"></span></li>
+            <li><label>当前字体</label><span id="fontname">思源黑体</span></li>
             <h4>画笔设置</h4>
-            <li><label>字号</label><span><input type="number" value="36">px</span></li>
-            <li><label>字体颜色</label><span><input class="jscolor" value="444444"></span></li>
-            <li><label>描边宽度</label><span><input value="2">px</span></li>
+            <li><label>字号</label><span><input id="ifont-size" type="number" value="15">px</span></li>
+            <li><label>字体颜色</label><span><input id="icolor" class="jscolor" value="444444"></span></li>
+            <li><label>描边宽度</label><span><input id="istroke" value="2">px</span></li>
             <h4>动画设置</h4>
-            <li><label>动画时长</label><span><input type="number" value="1000"></input>ms</span></li>
-            <li><label>重复次数</label><span><input value="1"></span></li>
+            <li><label>动画时长</label><span><input id="iduration" type="number" value="1000"></input>ms</span></li>
+            <li><label>重复次数</label><span><input id="icount" value="1"></span></li>
             <li>
               <label>动画完成</label>
               <span>
-                <select>
-                  <option>清除</option>
-                  <option selected>保留</option>
+                <select id = "ifill">
+                  <option value="none">清除</option>
+                  <option selected value="forwords">保留</option>
                 </select>
               </span>
             </li>
             <li>
               <label>动画模式</label>
               <span>
-                <select>
-                  <option>同时</option>
-                  <option selected>延时</option>
-                  <option>顺序</option>
+                <select id = "imode">
+                  <option value="sync">同时</option>
+                  <option selected value="delay">延时</option>
+                  <option value="onebyone">顺序</option>
                 </select>
               </span>
             </li>
-            <li><label>延时时长</label><span><input type="number" value="200"></input>ms</span></li>
+            <li><label>延时时长</label><span><input id = "idelay" type="number" value="200"></input>ms</span></li>
           </div>
           <div>
-            <button class="button"><text>开始</text></button>
-            <button class="download button"><text>复制</text></button>
+            <button id="create" class="button"><text>生成</text></button>
+            <button id="copy" class="button"><text>复制</text></button>
           </div>
         </div>
         <div class="child">
@@ -265,6 +276,9 @@
       Copyright © 2019 oubenruing - MIT License.
     </div>
   </section>
+  <div id="loading" class="loading">
+    默认字体加载中...
+  </div>
   <a href="https://github.com/oubenruing/svg-text-animate" class="github-corner" aria-label="View source on GitHub"><svg
       width="80" height="80" viewBox="0 0 250 250"
       style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -312,13 +326,12 @@
 </body>
 
 </html>
-<!-- <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script> -->
 <script src="../dist/svg-text-animate.js"></script>
 <script>
   window.onload = async function () {
-    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf", {}, {}, "svg");
+    var chinese = new SVGTextAnimate("./fonts/.font-spider/SourceHanSansCN-Normal.ttf", {}, {}, "svg");
     await chinese.setFont();
-    var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
+    var opensans = new SVGTextAnimate("./fonts/.font-spider/SourceHanSansCN-Normal.ttf", {
       "duration": 300,
       "direction": "normal",
       "fill-mode": "forwards",
@@ -330,7 +343,7 @@
       "font-size": 55
     }, "svg");
     await opensans.setFont();
-
+    document.querySelector("#loading").style.display="none";
     opensans.create("svg-text-animate", "#name");
 
     setTimeout(function () {
@@ -346,34 +359,71 @@
         "stroke": "#5db4f2",
         "font-size": 32
       })
-      var text = "svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具"
+      var text = "该工具是使用svg-text-animate制作的生成描边动画的工具，生成的描边动画可直接复制粘贴至微信公众号使用。"
       text.split("").forEach(e => {
         chinese.add(e, "#des");
       })
     }, 3000)
-
-    opensans.setStroke({
-      "stroke": "#333333",
-      "font-size": 14,
-
-    }).create(document.querySelector(".input").value, ".playbox")
-
-    document.querySelector(".button").addEventListener("click", function () {
+    document.querySelector("#ifont").addEventListener("change",function(event){
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        opensans.setFontFromBuffer(e.target.result)
+        document.querySelector("#fontname").innerHTML=event.target.files[0].name
+      }
+      reader.readAsArrayBuffer(event.target.files[0]);
+    })
+    document.querySelector("#create").addEventListener("click", function () {
       document.querySelector(".playbox").innerHTML = "";
-      opensans.setStroke({
-        "stroke": "#333333",
-        "font-size": 14
+      const dur = document.querySelector("#iduration").value
+      const fill = document.querySelector("#ifill").value
+      const count = document.querySelector("#icount").value
+      const mode = document.querySelector("#imode").value
+      const delay = document.querySelector("#idelay").value
+      const fontsize = document.querySelector("#ifont-size").value
+      const color = document.querySelector("#icolor").value
+      const strokewidth = document.querySelector("#istroke").value
+      document.querySelector(".playbox").style.fontSize=fontsize+"px";
+
+      opensans.setOptions({
+        "duration": Number(dur),
+        "timing-function": "linear",
+        "direction": "normal",
+        "fill-mode": fill,
+        "iteration-count": count,
+      }).setStroke({
+        "stroke": "#"+color,
+        "font-size": Number(fontsize),
+        "stroke-width": strokewidth+"px",
       })
       document.querySelector(".input").value.split("").forEach((e, i) => {
-        opensans.setOptions({ "delay": 100 * i, "mode": "delay", "iteration-count": "30" }).add(e, ".playbox");
+        
+        if(e=="\n"){
+          document.querySelector(".playbox").innerHTML+="<br>"
+          return
+        }
+        if(e==" "){
+          document.querySelector(".playbox").innerHTML+="&nbsp;"
+          return
+        }
+        if(mode=="delay"){
+          opensans.setOptions({ "delay": delay * i, "mode": "delay"})
+        }else if(mode=="onebyone"){
+          opensans.setOptions({ "delay": dur * i, "mode": "delay"})
+        }else{
+          opensans.setOptions({ "delay": 0, "mode": "delay"})
+        }
+        opensans.add(e, ".playbox");
       })
     })
+    setTimeout(function(){
+      document.querySelector("#create").click();
+    },4500)
     document.addEventListener('copy', function (e) {
       const html = document.querySelector(".playbox").innerHTML;
       e.clipboardData.setData('text/html', html);
       e.preventDefault();
     })
-    document.querySelector(".download").addEventListener("click", function () {
+    document.querySelector("#copy").addEventListener("click", function () {
       document.execCommand('copy')
     })
   }
