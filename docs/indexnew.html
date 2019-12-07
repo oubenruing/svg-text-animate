@@ -3,8 +3,10 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>SVG text animate</title>
+  <script src="https://cdn.bootcss.com/jscolor/2.0.4/jscolor.min.js"></script>
   <style>
     /* @font-face {
       font-family: 'source';
@@ -14,15 +16,20 @@
       font-family: OpenSans;
       src: url("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.1.0/docs/fonts/OpenSans-Regular-webfont.woff") format("woff");
     } */
-    
-    html{
+
+    html {
       font-family: 'source';
     }
+
     html,
     body {
       width: 100%;
       position: relative;
       margin: 0;
+    }
+
+    li {
+      list-style: none;
     }
 
     #page {
@@ -63,22 +70,25 @@
       width: 70%;
       text-align: center;
     }
-    .b{
-      color:#333333;
+
+    .b {
+      color: #333333;
       font-style: normal;
       font-size: 21px;
       margin-top: 20px;
     }
 
     .inputbox .input {
-      height: 340px;
-      width: 70%;
+      height: 450px;
+      width: 100%;
+      display: block;
       border-radius: 10px;
       outline: none;
       font-size: 15px;
-      padding: 0 10px;
       border: #333333 1px solid;
       color: #333333;
+      margin-bottom: 15px;
+      resize: none;
     }
 
     .inputbox .button {
@@ -101,7 +111,7 @@
     .inputbox .button:hover {
       transition: all 500ms linear;
       background: #005792;
-      color:white;
+      color: white;
     }
 
     /* .inputbox .button svg {
@@ -111,15 +121,19 @@
     .inputbox .button:hover svg {
       display: inline;
     } */
-
-    .left{
-      height:70%;
-      width:50%;
+    .main {
+      width: 90%;
+      display: flex;
+      align-items: start;
+      justify-content: center;
     }
+
+    .main .child {
+      flex: 1;
+    }
+
     .playbox {
-      margin: 30px;
-      height: 200px;
-      width: 80%;
+      height: 450px;
       text-align: center;
       overflow-x: hidden;
       overflow-y: auto;
@@ -129,6 +143,7 @@
       display: flex;
       flex-wrap: wrap;
       align-content: flex-start;
+      padding: 2px;
     }
 
     .delayshow {
@@ -145,21 +160,49 @@
       color: #333333;
     }
 
+    .setting{
+      margin-bottom:20px;
+    }
+    .setting li{
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin:0 20px;
+    }
+    .setting li label{
+      text-align: right;
+      margin-right:20px;
+    }
+    .setting li span{
+      text-align: left;
+    }
+    .setting li label,.setting li span{
+      flex:1;
+    }
+    .setting li span input:not([type="file"]){
+      width: 50%;
+    }
+    .setting li span input[type="file"]{
+      width: 55%;
+    }
+
     @keyframes delayshow {
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-    nav{
-      position:absolute;
-      top:10px;
-      right:100px;
+
+    nav {
+      position: absolute;
+      top: 10px;
+      right: 100px;
       z-index: 9;
-      width:150px;
+      width: 150px;
     }
-    nav li{
-      display:inline-block;
+
+    nav li {
+      display: inline-block;
       margin-right: 10px;
     }
   </style>
@@ -171,16 +214,53 @@
     <div id="des" style="margin-top:10px;max-width: 90%;text-align: center;display: flex;flex-wrap: wrap;"></div>
     <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
       <!-- <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div> -->
-      <div style="width: 100%;display: flex;align-items: center;justify-content: center;">
-        <div class="left">
+      <div class="main">
+        <div class="child">
           <textarea class="input">Hello World!</textarea>
-          <button class="button"><text>开始</text></button>
-          <button class="download button"><text>复制</text></button>
         </div>
-        <div class="playbox delayshow right"></div>
+        <div class="child">
+          <div class="setting">
+            <h4>字体设置</h4>
+            <li><label>字体</label><span><input type="file" value="opensans"></span></li>
+            <h4>画笔设置</h4>
+            <li><label>字号</label><span><input type="number" value="36">px</span></li>
+            <li><label>字体颜色</label><span><input class="jscolor" value="444444"></span></li>
+            <li><label>描边宽度</label><span><input value="2">px</span></li>
+            <h4>动画设置</h4>
+            <li><label>动画时长</label><span><input type="number" value="1000"></input>ms</span></li>
+            <li><label>重复次数</label><span><input value="1"></span></li>
+            <li>
+              <label>动画完成</label>
+              <span>
+                <select>
+                  <option>清除</option>
+                  <option selected>保留</option>
+                </select>
+              </span>
+            </li>
+            <li>
+              <label>动画模式</label>
+              <span>
+                <select>
+                  <option>同时</option>
+                  <option selected>延时</option>
+                  <option>顺序</option>
+                </select>
+              </span>
+            </li>
+            <li><label>延时时长</label><span><input type="number" value="200"></input>ms</span></li>
+          </div>
+          <div>
+            <button class="button"><text>开始</text></button>
+            <button class="download button"><text>复制</text></button>
+          </div>
+        </div>
+        <div class="child">
+          <div class="playbox"></div>
+        </div>
       </div>
     </div>
-    
+
     <div class="footer">
       Copyright © 2019 oubenruing - MIT License.
     </div>
@@ -236,7 +316,7 @@
 <script src="../dist/svg-text-animate.js"></script>
 <script>
   window.onload = async function () {
-    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf",{},{},"svg");
+    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf", {}, {}, "svg");
     await chinese.setFont();
     var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
       "duration": 300,
@@ -248,23 +328,10 @@
       "stroke": "#005792",
       "stroke-width": "2px",
       "font-size": 55
-    },"svg");
+    }, "svg");
     await opensans.setFont();
 
     opensans.create("svg-text-animate", "#name");
-    // chinese.setOptions({
-    //   "duration": 1500,
-    //   "timing-function": "linear",
-    //   "direction": "normal",
-    //   "fill-mode": "remove",
-    //   "delay": 50,
-    //   "mode": "onebyone"
-    // }).setStroke({
-    //   "stroke": "white",
-    //   "stroke-width": "2px",
-    //   "font-size": 23
-    // }).create("开始", ".inputbox .button");
-
 
     setTimeout(function () {
       chinese.setOptions({
@@ -280,27 +347,28 @@
         "font-size": 32
       })
       var text = "svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具"
-      text.split("").forEach(e=>{
+      text.split("").forEach(e => {
         chinese.add(e, "#des");
       })
     }, 3000)
 
     opensans.setStroke({
       "stroke": "#333333",
-      "font-size": 36
+      "font-size": 14,
+
     }).create(document.querySelector(".input").value, ".playbox")
 
     document.querySelector(".button").addEventListener("click", function () {
       document.querySelector(".playbox").innerHTML = "";
       opensans.setStroke({
         "stroke": "#333333",
-        "font-size": 36
+        "font-size": 14
       })
-      document.querySelector(".input").value.split("").forEach((e,i)=>{
-        opensans.setOptions({"delay":100*i,"mode": "delay"}).add(e, ".playbox");
+      document.querySelector(".input").value.split("").forEach((e, i) => {
+        opensans.setOptions({ "delay": 100 * i, "mode": "delay", "iteration-count": "30" }).add(e, ".playbox");
       })
     })
-    document.addEventListener('copy', function(e){
+    document.addEventListener('copy', function (e) {
       const html = document.querySelector(".playbox").innerHTML;
       e.clipboardData.setData('text/html', html);
       e.preventDefault();
