@@ -85,6 +85,14 @@ stroke|String|#000000|十六进制颜色值的描边颜色
 stroke-width|String|1px|描边宽度
 font-size|Number|72|输出字符的大小.
 
+### creator
+动画创建器
+
+参数|说明
+---|---
+css | (默认) 使用 CSSCreator. 创建CSS风格的svg动画.(使用 \<style\> 标签 和 @keyframes).
+svg | 使用 SVGCreator. 创建 SMIL 风格的SVG动画.(使用 \<animate\> 标签).<br>这种情况下：<br>1.选项中的 'timing-function'总是在'linear'模式下工作,只能使用线性动画。<br>2.选项中的'fill-mode'只能使用 'forwards' 或 'none'模式。<br>3.选项中的'direction'总是在'normal' 模式下工作，不可变.<br><br>**'svg'模式生成的svg图片可用在不支持css的场景中，例如使用在微信公众号的文章中**
+
 ---
 ## 方法
 
@@ -101,6 +109,10 @@ font-size|Number|72|输出字符的大小.
   opensans.setFont().then();
 ```
 
+### setFontFromBuffer()
+从ArrayBuffer中读取一个字体，用于浏览器本地字体文件读取<br>
+每个字体仅需要加载一次<br>
+返回当前实例
 
 ### setOptions(options)
 

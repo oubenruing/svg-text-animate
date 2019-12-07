@@ -6,6 +6,7 @@ import Tools from "../tools/tools.js";
  *
  * @export
  * @class AnimationCreator
+ * @Description Abstract class
  */
 export default class AnimationCreator {
   /**
@@ -14,7 +15,7 @@ export default class AnimationCreator {
    * @memberof AnimationCreator
    */
   constructor(options) {
-    this.options = Tools.deepCopy(DEFAULT_OPTIONS);
+    this.options = Tools.deepCopy(this.formatOptions(DEFAULT_OPTIONS));
     this.svgDom = null;
     this.setOptions(options);
   }
@@ -38,7 +39,7 @@ export default class AnimationCreator {
    * @memberof AnimationCreator
    */
   setOptions(options) {
-    Object.assign(this.options, options);
+    Object.assign(this.options, this.formatOptions(options));
     return this;
   }
 
@@ -97,8 +98,10 @@ export default class AnimationCreator {
    *
    * @memberof AnimationCreator
    */
-  formatOptions() {
-    //console.log(this.constructor.name + " using default options.");
+  formatOptions(options) {
+    console.error(
+      this.constructor.name + " do not have setPathAnimation method."
+    );
   }
 
   /**
@@ -111,7 +114,6 @@ export default class AnimationCreator {
 
   create(svgDom) {
     this.setSVGDom(svgDom);
-    this.formatOptions();
     this.setSVGAnimation();
     this.setAllPathsAnimation();
     return svgDom;

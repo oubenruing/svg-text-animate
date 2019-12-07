@@ -84,6 +84,16 @@ stroke|String|#000000|The hex color of stroke
 stroke-width|String|1px|The width of stroke
 font-size|Number|72|Output font size.
 
+### creator
+
+The mode of animation.<br>
+Param|Description
+---|---
+css | (default) Using CSSCreator. Create a CSS style SVG animation.(Using \<style\> tag and @keyframes).
+svg | Using SVGCreator. Create a SMIL SVG animation.(Using \<animate\> tag).<br>In this case：<br>1.The option 'timing-function' always works in 'linear' mode.<br>2.The option 'fill-mode' only works in 'forwards' mode or 'none' mode.<br>3.The option 'direction' always works in 'normal' mode.<br><br>The 'svg' mode can be used in the scenario where CSS is not supported
+
+
+
 ---
 ## Methods
 
@@ -100,6 +110,10 @@ or
   opensans.setFont().then();
 ```
 
+### setFontFromBuffer()
+Load a font file from an ArrayBuffer<br>
+Each font just needs to be loaded only once.<br>
+returns current instance
 
 
 ### setOptions(options)

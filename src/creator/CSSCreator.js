@@ -63,4 +63,14 @@ export default class CSSCreator extends AnimationCreator {
     }
     path.style.cssText += animation;
   }
+
+    /**
+   * Function to format Options ,using default options
+   *
+   * @param {Object} options Options of creator
+   * @memberof CSSCreator
+   */
+  formatOptions(options) {
+    return options;
+  }
 }

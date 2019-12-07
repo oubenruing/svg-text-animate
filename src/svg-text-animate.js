@@ -1,11 +1,12 @@
 /**
  * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
  * @author oubenruing
- * @version 1.2.0
+ * @version 1.3.0
  */
 
 import * as opentype from "opentype.js";
 import CSSCreator from "./creator/CSSCreator";
+import SVGCreator from "./creator/SVGCreator";
 import Tools from "./tools/tools.js";
 import { DEFAULT_STROKE } from "./config/config.js";
 export default class SVGTextAnimate {
@@ -55,6 +56,19 @@ export default class SVGTextAnimate {
     }).catch(function(reason) {
       console.log("catch:", reason);
     });
+  }
+
+  /**
+   * Load a font file from an ArrayBuffer
+   * 
+   *
+   * @param {ArrayBuffer} buffer
+   * @returns {SVGTextAnimate} current instance
+   */
+  setFontFromBuffer(buffer) {
+    this.font = opentype.parse(buffer);
+    this.loaded = true;
+    return this
   }
 
   /**
@@ -169,16 +183,16 @@ export default class SVGTextAnimate {
     const end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
     const strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
 
-    const svg = `<svg width="${box.x2 -
-      box.x1 +
-      strokeWidth}" height="${box.y2 - box.y1}" viewBox="${box.x1} ${
-      box.y1
-    } ${box.x2 + strokeWidth} ${box.y2 +
-      strokeWidth}" xmlns="http://www.w3.org/2000/svg">\
-    <g id="svgGroup" stroke-linecap="round" stroke="#000" fill="none" style="fill:none; stroke:${
-      this.stroke.stroke
-    };stroke-width:${this.stroke["stroke-width"]};"></g>\
-    </svg>`;
+    const svg = 
+      `<svg width="${box.x2 - box.x1 +strokeWidth}" 
+            height="${box.y2 - box.y1}" 
+            viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 +strokeWidth}"
+            xmlns="http://www.w3.org/2000/svg" data-copyright="https://github.com/oubenruing/svg-text-animate" style="vertical-align: text-top; ">
+          <g id="svgGroup" stroke-linecap="round" stroke="#000" fill="none" style="fill:none; 
+            stroke:${this.stroke.stroke};
+            stroke-width:${this.stroke["stroke-width"]};">
+          </g>
+      </svg>`;
 
     _div.innerHTML = svg;
     svgDom = _div.querySelector("svg");
