@@ -61,10 +61,15 @@ export default class SVGCreator extends AnimationCreator {
     if(options["timing-function"]){
       options["timing-function"]="linear";
     }
-    if(!options["fill-mode"] || options["fill-mode"]=="forwards"){
-      options["fill-mode"]="freeze"
-    }else{
-      options["fill-mode"]="remove"
+    if(options["iteration-count"]=="infinite"){
+      options["iteration-count"]="indefinite"
+    }
+    if(options["fill-mode"]){
+      if(options["fill-mode"]=="none"){
+        options["fill-mode"]="remove"
+      }else{
+        options["fill-mode"]="freeze"
+      }
     }
     return options;
   }

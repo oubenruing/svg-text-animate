@@ -109,6 +109,10 @@ svg | 使用 SVGCreator. 创建 SMIL 风格的SVG动画.(使用 \<animate\> 标�
   opensans.setFont().then();
 ```
 
+### setFontFromBuffer()
+从ArrayBuffer中读取一个字体，用于浏览器本地字体文件读取<br>
+每个字体仅需要加载一次<br>
+返回当前实例
 
 ### setOptions(options)
 

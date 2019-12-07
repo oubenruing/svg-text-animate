@@ -110,6 +110,10 @@ or
   opensans.setFont().then();
 ```
 
+### setFontFromBuffer()
+Load a font file from an ArrayBuffer<br>
+Each font just needs to be loaded only once.<br>
+returns current instance
 
 
 ### setOptions(options)
