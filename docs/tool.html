@@ -135,6 +135,7 @@
     }
 
     .footer {
+      position:fixed;
       bottom: 0px;
       width: 100%;
       font-size: 16px;
@@ -199,7 +200,7 @@
       height: 200px;
       line-height: 200px;
       color: white;
-      position: absolute;
+      position: fixed;
     }
   </style>
 </head>
@@ -208,7 +209,7 @@
   <section id="page">
     <div id="name" class="whiteshadow" style="margin-top:30px;height:72px;max-width: 100%;"></div>
     <div id="des" style="margin-top:10px;max-width: 90%;text-align: center;display: flex;flex-wrap: wrap;"></div>
-    <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center;">
+    <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center; display:none;">
       <!-- <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div> -->
       <div class="main">
         <div class="child">
@@ -344,6 +345,7 @@
     }, "svg");
     await opensans.setFont();
     document.querySelector("#loading").style.display="none";
+    document.querySelector(".inputbox").style.display="block";
     opensans.create("svg-text-animate", "#name");
 
     setTimeout(function () {
