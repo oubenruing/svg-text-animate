@@ -4,6 +4,11 @@
 [[English](https://github.com/oubenruing/svg-text-animate/blob/master/README_EN.md)]
 
 Svg-text-animate 一个在浏览器环境中将输入文本转化为描边动画的工具<br>
+![Alt text](https://oubenruing.github.io/svg-text-animate/demo/title.svg)<br>
+![Alt text](https://oubenruing.github.io/svg-text-animate/demo/hello.svg)<br>
+![Alt text](https://oubenruing.github.io/svg-text-animate/demo/top.svg)<br>
+
+
 demo [svg-text-animate](https://oubenruing.github.io/svg-text-animate/)<br>
 在线生成工具 [svg-tool](https://oubenruing.github.io/svg-text-animate/tool.html)
 
