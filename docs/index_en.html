@@ -152,6 +152,18 @@
       display:inline-block;
       margin-right: 10px;
     }
+    .loading{
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0,0,0,0.6);
+      text-align: center;
+      width: 300px;
+      height: 200px;
+      line-height: 200px;
+      color: white;
+      position: fixed;
+    }
   </style>
 </head>
 
@@ -179,6 +191,9 @@
       Copyright © 2019 Rui Chen - MIT License.
     </div>
   </section>
+  <div id="loading" class="loading">
+    The font is downloading ...
+  </div>
   <a href="https://github.com/oubenruing/svg-text-animate" class="github-corner" aria-label="View source on GitHub"><svg
       width="80" height="80" viewBox="0 0 250 250"
       style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -222,6 +237,7 @@
         animation: octocat-wave 560ms ease-in-out
       }
     }
+    
   </style>
 </body>
 
@@ -247,7 +263,7 @@
       "font-size": 55
     });
     await opensans.setFont();
-
+    document.querySelector("#loading").style.display="none";
     fontawesome.setOptions({
       "duration": 4000,
       "timing-function": "linear",
