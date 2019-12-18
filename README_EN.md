@@ -9,7 +9,7 @@ Svg-text-animate is a JavaScript library for convert text to SVG stroke animatio
 ![Alt text](https://oubenruing.github.io/svg-text-animate/demo/hello.svg)<br>
 ![Alt text](https://oubenruing.github.io/svg-text-animate/demo/top.svg)<br>
 
-See [svg-text-animate](https://oubenruing.github.io/svg-text-animate/) for a live demo.
+See [svg-text-animate](https://oubenruing.github.io/svg-text-animate/index_en.html) for a live demo.
 
 ---
 ## Usage
