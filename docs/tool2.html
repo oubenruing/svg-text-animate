@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SVG text animate</title>
+  <script src="https://cdn.bootcss.com/jscolor/2.0.4/jscolor.min.js"></script>
+  <style>
+    html {
+      font-family: 'source';
+    }
+
+    html,
+    body {
+      width: 100%;
+      position: relative;
+      margin: 0;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    #page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: 70%;
+      height: 100%;
+      margin:0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .whitefont {
+      filter: drop-shadow(1px 1px 3px black);
+      padding: 0 5px;
+    }
+
+    .whiteshadow {
+      filter: drop-shadow(2px 4px 3px #aaaaaa);
+    }
+
+    .inputbox {
+      position: relative;
+      margin-top: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .info {
+      position: relative;
+      font-size: 15px;
+      font-style: oblique;
+      color: grey;
+      width: 70%;
+      text-align: center;
+    }
+
+    .b {
+      color: #333333;
+      font-style: normal;
+      font-size: 21px;
+      margin-top: 20px;
+    }
+
+    .inputbox .input {
+      height: 450px;
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      border: #333333 1px solid;
+      color: #333333;
+      margin-bottom: 15px;
+      resize: none;
+    }
+
+    .inputbox .button {
+      height: 24px;
+      width: 60px;
+      background: none;
+      border: #005792 2px solid;
+      border-radius: 20px;
+      outline: none;
+      color: #005792;
+      font-size: 15px;
+      font-family: OpenSans;
+    }
+
+    /* .inputbox .button:hover text {
+      transition: all 500ms linear;
+      display: none;
+    } */
+
+    .inputbox .button:hover {
+      transition: all 500ms linear;
+      background: #005792;
+      color: white;
+    }
+    .main {
+      width: 90%;
+      display: flex;
+      align-items: start;
+      justify-content: center;
+    }
+
+    .main .child {
+      flex: 1;
+    }
+
+    .playbox {
+      height: 450px;
+      text-align: left;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      border-radius: 10px;
+      border: #333333 solid 1px;
+      display: block;
+      padding: 2px;
+    }
+
+    .delayshow {
+      /* opacity: 0; */
+      /* transform: translateY(40%); */
+      /* animation: delayshow 800ms ease 4500ms forwards; */
+    }
+
+    .footer {
+      position:fixed;
+      bottom: 0px;
+      width: 100%;
+      font-size: 16px;
+      text-align: center;
+      color: #333333;
+    }
+
+    .setting{
+      margin-bottom:20px;
+    }
+    .setting li{
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin:0 20px;
+      font-size:12px;
+    }
+    .setting li label{
+      text-align: right;
+      margin-right:20px;
+    }
+    .setting li span{
+      text-align: left;
+    }
+    .setting li label,.setting li span{
+      flex:1;
+    }
+    .setting li span input:not([type="file"]){
+      width: 50%;
+    }
+    .setting li span input[type="file"]{
+      width: 55%;
+      min-width: 70px;
+    }
+
+    @keyframes delayshow {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    nav {
+      position: absolute;
+      top: 10px;
+      right: 100px;
+      z-index: 9;
+      width: 150px;
+    }
+
+    nav li {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .loading{
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0,0,0,0.6);
+      text-align: center;
+      width: 300px;
+      height: 200px;
+      line-height: 200px;
+      color: white;
+      position: fixed;
+    }
+  </style>
+</head>
+
+<body>
+  <section id="page">
+    <div id="name" class="whiteshadow" style="margin-top:30px;height:72px;max-width: 100%;"></div>
+    <div id="des" style="margin-top:10px;max-width: 90%;text-align: center;display: flex;flex-wrap: wrap;"></div>
+    <div class="inputbox delayshow" style="position: relative; width:100%; text-align: center; display:none;">
+      <!-- <div class="info b">1.在下方输入字符串(英文，数字，标点); 2.点击“开始”按钮.</div> -->
+      <div class="main">
+        <div class="child">
+          <textarea class="input">使用说明：
+1.在左侧输入你想要转换的文本
+2.中间选项处选择你的字体文件（支持WOFF, OTF, TTF格式）
+3.点击生成
+4.点击复制
+5.在公众号编辑器直接粘贴
+
+
+有任何问题欢迎提issue
+或邮件联系oubenruing@gmail.com
+          </textarea>
+        </div>
+        <div class="child">
+          <div class="setting">
+            <h4>字体设置</h4>
+            <li><label>字体</label><span><input id="ifont" type="file" value="opensans"></span></li>
+            <li><label>当前字体</label><span id="fontname">思源黑体</span></li>
+            <h4>画笔设置</h4>
+            <li><label>字号</label><span><input id="ifont-size" type="number" value="15">px</span></li>
+            <li><label>字体颜色</label><span><input id="icolor" class="jscolor" value="444444"></span></li>
+            <li><label>描边宽度</label><span><input id="istroke" value="2">px</span></li>
+            <!-- <h4>动画设置</h4>
+            <li><label>动画时长</label><span><input id="iduration" type="number" value="1000"></input>ms</span></li>
+            <li><label>重复次数</label><span><input id="icount" value="1"></span></li>
+            <li>
+              <label>动画完成</label>
+              <span>
+                <select id = "ifill">
+                  <option value="none">清除</option>
+                  <option selected value="forwords">保留</option>
+                </select>
+              </span>
+            </li>
+            <li>
+              <label>动画模式</label>
+              <span>
+                <select id = "imode">
+                  <option value="sync">同时</option>
+                  <option selected value="delay">延时</option>
+                  <option value="onebyone">顺序</option>
+                </select>
+              </span>
+            </li>
+            <li><label>延时时长</label><span><input id = "idelay" type="number" value="200"></input>ms</span></li> -->
+          </div>
+          <div>
+            <button id="create" class="button"><text>生成</text></button>
+            <button id="copy" class="button"><text>复制</text></button>
+          </div>
+        </div>
+        <div class="child">
+          <div class="playbox"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Copyright © 2019 oubenruing - MIT License.
+    </div>
+  </section>
+  <div id="loading" class="loading">
+    默认字体加载中...
+  </div>
+  <a href="https://github.com/oubenruing/svg-text-animate" class="github-corner" aria-label="View source on GitHub"><svg
+      width="80" height="80" viewBox="0 0 250 250"
+      style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+      <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+      <path
+        d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+        fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+      <path
+        d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+        fill="currentColor" class="octo-body"></path>
+    </svg></a>
+  <style>
+    .github-corner:hover .octo-arm {
+      animation: octocat-wave 560ms ease-in-out
+    }
+
+    @keyframes octocat-wave {
+
+      0%,
+      100% {
+        transform: rotate(0)
+      }
+
+      20%,
+      60% {
+        transform: rotate(-25deg)
+      }
+
+      40%,
+      80% {
+        transform: rotate(10deg)
+      }
+    }
+
+    @media (max-width:500px) {
+      .github-corner:hover .octo-arm {
+        animation: none
+      }
+
+      .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+      }
+    }
+  </style>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/tool.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@v1.3.0/dist/svg-text-animate.min.js"></script> -->
+<script>
+  window.onload = async function () {
+    var chinese = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/.font-spider/SourceHanSansCN-Normal.ttf", {}, {}, "svg");
+    await chinese.setFont();
+    var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/.font-spider/SourceHanSansCN-Normal.ttf", {
+      "duration": 300,
+      "direction": "normal",
+      "fill-mode": "forwards",
+      "delay": 150,
+      "mode": "delay",
+    }, {
+      "stroke": "#005792",
+      "stroke-width": "2px",
+      "font-size": 55
+    }, "svg");
+    await opensans.setFont();
+    document.querySelector("#loading").style.display="none";
+    document.querySelector(".inputbox").style.display="block";
+    opensans.create("文本转换工具", "#name");
+
+      chinese.setOptions({
+        "duration": 1500,
+        "timing-function": "linear",
+        "direction": "normal",
+        "fill-mode": "forwards",
+        "iteration-count": "1",
+        "delay": 50,
+        "mode": "sync"
+      }).setStroke({
+        "stroke": "#5db4f2",
+        "font-size": 32
+      })
+      var text = "该工具是将文字转换为svg图像文字的工具。"
+      text.split("").forEach(e => {
+        chinese.add(e, "#des");
+      })
+    document.querySelector("#ifont").addEventListener("change",function(event){
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        opensans.setFontFromBuffer(e.target.result)
+        document.querySelector("#fontname").innerHTML=event.target.files[0].name
+      }
+      reader.readAsArrayBuffer(event.target.files[0]);
+    })
+    document.querySelector("#create").addEventListener("click", function () {
+      document.querySelector(".playbox").innerHTML = "";
+      // const dur = document.querySelector("#iduration").value
+      // const fill = document.querySelector("#ifill").value
+      // const count = document.querySelector("#icount").value
+      // const mode = document.querySelector("#imode").value
+      // const delay = document.querySelector("#idelay").value
+      const fontsize = document.querySelector("#ifont-size").value
+      const color = document.querySelector("#icolor").value
+      const strokewidth = document.querySelector("#istroke").value
+      document.querySelector(".playbox").style.fontSize=fontsize+"px";
+
+      opensans.setOptions({
+        // "duration": Number(dur),
+        "timing-function": "linear",
+        "direction": "normal",
+        //"fill-mode": fill,
+        // "iteration-count": count,
+      }).setStroke({
+        "stroke": "#"+color,
+        "font-size": Number(fontsize),
+        "stroke-width": strokewidth+"px",
+      })
+      document.querySelector(".input").value.split("").forEach((e, i) => {
+        
+        if(e=="\n"){
+          document.querySelector(".playbox").innerHTML+="<br>"
+          return
+        }
+        if(e==" "){
+          document.querySelector(".playbox").innerHTML+="&nbsp;"
+          return
+        }
+        opensans.add(e, ".playbox");
+      })
+    })
+    
+    document.querySelector("#create").click();
+    document.addEventListener('copy', function (e) {
+      const html = document.querySelector(".playbox").innerHTML;
+      e.clipboardData.setData('text/html', html);
+      e.preventDefault();
+    })
+    document.querySelector("#copy").addEventListener("click", function () {
+      document.execCommand('copy')
+    })
+  }
+</script>
