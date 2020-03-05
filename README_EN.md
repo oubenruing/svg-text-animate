@@ -90,7 +90,7 @@ stroke-width|String|1px|The width of stroke
 font-size|Number|72|Output font size.
 
 ### creator
-The mode of animation.
+A string describing the animation mode.
 
 Param|Description
 ---|---
