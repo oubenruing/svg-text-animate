@@ -90,8 +90,8 @@ stroke-width|String|1px|The width of stroke
 font-size|Number|72|Output font size.
 
 ### creator
+The mode of animation.
 
-The mode of animation.<br>
 Param|Description
 ---|---
 css | (default) Using CSSCreator. Create a CSS style SVG animation.(Using \<style\> tag and @keyframes).
