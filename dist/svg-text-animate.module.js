@@ -2,6 +2,10 @@
  * https://github.com/oubenruing/svg-text-animate | (c) oubenruing 2019 | MIT License
  */
 
+/**
+ * https://opentype.js.org v1.3.3 | (c) Frederik De Bleser and other contributors | MIT License | Uses tiny-inflate by Devon Govett and string.prototype.codepointat polyfill by Mathias Bynens
+ */
+
 /*! https://mths.be/codepointat v0.2.0 by @mathias */
 if (!String.prototype.codePointAt) {
 	(function() {
@@ -3370,23 +3374,23 @@ Glyph.prototype.bindConstructorValues = function(options) {
 
     // But by binding these values only when necessary, we reduce can
     // the memory requirements by almost 3% for larger fonts.
-    if (options.xMin) {
+    if ('xMin' in options) {
         this.xMin = options.xMin;
     }
 
-    if (options.yMin) {
+    if ('yMin' in options) {
         this.yMin = options.yMin;
     }
 
-    if (options.xMax) {
+    if ('xMax' in options) {
         this.xMax = options.xMax;
     }
 
-    if (options.yMax) {
+    if ('yMax' in options) {
         this.yMax = options.yMax;
     }
 
-    if (options.advanceWidth) {
+    if ('advanceWidth' in options) {
         this.advanceWidth = options.advanceWidth;
     }
 
@@ -3580,11 +3584,10 @@ Glyph.prototype.draw = function(ctx, x, y, fontSize, options) {
  */
 Glyph.prototype.drawPoints = function(ctx, x, y, fontSize) {
     function drawCircles(l, x, y, scale) {
-        var PI_SQ = Math.PI * 2;
         ctx.beginPath();
         for (var j = 0; j < l.length; j += 1) {
             ctx.moveTo(x + (l[j].x * scale), y + (l[j].y * scale));
-            ctx.arc(x + (l[j].x * scale), y + (l[j].y * scale), 2, 0, PI_SQ, false);
+            ctx.arc(x + (l[j].x * scale), y + (l[j].y * scale), 2, 0, Math.PI * 2, false);
         }
 
         ctx.closePath();
@@ -7042,17 +7045,14 @@ function fontToSfntTable(font) {
 
     var maxpTable = maxp.make(font.glyphs.length);
 
-    var os2Table = os2.make({
+    var os2Table = os2.make(Object.assign({
         xAvgCharWidth: Math.round(globals.advanceWidthAvg),
-        usWeightClass: font.tables.os2.usWeightClass,
-        usWidthClass: font.tables.os2.usWidthClass,
         usFirstCharIndex: firstCharIndex,
         usLastCharIndex: lastCharIndex,
         ulUnicodeRange1: ulUnicodeRange1,
         ulUnicodeRange2: ulUnicodeRange2,
         ulUnicodeRange3: ulUnicodeRange3,
         ulUnicodeRange4: ulUnicodeRange4,
-        fsSelection: font.tables.os2.fsSelection, // REGULAR
         // See http://typophile.com/node/13081 for more info on vertical metrics.
         // We get metrics for typical characters (such as "x" for xHeight).
         // We provide some fallback characters if characters are unavailable: their
@@ -7066,8 +7066,8 @@ function fontToSfntTable(font) {
         sxHeight: metricsForChar(font, 'xyvw', {yMax: Math.round(globals.ascender / 2)}).yMax,
         sCapHeight: metricsForChar(font, 'HIKLEFJMNTZBDPRAGOQSUVWXY', globals).yMax,
         usDefaultChar: font.hasChar(' ') ? 32 : 0, // Use space as the default character, if available.
-        usBreakChar: font.hasChar(' ') ? 32 : 0 // Use space as the break character, if available.
-    });
+        usBreakChar: font.hasChar(' ') ? 32 : 0, // Use space as the break character, if available.
+    }, font.tables.os2));
 
     var hmtxTable = hmtx.make(font.glyphs);
     var cmapTable = cmap.make(font.glyphs);
@@ -12485,7 +12485,7 @@ var SUBSTITUTIONS = {
  * @param {number} index token index
  */
 function applySubstitution(action, tokens, index) {
-    if (action instanceof SubstitutionAction) {
+    if (action instanceof SubstitutionAction && SUBSTITUTIONS[action.id]) {
         SUBSTITUTIONS[action.id](action, tokens, index);
     }
 }
@@ -12957,6 +12957,7 @@ Bidi.prototype.getTextGlyphs = function (text) {
  */
 function Font(options) {
     options = options || {};
+    options.tables = options.tables || {};
 
     if (!options.empty) {
         // Check that we've provided the minimum set of names.
@@ -12964,8 +12965,7 @@ function Font(options) {
         checkArgument(options.styleName, 'When creating a new Font object, styleName is required.');
         checkArgument(options.unitsPerEm, 'When creating a new Font object, unitsPerEm is required.');
         checkArgument(options.ascender, 'When creating a new Font object, ascender is required.');
-        checkArgument(options.descender, 'When creating a new Font object, descender is required.');
-        checkArgument(options.descender < 0, 'Descender should be negative (e.g. -512).');
+        checkArgument(options.descender <= 0, 'When creating a new Font object, negative descender value is required.');
 
         // OS X will complain if the names are empty, so we put a single space everywhere by default.
         this.names = {
@@ -12989,11 +12989,13 @@ function Font(options) {
         this.ascender = options.ascender;
         this.descender = options.descender;
         this.createdTimestamp = options.createdTimestamp;
-        this.tables = { os2: {
-            usWeightClass: options.weightClass || this.usWeightClasses.MEDIUM,
-            usWidthClass: options.widthClass || this.usWidthClasses.MEDIUM,
-            fsSelection: options.fsSelection || this.fsSelectionValues.REGULAR
-        } };
+        this.tables = Object.assign(options.tables, {
+            os2: Object.assign({
+                usWeightClass: options.weightClass || this.usWeightClasses.MEDIUM,
+                usWidthClass: options.widthClass || this.usWidthClasses.MEDIUM,
+                fsSelection: options.fsSelection || this.fsSelectionValues.REGULAR,
+            }, options.tables.os2)
+        });
     }
 
     this.supported = true; // Deprecated: parseBuffer will throw an error if font is not supported.
@@ -13206,7 +13208,7 @@ Font.prototype.forEachGlyph = function(text, x, y, fontSize, options, callback) 
     x = x !== undefined ? x : 0;
     y = y !== undefined ? y : 0;
     fontSize = fontSize !== undefined ? fontSize : 72;
-    options = options || this.defaultRenderOptions;
+    options = Object.assign({}, this.defaultRenderOptions, options);
     var fontScale = 1 / this.unitsPerEm * fontSize;
     var glyphs = this.stringToGlyphs(text, options);
     var kerningLookups;
@@ -14179,17 +14181,32 @@ function parseBuffer(buffer, opt) {
 function load(url, callback, opt) {
     var isNode = typeof window === 'undefined';
     var loadFn = isNode ? loadFromFile : loadFromUrl;
-    loadFn(url, function(err, arrayBuffer) {
-        if (err) {
-            return callback(err);
-        }
-        var font;
-        try {
-            font = parseBuffer(arrayBuffer, opt);
-        } catch (e) {
-            return callback(e, null);
-        }
-        return callback(null, font);
+
+    return new Promise(function (resolve, reject) {
+        loadFn(url, function(err, arrayBuffer) {
+            if (err) {
+                if (callback) {
+                    return callback(err);
+                } else {
+                    reject(err);
+                }
+            }
+            var font;
+            try {
+                font = parseBuffer(arrayBuffer, opt);
+            } catch (e) {
+                if (callback) {
+                    return callback(e, null);
+                } else {
+                    reject(e);
+                }
+            }
+            if (callback) {
+                return callback(null, font);
+            } else {
+                resolve(font);
+            }
+        });
     });
 }
 
@@ -14495,7 +14512,7 @@ var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
     if(options["fill-mode"]){
       if(options["fill-mode"]=="none"){
         options["fill-mode"]="remove";
-      }else{
+      }else {
         options["fill-mode"]="freeze";
       }
     }
