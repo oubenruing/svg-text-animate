@@ -14695,7 +14695,7 @@ SVGTextAnimate.prototype.createSVGDom = function createSVGDom (text) {
   var strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
 
   var svg = 
-    "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\" data-copyright=\"https://github.com/oubenruing/svg-text-animate\" style=\"vertical-align: text-top; \">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; \n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
+    "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\" style=\"vertical-align: text-top; \">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; \n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
 
   _div.innerHTML = svg;
   svgDom = _div.querySelector("svg");
