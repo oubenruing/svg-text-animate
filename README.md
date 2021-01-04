@@ -24,13 +24,13 @@ svg-text-animate.js 或 svg-text-animate.min.js
     or
     <script src="YOURPATH/svg-text-animate.min.js"></script>
     <script>
-      var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
+      const fontawesome = new SVGTextAnimate("YOUR FONT FILE");
     </script>
 ES6 风格 svg-text-animate.module.js
     
     <script type="module">
       import SVGTextAnimate from "YOURPATH/svg-text-animate.module.js";
-      var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
+      const fontawesome = new SVGTextAnimate("YOUR FONT FILE");
     </script>
     
 ### CDN
@@ -38,6 +38,26 @@ ES6 风格 svg-text-animate.module.js
 使用CDN，直接将下述代码放在您的html中即可。
 
     <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
+
+### Demo
+
+```
+    const opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
+      "duration": 300,
+      "direction": "normal",
+      "fill-mode": "forwards",
+      "delay": 150,
+      "mode": "delay"
+    }, {
+      "stroke": "#005792",
+      "stroke-width": "2px",
+      "font-size": 55
+    });
+
+    await opensans.setFont();
+    
+    opensans.create("svg-text-animate", "#name");
+```
 
 ---
 ## 构造函数
@@ -51,22 +71,6 @@ ES6 风格 svg-text-animate.module.js
   * @param {String} `可选` creator: 动画生成器，默认使用 CSSCreator 生成css动画.
 
   ***font-size 在1.2.0版本中 从 options 移至 stroke***
-
-例:
-
-```
-var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
-      "duration": 300,
-      "direction": "normal",
-      "fill-mode": "forwards",
-      "delay": 150,
-      "mode": "delay"
-    }, {
-      "stroke": "#005792",
-      "stroke-width": "2px",
-      "font-size": 55
-    });
-```
 
 ### options
 控制动画效果的对象
