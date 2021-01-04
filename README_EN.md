@@ -23,13 +23,13 @@ Using svg-text-animate.js or minimum svg-text-animate.min.js like this
     or
     <script src="YOURPATH/svg-text-animate.min.js"></script>
     <script>
-      var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
+      const fontawesome = new SVGTextAnimate("YOUR FONT FILE");
     </script>
 or using svg-text-animate.module.js by ES6-style
     
     <script type="module">
       import SVGTextAnimate from "YOURPATH/svg-text-animate.module.js";
-      var fontawesome = new SVGTextAnimate("YOUR FONT FILE");
+      const fontawesome = new SVGTextAnimate("YOUR FONT FILE");
     </script>
     
 ### CDN
@@ -38,8 +38,28 @@ To use via a CDN, include the following code in your html:
 
     <script src="https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/dist/svg-text-animate.min.js"></script>
 
+### Demo
+
+```
+    const opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
+      "duration": 300,
+      "direction": "normal",
+      "fill-mode": "forwards",
+      "delay": 150,
+      "mode": "delay"
+    }, {
+      "stroke": "#005792",
+      "stroke-width": "2px",
+      "font-size": 55
+    });
+
+    await opensans.setFont();
+    
+    opensans.create("svg-text-animate", "#name");
+```
+
 ---
-## constructor
+## Constructor
 Creates an instance of SVGTextAnimate.
 
 `SVGTextAnimate(fontfile, options, stroke, cretor)`
@@ -51,23 +71,7 @@ Creates an instance of SVGTextAnimate.
 
 ***Font-size moved from ‘options’ to ‘stroke’ in version 1.2.0***
 
-For example:
-
-```
-var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
-      "duration": 300,
-      "direction": "normal",
-      "fill-mode": "forwards",
-      "delay": 150,
-      "mode": "delay"
-    }, {
-      "stroke": "#005792",
-      "stroke-width": "2px",
-      "font-size": 55
-    });
-```
-
-### options
+### Options
 An Object for controlling animation
 
 Name|Type|Default value|Description
@@ -80,7 +84,7 @@ fill-mode|String|forwards|Same as the animation-fill-mode CSS property.
 mode|String|sync|"**sync**":All symbols appear at the same time; <br>"**onebyone**":a symbol appears after the last symbol animation;<br>"**delay**":a symbol appears n milliseconds later when the last symbol starts drawing.(The value of n is taken from the next option)
 delay|Number|0|Only work with mode:"**delay**"
 
-### stroke
+### Stroke
 An Object for controlling stroke
 
 Name|Type|Default value|Description
@@ -89,7 +93,7 @@ stroke|String|#000000|The hex color of stroke
 stroke-width|String|1px|The width of stroke
 font-size|Number|72|Output font size.
 
-### creator
+### Creator
 A string describing the animation mode.
 
 Param|Description
