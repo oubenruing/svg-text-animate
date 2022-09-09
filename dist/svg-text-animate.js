@@ -6,7 +6,7 @@ var SVGTextAnimate = (function () {
   'use strict';
 
   /**
-   * https://opentype.js.org v1.3.3 | (c) Frederik De Bleser and other contributors | MIT License | Uses tiny-inflate by Devon Govett and string.prototype.codepointat polyfill by Mathias Bynens
+   * https://opentype.js.org v1.3.4 | (c) Frederik De Bleser and other contributors | MIT License | Uses tiny-inflate by Devon Govett and string.prototype.codepointat polyfill by Mathias Bynens
    */
 
   /*! https://mths.be/codepointat v0.2.0 by @mathias */
@@ -995,6 +995,10 @@ var SVGTextAnimate = (function () {
    * @returns {Array}
    */
   encode.CHARARRAY = function(v) {
+      if (typeof v === 'undefined') {
+          v = '';
+          console.warn('Undefined CHARARRAY encountered and treated as an empty string. This is probably caused by a missing glyph name.');
+      }
       var b = [];
       for (var i = 0; i < v.length; i += 1) {
           b[i] = v.charCodeAt(i);
@@ -1008,6 +1012,9 @@ var SVGTextAnimate = (function () {
    * @returns {number}
    */
   sizeOf.CHARARRAY = function(v) {
+      if (typeof v === 'undefined') {
+          return 0;
+      }
       return v.length;
   };
 
@@ -1905,9 +1912,14 @@ var SVGTextAnimate = (function () {
    * @constructor
    */
   function Table(tableName, fields, options) {
-      for (var i = 0; i < fields.length; i += 1) {
-          var field = fields[i];
-          this[field.name] = field.value;
+      // For coverage tables with coverage format 2, we do not want to add the coverage data directly to the table object,
+      // as this will result in wrong encoding order of the coverage data on serialization to bytes.
+      // The fallback of using the field values directly when not present on the table is handled in types.encode.TABLE() already.
+      if (fields.length && (fields[0].name !== 'coverageFormat' || fields[0].value === 1)) {
+          for (var i = 0; i < fields.length; i += 1) {
+              var field = fields[i];
+              this[field.name] = field.value;
+          }
       }
 
       this.tableName = tableName;
@@ -1996,8 +2008,18 @@ var SVGTextAnimate = (function () {
               [{name: 'coverageFormat', type: 'USHORT', value: 1}]
               .concat(ushortList('glyph', coverageTable.glyphs))
           );
+      } else if (coverageTable.format === 2) {
+          Table.call(this, 'coverageTable',
+              [{name: 'coverageFormat', type: 'USHORT', value: 2}]
+              .concat(recordList('rangeRecord', coverageTable.ranges, function(RangeRecord) {
+                  return [
+                      {name: 'startGlyphID', type: 'USHORT', value: RangeRecord.start},
+                      {name: 'endGlyphID', type: 'USHORT', value: RangeRecord.end},
+                      {name: 'startCoverageIndex', type: 'USHORT', value: RangeRecord.index} ];
+              }))
+          );
       } else {
-          check.assert(false, 'Can\'t create coverage table format 2 yet.');
+          check.assert(false, 'Coverage format must be 1 or 2.');
       }
   }
   Coverage.prototype = Object.create(Table.prototype);
@@ -4203,6 +4225,8 @@ var SVGTextAnimate = (function () {
           var topDict = parseCFFTopDict(topDictData, strings);
           topDict._subrs = [];
           topDict._subrsBias = 0;
+          topDict._defaultWidthX = 0;
+          topDict._nominalWidthX = 0;
           var privateSize = topDict.private[0];
           var privateOffset = topDict.private[1];
           if (privateSize !== 0 && privateOffset !== 0) {
@@ -4986,14 +5010,15 @@ var SVGTextAnimate = (function () {
               var _23 = 2 / 3;
 
               // We're going to create a new command so we don't change the original path.
+              // Since all coordinates are relative, we round() them ASAP to avoid propagating errors.
               cmd = {
                   type: 'C',
                   x: cmd.x,
                   y: cmd.y,
-                  x1: _13 * x + _23 * cmd.x1,
-                  y1: _13 * y + _23 * cmd.y1,
-                  x2: _13 * cmd.x + _23 * cmd.x1,
-                  y2: _13 * cmd.y + _23 * cmd.y1
+                  x1: Math.round(_13 * x + _23 * cmd.x1),
+                  y1: Math.round(_13 * y + _23 * cmd.y1),
+                  x2: Math.round(_13 * cmd.x + _23 * cmd.x1),
+                  y2: Math.round(_13 * cmd.y + _23 * cmd.y1)
               };
           }
 
@@ -6048,11 +6073,9 @@ var SVGTextAnimate = (function () {
               }
           }
       }
-
-      var langTagCount = 0;
       if (format === 1) {
           // FIXME: Also handle Microsoft's 'name' table 1.
-          langTagCount = p.parseUShort();
+          p.parseUShort();
       }
 
       return name;
@@ -6754,6 +6777,16 @@ var SVGTextAnimate = (function () {
       }
   };
 
+  subtableMakers[2] = function makeLookup2(subtable) {
+      check.assert(subtable.substFormat === 1, 'Lookup type 2 substFormat must be 1.');
+      return new table.Table('substitutionTable', [
+          {name: 'substFormat', type: 'USHORT', value: 1},
+          {name: 'coverage', type: 'TABLE', value: new table.Coverage(subtable.coverage)}
+      ].concat(table.tableList('seqSet', subtable.sequences, function(sequenceSet) {
+          return new table.Table('sequenceSetTable', table.ushortList('sequence', sequenceSet));
+      })));
+  };
+
   subtableMakers[3] = function makeLookup3(subtable) {
       check.assert(subtable.substFormat === 1, 'Lookup type 3 substFormat must be 1.');
       return new table.Table('substitutionTable', [
@@ -6777,6 +6810,61 @@ var SVGTextAnimate = (function () {
               );
           }));
       })));
+  };
+
+  subtableMakers[6] = function makeLookup6(subtable) {
+      if (subtable.substFormat === 1) {
+          var returnTable = new table.Table('chainContextTable', [
+              {name: 'substFormat', type: 'USHORT', value: subtable.substFormat},
+              {name: 'coverage', type: 'TABLE', value: new table.Coverage(subtable.coverage)}
+          ].concat(table.tableList('chainRuleSet', subtable.chainRuleSets, function(chainRuleSet) {
+              return new table.Table('chainRuleSetTable', table.tableList('chainRule', chainRuleSet, function(chainRule) {
+                  var tableData = table.ushortList('backtrackGlyph', chainRule.backtrack, chainRule.backtrack.length)
+                      .concat(table.ushortList('inputGlyph', chainRule.input, chainRule.input.length + 1))
+                      .concat(table.ushortList('lookaheadGlyph', chainRule.lookahead, chainRule.lookahead.length))
+                      .concat(table.ushortList('substitution', [], chainRule.lookupRecords.length));
+
+                  chainRule.lookupRecords.forEach(function (record, i) {
+                      tableData = tableData
+                          .concat({name: 'sequenceIndex' + i, type: 'USHORT', value: record.sequenceIndex})
+                          .concat({name: 'lookupListIndex' + i, type: 'USHORT', value: record.lookupListIndex});
+                  });
+                  return new table.Table('chainRuleTable', tableData);
+              }));
+          })));
+          return returnTable;
+      } else if (subtable.substFormat === 2) {
+          check.assert(false, 'lookup type 6 format 2 is not yet supported.');
+      } else if (subtable.substFormat === 3) {
+          var tableData = [
+              {name: 'substFormat', type: 'USHORT', value: subtable.substFormat} ];
+
+          tableData.push({name: 'backtrackGlyphCount', type: 'USHORT', value: subtable.backtrackCoverage.length});
+          subtable.backtrackCoverage.forEach(function (coverage, i) {
+              tableData.push({name: 'backtrackCoverage' + i, type: 'TABLE', value: new table.Coverage(coverage)});
+          });
+          tableData.push({name: 'inputGlyphCount', type: 'USHORT', value: subtable.inputCoverage.length});
+          subtable.inputCoverage.forEach(function (coverage, i) {
+              tableData.push({name: 'inputCoverage' + i, type: 'TABLE', value: new table.Coverage(coverage)});
+          });
+          tableData.push({name: 'lookaheadGlyphCount', type: 'USHORT', value: subtable.lookaheadCoverage.length});
+          subtable.lookaheadCoverage.forEach(function (coverage, i) {
+              tableData.push({name: 'lookaheadCoverage' + i, type: 'TABLE', value: new table.Coverage(coverage)});
+          });
+
+          tableData.push({name: 'substitutionCount', type: 'USHORT', value: subtable.lookupRecords.length});
+          subtable.lookupRecords.forEach(function (record, i) {
+              tableData = tableData
+                  .concat({name: 'sequenceIndex' + i, type: 'USHORT', value: record.sequenceIndex})
+                  .concat({name: 'lookupListIndex' + i, type: 'USHORT', value: record.lookupListIndex});
+          });
+
+          var returnTable$1 = new table.Table('chainContextTable', tableData);
+
+          return returnTable$1;
+      }
+
+      check.assert(false, 'lookup type 6 format must be 1, 2 or 3.');
   };
 
   function makeGsubTable(gsub) {
@@ -7663,6 +7751,33 @@ var SVGTextAnimate = (function () {
   };
 
   /**
+   * List all multiple substitutions (lookup type 2) for a given script, language, and feature.
+   * @param {string} [script='DFLT']
+   * @param {string} [language='dflt']
+   * @param {string} feature - 4-character feature name ('ccmp', 'stch')
+   * @return {Array} substitutions - The list of substitutions.
+   */
+  Substitution.prototype.getMultiple = function(feature, script, language) {
+      var substitutions = [];
+      var lookupTables = this.getLookupTables(script, language, feature, 2);
+      for (var idx = 0; idx < lookupTables.length; idx++) {
+          var subtables = lookupTables[idx].subtables;
+          for (var i = 0; i < subtables.length; i++) {
+              var subtable = subtables[i];
+              var glyphs = this.expandCoverage(subtable.coverage);
+              var j = (void 0);
+
+              for (j = 0; j < glyphs.length; j++) {
+                  var glyph = glyphs[j];
+                  var replacements = subtable.sequences[j];
+                  substitutions.push({ sub: glyph, by: replacements });
+              }
+          }
+      }
+      return substitutions;
+  };
+
+  /**
    * List all alternates (lookup type 3) for a given script, language, and feature.
    * @param {string} [script='DFLT']
    * @param {string} [language='dflt']
@@ -7723,7 +7838,7 @@ var SVGTextAnimate = (function () {
    * Add or modify a single substitution (lookup type 1)
    * Format 2, more flexible, is always used.
    * @param {string} feature - 4-letter feature name ('liga', 'rlig', 'dlig'...)
-   * @param {Object} substitution - { sub: id, delta: number } for format 1 or { sub: id, by: id } for format 2.
+   * @param {Object} substitution - { sub: id, by: id } (format 1 is not supported)
    * @param {string} [script='DFLT']
    * @param {string} [language='dflt']
    */
@@ -7734,7 +7849,7 @@ var SVGTextAnimate = (function () {
           coverage: {format: 1, glyphs: []},
           substitute: []
       });
-      check.assert(subtable.coverage.format === 1, 'Ligature: unable to modify coverage table format ' + subtable.coverage.format);
+      check.assert(subtable.coverage.format === 1, 'Single: unable to modify coverage table format ' + subtable.coverage.format);
       var coverageGlyph = substitution.sub;
       var pos = this.binSearch(subtable.coverage.glyphs, coverageGlyph);
       if (pos < 0) {
@@ -7746,7 +7861,33 @@ var SVGTextAnimate = (function () {
   };
 
   /**
-   * Add or modify an alternate substitution (lookup type 1)
+   * Add or modify a multiple substitution (lookup type 2)
+   * @param {string} feature - 4-letter feature name ('ccmp', 'stch')
+   * @param {Object} substitution - { sub: id, by: [id] } for format 2.
+   * @param {string} [script='DFLT']
+   * @param {string} [language='dflt']
+   */
+  Substitution.prototype.addMultiple = function(feature, substitution, script, language) {
+      check.assert(substitution.by instanceof Array && substitution.by.length > 1, 'Multiple: "by" must be an array of two or more ids');
+      var lookupTable = this.getLookupTables(script, language, feature, 2, true)[0];
+      var subtable = getSubstFormat(lookupTable, 1, {                // lookup type 2 subtable, format 1, coverage format 1
+          substFormat: 1,
+          coverage: {format: 1, glyphs: []},
+          sequences: []
+      });
+      check.assert(subtable.coverage.format === 1, 'Multiple: unable to modify coverage table format ' + subtable.coverage.format);
+      var coverageGlyph = substitution.sub;
+      var pos = this.binSearch(subtable.coverage.glyphs, coverageGlyph);
+      if (pos < 0) {
+          pos = -1 - pos;
+          subtable.coverage.glyphs.splice(pos, 0, coverageGlyph);
+          subtable.sequences.splice(pos, 0, 0);
+      }
+      subtable.sequences[pos] = substitution.by;
+  };
+
+  /**
+   * Add or modify an alternate substitution (lookup type 3)
    * @param {string} feature - 4-letter feature name ('liga', 'rlig', 'dlig'...)
    * @param {Object} substitution - { sub: id, by: [ids] }
    * @param {string} [script='DFLT']
@@ -7759,7 +7900,7 @@ var SVGTextAnimate = (function () {
           coverage: {format: 1, glyphs: []},
           alternateSets: []
       });
-      check.assert(subtable.coverage.format === 1, 'Ligature: unable to modify coverage table format ' + subtable.coverage.format);
+      check.assert(subtable.coverage.format === 1, 'Alternate: unable to modify coverage table format ' + subtable.coverage.format);
       var coverageGlyph = substitution.sub;
       var pos = this.binSearch(subtable.coverage.glyphs, coverageGlyph);
       if (pos < 0) {
@@ -7835,7 +7976,13 @@ var SVGTextAnimate = (function () {
                       .concat(this.getAlternates(feature, script, language));
           case 'dlig':
           case 'liga':
-          case 'rlig': return this.getLigatures(feature, script, language);
+          case 'rlig':
+              return this.getLigatures(feature, script, language);
+          case 'ccmp':
+              return this.getMultiple(feature, script, language)
+                  .concat(this.getLigatures(feature, script, language));
+          case 'stch':
+              return this.getMultiple(feature, script, language);
       }
       return undefined;
   };
@@ -7862,6 +8009,11 @@ var SVGTextAnimate = (function () {
           case 'dlig':
           case 'liga':
           case 'rlig':
+              return this.addLigature(feature, sub, script, language);
+          case 'ccmp':
+              if (sub.by instanceof Array) {
+                  return this.addMultiple(feature, sub, script, language);
+              }
               return this.addLigature(feature, sub, script, language);
       }
       return undefined;
@@ -8140,11 +8292,10 @@ var SVGTextAnimate = (function () {
                   // This is a straight line.
                   p.lineTo(curr.x, curr.y);
               } else {
-                  var prev2 = prev;
                   var next2 = next;
 
                   if (!prev.onCurve) {
-                      prev2 = { x: (curr.x + prev.x) * 0.5, y: (curr.y + prev.y) * 0.5 };
+                      ({ x: (curr.x + prev.x) * 0.5, y: (curr.y + prev.y) * 0.5 });
                   }
 
                   if (!next.onCurve) {
@@ -11373,7 +11524,7 @@ var SVGTextAnimate = (function () {
    * @param {any} events an object that enlists core events handlers
    */
   function initializeCoreEvents(events) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var coreEvents = [
           'start', 'end', 'next', 'newToken', 'contextStart',
@@ -11382,7 +11533,7 @@ var SVGTextAnimate = (function () {
       ];
 
       coreEvents.forEach(function (eventId) {
-          Object.defineProperty(this$1.events, eventId, {
+          Object.defineProperty(this$1$1.events, eventId, {
               value: new Event(eventId)
           });
       });
@@ -11391,7 +11542,7 @@ var SVGTextAnimate = (function () {
           coreEvents.forEach(function (eventId) {
               var event = events[eventId];
               if (typeof event === 'function') {
-                  this$1.events[eventId].subscribe(event);
+                  this$1$1.events[eventId].subscribe(event);
               }
           });
       }
@@ -11400,8 +11551,8 @@ var SVGTextAnimate = (function () {
           'replaceToken', 'replaceRange', 'composeRUD'
       ];
       requiresContextUpdate.forEach(function (eventId) {
-          this$1.events[eventId].subscribe(
-              this$1.updateContextsRanges
+          this$1$1.events[eventId].subscribe(
+              this$1$1.updateContextsRanges
           );
       });
   }
@@ -11449,11 +11600,11 @@ var SVGTextAnimate = (function () {
    * TODO: Perf. Optimization (lengthBefore === lengthAfter ? dispatch once)
    */
   Tokenizer.prototype.composeRUD = function (RUDs) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var silent = true;
       var state = RUDs.map(function (RUD) { return (
-          this$1[RUD[0]].apply(this$1, RUD.slice(1).concat(silent))
+          this$1$1[RUD[0]].apply(this$1$1, RUD.slice(1).concat(silent))
       ); });
       var hasFAILObject = function (obj) { return (
           typeof obj === 'object' &&
@@ -11676,12 +11827,12 @@ var SVGTextAnimate = (function () {
    * @param {any} args event handler arguments
    */
   Tokenizer.prototype.dispatch = function(eventName, args) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var event = this.events[eventName];
       if (event instanceof Event) {
           event.subscribers.forEach(function (subscriber) {
-              subscriber.apply(this$1, args || []);
+              subscriber.apply(this$1$1, args || []);
           });
       }
   };
@@ -11785,21 +11936,21 @@ var SVGTextAnimate = (function () {
    * @param {contextParams} contextParams current context params
    */
   Tokenizer.prototype.runContextCheck = function(contextParams) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var index = contextParams.index;
       this.contextCheckers.forEach(function (contextChecker) {
           var contextName = contextChecker.contextName;
-          var openRange = this$1.getContext(contextName).openRange;
+          var openRange = this$1$1.getContext(contextName).openRange;
           if (!openRange && contextChecker.checkStart(contextParams)) {
               openRange = new ContextRange(index, null, contextName);
-              this$1.getContext(contextName).openRange = openRange;
-              this$1.dispatch('contextStart', [contextName, index]);
+              this$1$1.getContext(contextName).openRange = openRange;
+              this$1$1.dispatch('contextStart', [contextName, index]);
           }
           if (!!openRange && contextChecker.checkEnd(contextParams)) {
               var offset = (index - openRange.startIndex) + 1;
-              var range = this$1.setEndOffset(offset, contextName);
-              this$1.dispatch('contextEnd', [contextName, range]);
+              var range = this$1$1.setEndOffset(offset, contextName);
+              this$1$1.dispatch('contextEnd', [contextName, range]);
           }
       });
   };
@@ -12161,29 +12312,29 @@ var SVGTextAnimate = (function () {
    * @param {any} subtable subtable
    */
   FeatureQuery.prototype.getLookupMethod = function(lookupTable, subtable) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var substitutionType = this.getSubstitutionType(lookupTable, subtable);
       switch (substitutionType) {
           case '11':
               return function (glyphIndex) { return singleSubstitutionFormat1.apply(
-                  this$1, [glyphIndex, subtable]
+                  this$1$1, [glyphIndex, subtable]
               ); };
           case '12':
               return function (glyphIndex) { return singleSubstitutionFormat2.apply(
-                  this$1, [glyphIndex, subtable]
+                  this$1$1, [glyphIndex, subtable]
               ); };
           case '63':
               return function (contextParams) { return chainingSubstitutionFormat3.apply(
-                  this$1, [contextParams, subtable]
+                  this$1$1, [contextParams, subtable]
               ); };
           case '41':
               return function (contextParams) { return ligatureSubstitutionFormat1.apply(
-                  this$1, [contextParams, subtable]
+                  this$1$1, [contextParams, subtable]
               ); };
           case '21':
               return function (glyphIndex) { return decompositionSubstitutionFormat1.apply(
-                  this$1, [glyphIndex, subtable]
+                  this$1$1, [glyphIndex, subtable]
               ); };
           default:
               throw new Error(
@@ -12532,7 +12683,7 @@ var SVGTextAnimate = (function () {
    * @param {ContextRange} range a range of tokens
    */
   function arabicPresentationForms(range) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var script = 'arab';
       var tags = this.featuresTags[script];
@@ -12558,7 +12709,7 @@ var SVGTextAnimate = (function () {
               case 3: (tag = 'medi'); break;
           }
           if (tags.indexOf(tag) === -1) { return; }
-          var substitutions = this$1.query.lookupFeature({
+          var substitutions = this$1$1.query.lookupFeature({
               tag: tag, script: script, contextParams: contextParams
           });
           if (substitutions instanceof Error) { return console.info(substitutions.message); }
@@ -12590,14 +12741,14 @@ var SVGTextAnimate = (function () {
    * @param {ContextRange} range a range of tokens
    */
   function arabicRequiredLigatures(range) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var script = 'arab';
       var tokens = this.tokenizer.getRangeTokens(range);
       var contextParams = getContextParams(tokens);
       contextParams.context.forEach(function (glyphIndex, index) {
           contextParams.setCurrentIndex(index);
-          var substitutions = this$1.query.lookupFeature({
+          var substitutions = this$1$1.query.lookupFeature({
               tag: 'rlig', script: script, contextParams: contextParams
           });
           if (substitutions.length) {
@@ -12658,14 +12809,14 @@ var SVGTextAnimate = (function () {
    * @param {ContextRange} range a range of tokens
    */
   function latinLigature(range) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var script = 'latn';
       var tokens = this.tokenizer.getRangeTokens(range);
       var contextParams = getContextParams$1(tokens);
       contextParams.context.forEach(function (glyphIndex, index) {
           contextParams.setCurrentIndex(index);
-          var substitutions = this$1.query.lookupFeature({
+          var substitutions = this$1$1.query.lookupFeature({
               tag: 'liga', script: script, contextParams: contextParams
           });
           if (substitutions.length) {
@@ -12737,12 +12888,12 @@ var SVGTextAnimate = (function () {
    * TODO: check base dir before applying adjustments - priority low
    */
   function reverseArabicSentences() {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var ranges = this.tokenizer.getContextRanges('arabicSentence');
       ranges.forEach(function (range) {
-          var rangeTokens = this$1.tokenizer.getRangeTokens(range);
-          this$1.tokenizer.replaceRange(
+          var rangeTokens = this$1$1.tokenizer.getRangeTokens(range);
+          this$1$1.tokenizer.replaceRange(
               range.startIndex,
               range.endOffset,
               rangeTokens.reverse()
@@ -12756,10 +12907,10 @@ var SVGTextAnimate = (function () {
    * @param {Array} tags features tags list
    */
   Bidi.prototype.registerFeatures = function (script, tags) {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var supportedTags = tags.filter(
-          function (tag) { return this$1.query.supports({script: script, tag: tag}); }
+          function (tag) { return this$1$1.query.supports({script: script, tag: tag}); }
       );
       if (!this.featuresTags.hasOwnProperty(script)) {
           this.featuresTags[script] = supportedTags;
@@ -12813,14 +12964,14 @@ var SVGTextAnimate = (function () {
    * Apply arabic presentation forms features
    */
   function applyArabicPresentationForms() {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var script = 'arab';
       if (!this.featuresTags.hasOwnProperty(script)) { return; }
       checkGlyphIndexStatus.call(this);
       var ranges = this.tokenizer.getContextRanges('arabicWord');
       ranges.forEach(function (range) {
-          arabicPresentationForms.call(this$1, range);
+          arabicPresentationForms.call(this$1$1, range);
       });
   }
 
@@ -12828,7 +12979,7 @@ var SVGTextAnimate = (function () {
    * Apply required arabic ligatures
    */
   function applyArabicRequireLigatures() {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var script = 'arab';
       if (!this.featuresTags.hasOwnProperty(script)) { return; }
@@ -12837,7 +12988,7 @@ var SVGTextAnimate = (function () {
       checkGlyphIndexStatus.call(this);
       var ranges = this.tokenizer.getContextRanges('arabicWord');
       ranges.forEach(function (range) {
-          arabicRequiredLigatures.call(this$1, range);
+          arabicRequiredLigatures.call(this$1$1, range);
       });
   }
 
@@ -12845,7 +12996,7 @@ var SVGTextAnimate = (function () {
    * Apply required arabic ligatures
    */
   function applyLatinLigatures() {
-      var this$1 = this;
+      var this$1$1 = this;
 
       var script = 'latn';
       if (!this.featuresTags.hasOwnProperty(script)) { return; }
@@ -12854,7 +13005,7 @@ var SVGTextAnimate = (function () {
       checkGlyphIndexStatus.call(this);
       var ranges = this.tokenizer.getContextRanges('latinWord');
       ranges.forEach(function (range) {
-          latinLigature.call(this$1, range);
+          latinLigature.call(this$1$1, range);
       });
   }
 
@@ -13088,13 +13239,13 @@ var SVGTextAnimate = (function () {
    * @return {opentype.Glyph[]}
    */
   Font.prototype.stringToGlyphs = function(s, options) {
-      var this$1 = this;
+      var this$1$1 = this;
 
 
       var bidi = new Bidi();
 
       // Create and register 'glyphIndex' state modifier
-      var charToGlyphIndexMod = function (token) { return this$1.charToGlyphIndex(token.char); };
+      var charToGlyphIndexMod = function (token) { return this$1$1.charToGlyphIndex(token.char); };
       bidi.registerModifier('glyphIndex', null, charToGlyphIndexMod);
 
       // roll-back to default features
@@ -13624,6 +13775,65 @@ var SVGTextAnimate = (function () {
 
   var fvar = { make: makeFvarTable, parse: parseFvarTable };
 
+  // The `GDEF` table contains various glyph properties
+
+  var attachList = function() {
+      return {
+          coverage: this.parsePointer(Parser.coverage),
+          attachPoints: this.parseList(Parser.pointer(Parser.uShortList))
+      };
+  };
+
+  var caretValue = function() {
+      var format = this.parseUShort();
+      check.argument(format === 1 || format === 2 || format === 3,
+          'Unsupported CaretValue table version.');
+      if (format === 1) {
+          return { coordinate: this.parseShort() };
+      } else if (format === 2) {
+          return { pointindex: this.parseShort() };
+      } else if (format === 3) {
+          // Device / Variation Index tables unsupported
+          return { coordinate: this.parseShort() };
+      }
+  };
+
+  var ligGlyph = function() {
+      return this.parseList(Parser.pointer(caretValue));
+  };
+
+  var ligCaretList = function() {
+      return {
+          coverage: this.parsePointer(Parser.coverage),
+          ligGlyphs: this.parseList(Parser.pointer(ligGlyph))
+      };
+  };
+
+  var markGlyphSets = function() {
+      this.parseUShort(); // Version
+      return this.parseList(Parser.pointer(Parser.coverage));
+  };
+
+  function parseGDEFTable(data, start) {
+      start = start || 0;
+      var p = new Parser(data, start);
+      var tableVersion = p.parseVersion(1);
+      check.argument(tableVersion === 1 || tableVersion === 1.2 || tableVersion === 1.3,
+          'Unsupported GDEF table version.');
+      var gdef = {
+          version: tableVersion,
+          classDef: p.parsePointer(Parser.classDef),
+          attachList: p.parsePointer(attachList),
+          ligCaretList: p.parsePointer(ligCaretList),
+          markAttachClassDef: p.parsePointer(Parser.classDef)
+      };
+      if (tableVersion >= 1.2) {
+          gdef.markGlyphSets = p.parsePointer(markGlyphSets);
+      }
+      return gdef;
+  }
+  var gdef = { parse: parseGDEFTable };
+
   // The `GPOS` table contains kerning pairs, among other things.
 
   var subtableParsers$1 = new Array(10);         // subtableParsers[0] is unused
@@ -14021,6 +14231,7 @@ var SVGTextAnimate = (function () {
       var cffTableEntry;
       var fvarTableEntry;
       var glyfTableEntry;
+      var gdefTableEntry;
       var gposTableEntry;
       var gsubTableEntry;
       var hmtxTableEntry;
@@ -14106,6 +14317,9 @@ var SVGTextAnimate = (function () {
               case 'kern':
                   kernTableEntry = tableEntry;
                   break;
+              case 'GDEF':
+                  gdefTableEntry = tableEntry;
+                  break;
               case 'GPOS':
                   gposTableEntry = tableEntry;
                   break;
@@ -14146,6 +14360,11 @@ var SVGTextAnimate = (function () {
           font.kerningPairs = {};
       }
 
+      if (gdefTableEntry) {
+          var gdefTable = uncompressTable(data, gdefTableEntry);
+          font.tables.gdef = gdef.parse(gdefTable.data, gdefTable.offset);
+      }
+
       if (gposTableEntry) {
           var gposTable = uncompressTable(data, gposTableEntry);
           font.tables.gpos = gpos.parse(gposTable.data, gposTable.offset);
@@ -14182,8 +14401,9 @@ var SVGTextAnimate = (function () {
    * @param  {Function} callback - The callback.
    */
   function load(url, callback, opt) {
+      opt = (opt === undefined || opt === null) ?  {} : opt;
       var isNode = typeof window === 'undefined';
-      var loadFn = isNode ? loadFromFile : loadFromUrl;
+      var loadFn = isNode && !opt.isUrl ? loadFromFile : loadFromUrl;
 
       return new Promise(function (resolve, reject) {
           loadFn(url, function(err, arrayBuffer) {
@@ -14232,7 +14452,7 @@ var SVGTextAnimate = (function () {
   var Tools = function Tools () {};
 
   Tools.deepCopy = function deepCopy (obj, cache) {
-      var this$1 = this;
+      var this$1$1 = this;
       if ( cache === void 0 ) cache = [];
 
     function find(list, f) {
@@ -14259,7 +14479,7 @@ var SVGTextAnimate = (function () {
     });
 
     Object.keys(obj).forEach(function (key) {
-      copy[key] = this$1.deepCopy(obj[key], cache);
+      copy[key] = this$1$1.deepCopy(obj[key], cache);
     });
 
     return copy;
@@ -14307,11 +14527,11 @@ var SVGTextAnimate = (function () {
    * @memberof AnimationCreator
    */
   AnimationCreator.prototype.setAllPathsAnimation = function setAllPathsAnimation () {
-      var this$1 = this;
+      var this$1$1 = this;
 
     this.paths.forEach(function (path, i) {
-      this$1.setPathStroke(path);
-      this$1.setPathAnimation(path, i);
+      this$1$1.setPathStroke(path);
+      this$1$1.setPathAnimation(path, i);
     });
   };
 
@@ -14554,16 +14774,16 @@ var SVGTextAnimate = (function () {
    *
    */
   SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
-      var this$1 = this;
+      var this$1$1 = this;
 
     return new Promise(function (resove, reject) {
-      load(fontfile || this$1.fontfile, function (err, openfont) {
+      load(fontfile || this$1$1.fontfile, function (err, openfont) {
         if (err) {
           console.error("font could not be loaded :(");
           reject();
         } else {
-          this$1.font = openfont;
-          this$1.loaded = true;
+          this$1$1.font = openfont;
+          this$1$1.loaded = true;
           resove(true);
         }
       });
@@ -14712,5 +14932,5 @@ var SVGTextAnimate = (function () {
 
   return SVGTextAnimate;
 
-}());
+})();
 //# sourceMappingURL=svg-text-animate.js.map
