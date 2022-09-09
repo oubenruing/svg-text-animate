@@ -1,13 +1,27 @@
 {
   "name": "svg-text-animate",
-  "version": "1.3.1",
+  "version": "1.3.3",
   "description": "A Javascript library for convert text to SVG stroke animations in the browser.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c && uglifyjs dist/svg-text-animate.js -o dist/svg-text-animate.min.js -c -m",
+    "build": "rollup -c && npm run uglify",
+    "uglify": "uglifyjs dist/svg-text-animate.js -o dist/svg-text-animate.min.js -c -m && uglifyjs dist/svg-text-animate.es.js -o dist/svg-text-animate.es.min.js -c -m",
     "dev": "rollup -c -w"
   },
-  "author": "oubenruing",
+  "main": "dist/svg-text-animate.min.js",
+  "module": "dist/svg-text-animate.es.min.js",
+  "author": {
+    "name": "oubenruing",
+    "email": "oubenruing@gmail.com"
+  },
+  "homepage": "https://oubenruing.github.io/svg-text-animate/index_en.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oubenruing/svg-text-animate"
+  },
+  "files":[
+    "dist"
+  ],
   "license": "MIT",
   "dependencies": {
     "opentype.js": "^1.3.4"

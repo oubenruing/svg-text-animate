@@ -14745,7 +14745,7 @@ var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
 /**
  * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
  * @author oubenruing
- * @version 1.3.0
+ * @version 1.3.2
  */
 var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, creator) {
   this.loaded = false;
@@ -14928,4 +14928,4 @@ SVGTextAnimate.prototype.createSVGDom = function createSVGDom (text) {
 };
 
 export { SVGTextAnimate as default };
-//# sourceMappingURL=svg-text-animate.module.js.map
+//# sourceMappingURL=svg-text-animate.es.js.map

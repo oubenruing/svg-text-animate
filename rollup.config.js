@@ -14,7 +14,7 @@ module.exports = {
             sourcemap: true
         },
         {
-            file: 'dist/svg-text-animate.module.js',
+            file: 'dist/svg-text-animate.es.js',
             format: 'es',
             sourcemap: true
         },
