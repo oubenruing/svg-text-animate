@@ -11,7 +11,8 @@ const DEFAULT_OPTIONS = {
 const DEFAULT_STROKE = {
   stroke: "#000",
   "stroke-width": "1px",
-  "font-size": 72
+  "font-size": 72,
+  "fill-color": "transparent"
 };
 
 export { DEFAULT_OPTIONS, DEFAULT_STROKE };
