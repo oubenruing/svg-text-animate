@@ -38,7 +38,8 @@ See [svg-text-animate](https://oubenruing.github.io/svg-text-animate/index_en.ht
     }, {
       "stroke": "#005792",
       "stroke-width": "2px",
-      "font-size": 55
+      "font-size": 55,
+      "fill-color":"white"
     });
 
     await opensans.setFont();
@@ -80,7 +81,7 @@ Name|Type|Default value|Description
 stroke|String|#000000|The hex color of stroke
 stroke-width|String|1px|The width of stroke
 font-size|Number|72|Output font size.
-
+fill-color| String |72|Output font size.
 ### Creator
 A string describing the animation mode.
 
@@ -151,7 +152,8 @@ selector|String|The DOM selector you want to insert into
     }).setStroke({
       "stroke": "white",
       "stroke-width": "2px",
-      "font-size": 23
+      "font-size": 23,
+      "fill-color":"white"
     }).create("Try it", ".button");
 ```
 ---
@@ -175,7 +177,8 @@ In the second case, you can use like this
     }).setStroke({
       "stroke": "white",
       "stroke-width": "1px",
-      "font-size": 22
+      "font-size": 22,
+      "fill-color":"white"
     }).create(String.fromCharCode(0xf581), "#symbols")
       .create(String.fromCharCode(0xf164), "#symbols2");
 

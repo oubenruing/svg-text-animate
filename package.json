@@ -1,6 +1,6 @@
 {
   "name": "svg-text-animate",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "A Javascript library for convert text to SVG stroke animations in the browser.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

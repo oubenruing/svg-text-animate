@@ -39,7 +39,8 @@ demo [svg-text-animate](https://oubenruing.github.io/svg-text-animate/)<br>
     }, {
       "stroke": "#005792",
       "stroke-width": "2px",
-      "font-size": 55
+      "font-size": 55,
+      "fill-color":"white"
     });
 
     await opensans.setFont();
@@ -151,7 +152,8 @@ selector|String|要插入的DOM的css选择器
     }).setStroke({
       "stroke": "white",
       "stroke-width": "2px",
-      "font-size": 23
+      "font-size": 23,
+      "fill-color":"white"
     }).create("Try it", ".button");
 ```
 
@@ -176,7 +178,8 @@ selector|String|要插入的DOM的css选择器
     }).setStroke({
       "stroke": "white",
       "stroke-width": "1px"，
-      "font-size": 22
+      "font-size": 22,
+      "fill-color":"white"
     }).create(String.fromCharCode(0xf581), "#symbols")
       .create(String.fromCharCode(0xf164), "#symbols2");
 
