@@ -14627,7 +14627,7 @@ var SVGTextAnimate = (function () {
       } else {
         style = document.createElement("style");
       }
-      style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0}}";
+      style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0;fill-opacity:1;}}";
       this.svgDom.appendChild(style);
     };
 
@@ -14696,27 +14696,30 @@ var SVGTextAnimate = (function () {
     /**
      * Function to set the path animation , using CSS animation
      *
-     * @param {DOM} path
+     * @param {Element} path
      * @param {Number} i Index of paths
      * @memberof SVGCreator
      */
     SVGCreator.prototype.setPathAnimation = function setPathAnimation (path, i) {
       var _options = this.options;
-      var animation = "<animate";
-      animation+=" attributeName="+"stroke-dashoffset";
-      animation+=" to="+"0";
-      animation+=" dur="+_options["duration"]+"ms";
-      animation+=" calcMode="+_options["timing-function"];
-      animation+=" repeatCount="+ _options["iteration-count"];
-      animation+=" fill=" + _options["fill-mode"];
+      var animateDom = document.createElementNS("http://www.w3.org/2000/svg",'animate');
+      animateDom.setAttributeNS(null,'attributeName','stroke-dashoffset');
+      animateDom.setAttributeNS(null,'to','0');
+      animateDom.setAttributeNS(null,'dur', _options["duration"]+"ms");
+      animateDom.setAttributeNS(null,'calcMode',_options["timing-function"]);
+      animateDom.setAttributeNS(null,'repeatCount',_options["iteration-count"]);
+      animateDom.setAttributeNS(null,'fill',_options["fill-mode"]);
       switch (_options.mode) {
-        case "sync": animation+=" begin="+ "0ms"; break;
-        case "delay": animation+=" begin="+ _options.delay * (i+1)+"ms"; break;
-        case "onebyone": animation+=" begin="+ _options["duration"] * i + "ms"; break;
-        default :animation+=" begin="+ _options.mode; break;
+        case "sync": animateDom.setAttributeNS(null,'begin',"0ms"); break;
+        case "delay": animateDom.setAttributeNS(null,'begin',_options.delay * (i+1)+"ms"); break;
+        case "onebyone": animateDom.setAttributeNS(null,'begin',_options["duration"] * i + "ms"); break;
+        default : animateDom.setAttributeNS(null,'begin',_options.mode); break;
       }
-      animation+=" />";
-      path.innerHTML=animation;
+      var fillAnimate = animateDom.cloneNode();
+      fillAnimate.setAttributeNS(null,'attributeName','fill-opacity');
+      fillAnimate.setAttributeNS(null,'to','1');
+      path.appendChild(animateDom);
+      path.appendChild(fillAnimate);
     };
 
       /**
@@ -14726,6 +14729,7 @@ var SVGTextAnimate = (function () {
      * @memberof SVGCreator
      */
     SVGCreator.prototype.formatOptions = function formatOptions (options) {
+      if(!options) { return }
       if(options["timing-function"]){
         options["timing-function"]="linear";
       }
@@ -14918,7 +14922,7 @@ var SVGTextAnimate = (function () {
     var strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
 
     var svg = 
-      "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\" style=\"vertical-align: text-top; \">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"none\" style=\"fill:none; \n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
+      "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\" style=\"vertical-align: text-top; \">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=\"#000\" style=\"fill:#000; fill-opacity:0;\n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
 
     _div.innerHTML = svg;
     svgDom = _div.querySelector("svg");

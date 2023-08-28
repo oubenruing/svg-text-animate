@@ -28,7 +28,7 @@ export default class CSSCreator extends AnimationCreator {
     } else {
       style = document.createElement("style");
     }
-    style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0}}";
+    style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0;fill-opacity:1;}}";
     this.svgDom.appendChild(style);
   }
 

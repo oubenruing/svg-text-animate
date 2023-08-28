@@ -188,7 +188,7 @@ export default class SVGTextAnimate {
             height="${box.y2 - box.y1}" 
             viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 +strokeWidth}"
             xmlns="http://www.w3.org/2000/svg" style="vertical-align: text-top; ">
-          <g id="svgGroup" stroke-linecap="round" stroke="#000" fill="none" style="fill:none; 
+          <g id="svgGroup" stroke-linecap="round" stroke="#000" fill="#000" style="fill:#000; fill-opacity:0;
             stroke:${this.stroke.stroke};
             stroke-width:${this.stroke["stroke-width"]};">
           </g>
