@@ -82,6 +82,7 @@ delay|Number|0|:仅在mode为**delay**模式下生效，单位毫秒
 stroke|String|#000000|十六进制颜色值的描边颜色
 stroke-width|String|1px|描边宽度
 font-size|Number|72|输出字符的大小.
+fill-color|String|transparent|文字填充颜色.
 
 ### creator
 动画创建器

@@ -81,7 +81,7 @@ Name|Type|Default value|Description
 stroke|String|#000000|The hex color of stroke
 stroke-width|String|1px|The width of stroke
 font-size|Number|72|Output font size.
-fill-color| String |72|Output font size.
+fill-color|String|transparent|Fill color.
 ### Creator
 A string describing the animation mode.
 

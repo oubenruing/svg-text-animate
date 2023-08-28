@@ -14443,7 +14443,8 @@ var DEFAULT_OPTIONS = {
 var DEFAULT_STROKE = {
   stroke: "#000",
   "stroke-width": "1px",
-  "font-size": 72
+  "font-size": 72,
+  "fill-color": "transparent"
 };
 
 var Tools = function Tools () {};
