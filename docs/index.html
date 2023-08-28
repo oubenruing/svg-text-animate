@@ -267,7 +267,7 @@
     var fontawesome = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/Font Awesome 5 Free-Regular-400.otf");
     await fontawesome.setFont();
   
-    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf");
+    var chinese = new SVGTextAnimate("./fonts/SourceHanSansCN-Normal.ttf",undefined,undefined,"svg");
     await chinese.setFont();
 
     var opensans = new SVGTextAnimate("https://cdn.jsdelivr.net/gh/oubenruing/svg-text-animate@latest/docs/fonts/OpenSans-Regular-webfont.woff", {
@@ -279,7 +279,8 @@
     }, {
       "stroke": "#005792",
       "stroke-width": "2px",
-      "font-size": 55
+      "font-size": 55,
+      "fill-color": "#005792",
     });
     await opensans.setFont();
     document.querySelector("#loading").style.display="none";
@@ -292,7 +293,8 @@
       "mode": "delay"
     }).setStroke({
       "stroke": "#5db4f2",
-      "stroke-width": "2px"
+      "stroke-width": "2px",
+      "fill-color":"#5db4f2"
     }).create(String.fromCharCode(0xf25b), "#logo");
 
     opensans.create("svg-text-animate", "#name");
@@ -307,7 +309,8 @@
     }).setStroke({
       "stroke": "white",
       "stroke-width": "2px",
-      "font-size": 23
+      "font-size": 23,
+      "fill-color":"white"
     }).create("开始", ".inputbox .button #tsvg");
 
     chinese.setOptions({
@@ -333,7 +336,8 @@
     }).setStroke({
       "stroke": "white",
       "stroke-width": "1px",
-      "font-size": 22
+      "font-size": 22,
+      "stroke": "white",
     }).create(String.fromCharCode(0xf581), "#symbols")
       .create(String.fromCharCode(0xf164), "#symbols2");
 
@@ -348,7 +352,8 @@
         "mode": "sync"
       }).setStroke({
         "stroke": "#5db4f2",
-        "font-size": 32
+        "font-size": 32,
+        "fill-color":"#5db4f2",
       }).create("svg-text-animate是一个将输入文本根据使用字体转化为描边动画的工具", "#des");
     }, 3000)
 
