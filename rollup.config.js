@@ -1,35 +1,53 @@
-var buble = require('rollup-plugin-buble');
-var resolve = require('rollup-plugin-node-resolve');
-var commonjs = require('rollup-plugin-commonjs');
-var license = require('rollup-plugin-license');
+import resolve from "rollup-plugin-node-resolve"
+import commonjs from "rollup-plugin-commonjs"
+import typescript from "rollup-plugin-typescript"
+import license from "rollup-plugin-license"
+import progress from "rollup-plugin-progress"
+import pkg from "./package.json"
 
-module.exports = {
-    input: 'src/svg-text-animate.js',
-    output: [
-        {
-            file: 'dist/svg-text-animate.js',
-            // format: 'umd',
-            format:"iife",
-            name: 'SVGTextAnimate',
-            sourcemap: true
-        },
-        {
-            file: 'dist/svg-text-animate.es.js',
-            format: 'es',
-            sourcemap: true
-        },
-   ],
+export default [
+  // browser-friendly UMD build
+  {
+    input: "src/main.ts",
+    output: {
+      name: "SVGTextAnimate",
+      file: pkg.browser,
+      format: "umd",
+    },
     plugins: [
-        resolve({
-            mainFields: ['module', 'main', 'jsnext', 'browser'],
-        }),
-        commonjs(),
-        buble(),
-        license({
-            banner: 'https://github.com/oubenruing/svg-text-animate | (c) oubenruing 2019 | MIT License '
-        })
+      resolve(),
+      commonjs(),
+      typescript(),
+      tsConfigPaths(),
+      license({
+        banner:
+          "https://github.com/oubenruing/svg-text-animate | (c) oubenruing 2019 | MIT License ",
+      }),
+      progress({
+        clearLine: false, // default: true
+      }),
+    ],
+  },
+  {
+    input: "src/main.ts",
+    external: [],
+    plugins: [
+      typescript(),
+      tsConfigPaths(),
+      license({
+        banner:
+          "https://github.com/oubenruing/svg-text-animate | (c) oubenruing 2019 | MIT License ",
+      }),
+      progress({
+        clearLine: false, // default: true
+      }),
+    ],
+    output: [
+      { file: pkg.main, format: "cjs" },
+      { file: pkg.module, format: "es" },
     ],
     watch: {
-        include: 'src/**'
-    }
-};
+      include: "src/**",
+    },
+  },
+]

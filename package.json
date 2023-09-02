@@ -4,12 +4,12 @@
   "description": "A Javascript library for convert text to SVG stroke animations in the browser.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c && npm run uglify",
-    "uglify": "uglifyjs dist/svg-text-animate.js -o dist/svg-text-animate.min.js -c -m && uglifyjs dist/svg-text-animate.es.js -o dist/svg-text-animate.es.min.js -c -m",
+    "build": "rollup -c",
     "dev": "rollup -c -w"
   },
-  "main": "dist/svg-text-animate.min.js",
-  "module": "dist/svg-text-animate.es.min.js",
+  "main": "dist/svg-text-animate.cjs.js",
+  "module": "dist/svg-text-animate.esm.js",
+  "browser": "dist/svg-text-animate.umd.js",
   "author": {
     "name": "oubenruing",
     "email": "oubenruing@gmail.com"
@@ -27,10 +27,13 @@
     "opentype.js": "^1.3.4"
   },
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.3",
     "eslint": "^8.48.0",
     "pnpm": "^8.7.1",
     "prettier": "^3.0.3",
     "rollup": "^3.28.1",
+    "rollup-plugin-progress": "^1.1.2",
+    "rollup-plugin-ts-paths": "^1.0.5",
     "typescript": "^5.2.2"
   }
 }
