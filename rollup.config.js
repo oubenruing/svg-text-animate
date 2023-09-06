@@ -19,7 +19,7 @@ const deps = {
 export default [
   {
     input: "src/main.ts",
-    external: [...Object.keys(deps)],
+    external: [],
     output: [
       {
         name: "SVGTextAnimate",
