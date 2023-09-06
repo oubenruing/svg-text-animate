@@ -1,4 +1,4 @@
-import AnimationCreator from "./AnimationCreator";
+import AnimationCreator from "./AnimationCreator"
 /**
  *
  *
@@ -12,8 +12,8 @@ export default class CSSCreator extends AnimationCreator {
    * @param {Object} options
    * @memberof CSSCreator
    */
-  constructor(options) {
-    super(options);
+  constructor(options: any) {
+    super(options)
   }
 
   /**
@@ -22,14 +22,15 @@ export default class CSSCreator extends AnimationCreator {
    * @memberof CSSCreator
    */
   setSVGAnimation() {
-    let style = this.svgDom.querySelector("style");
+    let style = this.svgDom?.querySelector("style")
     if (style != null) {
-      style.innerHTML = "";
+      style.innerHTML = ""
     } else {
-      style = document.createElement("style");
+      style = document.createElement("style")
     }
-    style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0;fill-opacity:1;}}";
-    this.svgDom.appendChild(style);
+    style.innerHTML =
+      "@keyframes STAdraw{to{stroke-dashoffset:0;fill-opacity:1;}}"
+    this.svgDom?.appendChild(style)
   }
 
   /**
@@ -39,38 +40,46 @@ export default class CSSCreator extends AnimationCreator {
    * @param {Number} i Index of paths
    * @memberof CSSCreator
    */
-  setPathAnimation(path, i) {
-    let animation = "";
-    const _options = this.options;
+  setPathAnimation(path: { style: { cssText: string } }, i: number) {
+    let animation = ""
+    const _options = this.options
     switch (_options.mode) {
       case "sync":
-        animation = `animation: STAdraw ${_options["duration"]}ms ${_options["timing-function"]} 0ms ${_options["fill-mode"]} ${_options["direction"]} ${_options["iteration-count"]};`;
-        break;
+        animation = `animation: STAdraw ${_options["duration"]}ms ${_options["timing-function"]} 0ms ${_options["fill-mode"]} ${_options["direction"]} ${_options["iteration-count"]};`
+        break
       case "delay":
         animation = `animation: STAdraw ${_options["duration"]}ms ${
           _options["timing-function"]
         } ${_options.delay * i}ms ${_options["fill-mode"]} ${
           _options["direction"]
-        } ${_options["iteration-count"]};`;
-        break;
+        } ${_options["iteration-count"]};`
+        break
       case "onebyone":
         animation = `animation: STAdraw ${_options["duration"]}ms ${
           _options["timing-function"]
         } ${_options["duration"] * i}ms ${_options["fill-mode"]} ${
           _options["direction"]
-        } ${_options["iteration-count"]};`;
-        break;
+        } ${_options["iteration-count"]};`
+        break
     }
-    path.style.cssText += animation;
+    path.style.cssText += animation
   }
 
-    /**
+  /**
    * Function to format Options ,using default options
    *
    * @param {Object} options Options of creator
    * @memberof CSSCreator
    */
-  formatOptions(options) {
-    return options;
+  formatOptions(options: {
+    duration: number
+    "timing-function": string
+    "iteration-count": number
+    direction: string
+    "fill-mode": string
+    delay: number
+    mode: string
+  }) {
+    return options
   }
 }

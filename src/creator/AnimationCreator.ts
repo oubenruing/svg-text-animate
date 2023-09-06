@@ -1,5 +1,4 @@
-import { DEFAULT_OPTIONS } from "../config/config.js";
-import Tools from "../tools/tools.js";
+import { DEFAULT_OPTIONS } from "../config/config.js"
 
 /**
  *
@@ -9,15 +8,19 @@ import Tools from "../tools/tools.js";
  * @Description Abstract class
  */
 export default class AnimationCreator {
+  options: any
+  svgDom: SVGElement | null
+  paths: any
+
   /**
    *Creates an instance of AnimationCreator.
    * @param {Object} options
    * @memberof AnimationCreator
    */
-  constructor(options) {
-    this.options = Tools.deepCopy(this.formatOptions(DEFAULT_OPTIONS));
-    this.svgDom = null;
-    this.setOptions(options);
+  constructor(options: any) {
+    this.options = this.formatOptions(DEFAULT_OPTIONS)
+    this.svgDom = null
+    this.setOptions(options)
   }
 
   /**
@@ -26,9 +29,9 @@ export default class AnimationCreator {
    * @param {DOM} svgDom
    * @memberof AnimationCreator
    */
-  setSVGDom(svgDom) {
-    this.svgDom = svgDom;
-    this.paths = svgDom.querySelectorAll("path");
+  setSVGDom(svgDom: SVGElement) {
+    this.svgDom = svgDom
+    this.paths = svgDom.querySelectorAll("path")
   }
 
   /**
@@ -38,9 +41,9 @@ export default class AnimationCreator {
    * @returns {AnimationCreator} current instance
    * @memberof AnimationCreator
    */
-  setOptions(options) {
-    Object.assign(this.options, this.formatOptions(options));
-    return this;
+  setOptions(options: any) {
+    Object.assign(this.options, this.formatOptions(options))
+    return this
   }
 
   /**
@@ -49,10 +52,10 @@ export default class AnimationCreator {
    * @memberof AnimationCreator
    */
   setAllPathsAnimation() {
-    this.paths.forEach((path, i) => {
-      this.setPathStroke(path);
-      this.setPathAnimation(path, i);
-    });
+    this.paths.forEach((path: any, i: any) => {
+      this.setPathStroke(path)
+      this.setPathAnimation(path, i)
+    })
   }
 
   /**
@@ -62,11 +65,15 @@ export default class AnimationCreator {
    * @memberof AnimationCreator
    */
 
-  setPathStroke(path) {
-    const pathLength = Math.ceil(path.getTotalLength());
-    const stroke = `stroke-dasharray:${pathLength - 1} ${pathLength +
-      1};stroke-dashoffset:${pathLength};`;
-    path.style.cssText += stroke;
+  setPathStroke(path: {
+    getTotalLength: () => number
+    style: { cssText: string }
+  }) {
+    const pathLength = Math.ceil(path.getTotalLength())
+    const stroke = `stroke-dasharray:${pathLength - 1} ${
+      pathLength + 1
+    };stroke-dashoffset:${pathLength};`
+    path.style.cssText += stroke
   }
 
   /**
@@ -77,7 +84,7 @@ export default class AnimationCreator {
   setSVGAnimation() {
     console.error(
       this.constructor.name + " do not have setSVGAnimation method."
-    );
+    )
   }
 
   /**
@@ -87,10 +94,10 @@ export default class AnimationCreator {
    * @param {num} i index of paths
    * @memberof AnimationCreator
    */
-  setPathAnimation(path, i) {
+  setPathAnimation(path: any, i: any) {
     console.error(
       this.constructor.name + " do not have setPathAnimation method."
-    );
+    )
   }
 
   /**
@@ -98,10 +105,18 @@ export default class AnimationCreator {
    *
    * @memberof AnimationCreator
    */
-  formatOptions(options) {
+  formatOptions(options: {
+    duration: number
+    "timing-function": string
+    "iteration-count": number
+    direction: string
+    "fill-mode": string
+    delay: number
+    mode: string
+  }) {
     console.error(
       this.constructor.name + " do not have setPathAnimation method."
-    );
+    )
   }
 
   /**
@@ -112,10 +127,10 @@ export default class AnimationCreator {
    * @memberof AnimationCreator
    */
 
-  create(svgDom) {
-    this.setSVGDom(svgDom);
-    this.setSVGAnimation();
-    this.setAllPathsAnimation();
-    return svgDom;
+  create(svgDom: any) {
+    this.setSVGDom(svgDom)
+    this.setSVGAnimation()
+    this.setAllPathsAnimation()
+    return svgDom
   }
 }
