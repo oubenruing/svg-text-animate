@@ -3952,9 +3952,6 @@ var SVGTextAnimate = (function () {
       }
 
       var value = parse.getBytes(data, objectOffset + offsets[i], objectOffset + offsets[i + 1]);
-      if (conversionFn) {
-          value = conversionFn(value);
-      }
       return value;
   }
 
@@ -12733,7 +12730,7 @@ var SVGTextAnimate = (function () {
    */
   function getContextParams(tokens, index) {
       var context = tokens.map(function (token) { return token.activeState.value; });
-      return new ContextParams(context, index || 0);
+      return new ContextParams(context, 0);
   }
 
   /**
@@ -12801,7 +12798,7 @@ var SVGTextAnimate = (function () {
    */
   function getContextParams$1(tokens, index) {
       var context = tokens.map(function (token) { return token.activeState.value; });
-      return new ContextParams(context, index || 0);
+      return new ContextParams(context, 0);
   }
 
   /**
@@ -14433,507 +14430,437 @@ var SVGTextAnimate = (function () {
       });
   }
 
-  var DEFAULT_OPTIONS = {
-    duration: 1000,
-    "timing-function": "linear",
-    "iteration-count": 1,
-    direction: "normal",
-    "fill-mode": "forwards",
-    delay: 0,
-    mode: "sync"
+  const DEFAULT_OPTIONS = {
+      duration: 1000,
+      'timing-function': 'linear',
+      'iteration-count': 1,
+      direction: 'normal',
+      'fill-mode': 'forwards',
+      delay: 0,
+      mode: 'sync'
+  };
+  const DEFAULT_STROKE = {
+      stroke: '#000',
+      'stroke-width': '1px',
+      'font-size': 72,
+      'fill-color': 'transparent'
   };
 
-  var DEFAULT_STROKE = {
-    stroke: "#000",
-    "stroke-width": "1px",
-    "font-size": 72,
-    "fill-color": "transparent"
-  };
-
-  var Tools = function Tools () {};
-
-  Tools.deepCopy = function deepCopy (obj, cache) {
-      var this$1$1 = this;
-      if ( cache === void 0 ) cache = [];
-
-    function find(list, f) {
-      return list.filter(f)[0];
-    }
-
-    // just return if obj is immutable value
-    if (obj === null || typeof obj !== "object") {
-      return obj;
-    }
-
-    // if obj is hit, it is in circular structure
-    var hit = find(cache, function (c) { return c.original === obj; });
-    if (hit) {
-      return hit.copy;
-    }
-
-    var copy = Array.isArray(obj) ? [] : {};
-    // put the copy into cache at first
-    // because we want to refer it in recursive deepCopy
-    cache.push({
-      original: obj,
-      copy: copy
-    });
-
-    Object.keys(obj).forEach(function (key) {
-      copy[key] = this$1$1.deepCopy(obj[key], cache);
-    });
-
-    return copy;
-  };
-
-  /**
-   *
-   *
-   * @export
-   * @class AnimationCreator
-   * @Description Abstract class
-   */
-  var AnimationCreator = function AnimationCreator(options) {
-    this.options = Tools.deepCopy(this.formatOptions(DEFAULT_OPTIONS));
-    this.svgDom = null;
-    this.setOptions(options);
-  };
-
-  /**
-   * Set the svgDom
-   *
-   * @param {DOM} svgDom
-   * @memberof AnimationCreator
-   */
-  AnimationCreator.prototype.setSVGDom = function setSVGDom (svgDom) {
-    this.svgDom = svgDom;
-    this.paths = svgDom.querySelectorAll("path");
-  };
-
-  /**
-   *
-   *
-   * @param {Object} options
-   * @returns {AnimationCreator} current instance
-   * @memberof AnimationCreator
-   */
-  AnimationCreator.prototype.setOptions = function setOptions (options) {
-    Object.assign(this.options, this.formatOptions(options));
-    return this;
-  };
-
-  /**
-   * Animate each path
-   *
-   * @memberof AnimationCreator
-   */
-  AnimationCreator.prototype.setAllPathsAnimation = function setAllPathsAnimation () {
-      var this$1$1 = this;
-
-    this.paths.forEach(function (path, i) {
-      this$1$1.setPathStroke(path);
-      this$1$1.setPathAnimation(path, i);
-    });
-  };
-
-  /**
-   * Set the path stroke
-   *
-   * @param {DOM} path
-   * @memberof AnimationCreator
-   */
-
-  AnimationCreator.prototype.setPathStroke = function setPathStroke (path) {
-    var pathLength = Math.ceil(path.getTotalLength());
-    var stroke = "stroke-dasharray:" + (pathLength - 1) + " " + (pathLength +
-      1) + ";stroke-dashoffset:" + pathLength + ";";
-    path.style.cssText += stroke;
-  };
-
-  /**
-   * Function to set the SVG animation , you need to implement in the inheritance class
-   *
-   * @memberof AnimationCreator
-   */
-  AnimationCreator.prototype.setSVGAnimation = function setSVGAnimation () {
-    console.error(
-      this.constructor.name + " do not have setSVGAnimation method."
-    );
-  };
-
-  /**
-   * Function to set the path animation , you need to implement in the inheritance class
-   *
-   * @param {Dom} path
-   * @param {num} i index of paths
-   * @memberof AnimationCreator
-   */
-  AnimationCreator.prototype.setPathAnimation = function setPathAnimation (path, i) {
-    console.error(
-      this.constructor.name + " do not have setPathAnimation method."
-    );
-  };
-
-  /**
-   * Function to format Options ,using default options
-   *
-   * @memberof AnimationCreator
-   */
-  AnimationCreator.prototype.formatOptions = function formatOptions (options) {
-    console.error(
-      this.constructor.name + " do not have setPathAnimation method."
-    );
-  };
-
-  /**
-   *
-   *
-   * @param {DOM} svgDom
-   * @returns {DOM} Animated svgDom
-   * @memberof AnimationCreator
-   */
-
-  AnimationCreator.prototype.create = function create (svgDom) {
-    this.setSVGDom(svgDom);
-    this.setSVGAnimation();
-    this.setAllPathsAnimation();
-    return svgDom;
-  };
-
-  /**
-   *
-   *
-   * @export
-   * @class CSSCreator
-   * @extends {AnimationCreator}
-   */
-  var CSSCreator = /*@__PURE__*/(function (AnimationCreator) {
-    function CSSCreator(options) {
-      AnimationCreator.call(this, options);
-    }
-
-    if ( AnimationCreator ) CSSCreator.__proto__ = AnimationCreator;
-    CSSCreator.prototype = Object.create( AnimationCreator && AnimationCreator.prototype );
-    CSSCreator.prototype.constructor = CSSCreator;
-
-    /**
-     * Function to set the SVG animation , using CSS animation
-     *
-     * @memberof CSSCreator
-     */
-    CSSCreator.prototype.setSVGAnimation = function setSVGAnimation () {
-      var style = this.svgDom.querySelector("style");
-      if (style != null) {
-        style.innerHTML = "";
-      } else {
-        style = document.createElement("style");
-      }
-      style.innerHTML = "@keyframes STAdraw{to{stroke-dashoffset:0;fill-opacity:1;}}";
-      this.svgDom.appendChild(style);
-    };
-
-    /**
-     * Function to set the path animation , using CSS animation
-     *
-     * @param {DOM} path
-     * @param {Number} i Index of paths
-     * @memberof CSSCreator
-     */
-    CSSCreator.prototype.setPathAnimation = function setPathAnimation (path, i) {
-      var animation = "";
-      var _options = this.options;
-      switch (_options.mode) {
-        case "sync":
-          animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " 0ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";";
-          break;
-        case "delay":
-          animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " " + (_options.delay * i) + "ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";";
-          break;
-        case "onebyone":
-          animation = "animation: STAdraw " + (_options["duration"]) + "ms " + (_options["timing-function"]) + " " + (_options["duration"] * i) + "ms " + (_options["fill-mode"]) + " " + (_options["direction"]) + " " + (_options["iteration-count"]) + ";";
-          break;
-      }
-      path.style.cssText += animation;
-    };
-
+  class Tools {
       /**
-     * Function to format Options ,using default options
-     *
-     * @param {Object} options Options of creator
-     * @memberof CSSCreator
-     */
-    CSSCreator.prototype.formatOptions = function formatOptions (options) {
-      return options;
-    };
-
-    return CSSCreator;
-  }(AnimationCreator));
+       * Deep copy an object or array
+       * @param obj - The object to copy
+       * @param cache - Cache array to handle circular references
+       * @returns Deep copied object
+       */
+      static deepCopy(obj, cache = []) {
+          function find(list, f) {
+              return list.filter(f)[0];
+          }
+          // just return if obj is immutable value
+          if (obj === null || typeof obj !== "object") {
+              return obj;
+          }
+          // if obj is hit, it is in circular structure
+          const hit = find(cache, (c) => c.original === obj);
+          if (hit) {
+              return hit.copy;
+          }
+          const copy = Array.isArray(obj) ? [] : {};
+          // put the copy into cache at first
+          // because we want to refer it in recursive deepCopy
+          cache.push({
+              original: obj,
+              copy,
+          });
+          Object.keys(obj).forEach((key) => {
+              copy[key] = this.deepCopy(obj[key], cache);
+          });
+          return copy;
+      }
+  }
 
   /**
-   *
-   *
-   * @export
-   * @class SVGCreator
-   * @extends {AnimationCreator}
+   * Abstract class for animation creators
+   * @abstract
    */
-  var SVGCreator = /*@__PURE__*/(function (AnimationCreator) {
-    function SVGCreator(options) {
-      AnimationCreator.call(this, options);
-    }
-
-    if ( AnimationCreator ) SVGCreator.__proto__ = AnimationCreator;
-    SVGCreator.prototype = Object.create( AnimationCreator && AnimationCreator.prototype );
-    SVGCreator.prototype.constructor = SVGCreator;
-
-    /**
-     * Function to set the SVG animation , using CSS animation
-     *
-     * @memberof SVGCreator
-     */
-    SVGCreator.prototype.setSVGAnimation = function setSVGAnimation () {
-      
-    };
-
-    /**
-     * Function to set the path animation , using CSS animation
-     *
-     * @param {Element} path
-     * @param {Number} i Index of paths
-     * @memberof SVGCreator
-     */
-    SVGCreator.prototype.setPathAnimation = function setPathAnimation (path, i) {
-      var _options = this.options;
-      var animateDom = document.createElementNS("http://www.w3.org/2000/svg",'animate');
-      animateDom.setAttributeNS(null,'attributeName','stroke-dashoffset');
-      animateDom.setAttributeNS(null,'to','0');
-      animateDom.setAttributeNS(null,'dur', _options["duration"]+"ms");
-      animateDom.setAttributeNS(null,'calcMode',_options["timing-function"]);
-      animateDom.setAttributeNS(null,'repeatCount',_options["iteration-count"]);
-      animateDom.setAttributeNS(null,'fill',_options["fill-mode"]);
-      switch (_options.mode) {
-        case "sync": animateDom.setAttributeNS(null,'begin',"0ms"); break;
-        case "delay": animateDom.setAttributeNS(null,'begin',_options.delay * (i+1)+"ms"); break;
-        case "onebyone": animateDom.setAttributeNS(null,'begin',_options["duration"] * i + "ms"); break;
-        default : animateDom.setAttributeNS(null,'begin',_options.mode); break;
-      }
-      var fillAnimate = animateDom.cloneNode();
-      fillAnimate.setAttributeNS(null,'attributeName','fill-opacity');
-      fillAnimate.setAttributeNS(null,'to','1');
-      path.appendChild(animateDom);
-      path.appendChild(fillAnimate);
-    };
-
+  class AnimationCreator {
       /**
-     * Function to format Options ,using default options
-     *
-     * @param {Object} options Options of creator
-     * @memberof SVGCreator
-     */
-    SVGCreator.prototype.formatOptions = function formatOptions (options) {
-      if(!options) { return }
-      if(options["timing-function"]){
-        options["timing-function"]="linear";
+       * Creates an instance of AnimationCreator.
+       * @param options - Animation options
+       */
+      constructor(options) {
+          this.svgDom = null;
+          this.paths = null;
+          this.options = Tools.deepCopy(this.formatOptions(DEFAULT_OPTIONS));
+          this.setOptions(options);
       }
-      if(options["iteration-count"]=="infinite"){
-        options["iteration-count"]="indefinite";
+      /**
+       * Set the svgDom
+       * @param svgDom - SVG DOM element
+       */
+      setSVGDom(svgDom) {
+          this.svgDom = svgDom;
+          this.paths = svgDom.querySelectorAll('path');
       }
-      if(options["fill-mode"]){
-        if(options["fill-mode"]=="none"){
-          options["fill-mode"]="remove";
-        }else {
-          options["fill-mode"]="freeze";
-        }
+      /**
+       * Set animation options
+       * @param options - Animation options
+       * @returns Current instance
+       */
+      setOptions(options) {
+          if (options) {
+              Object.assign(this.options, this.formatOptions(options));
+          }
+          return this;
       }
-      return options;
-    };
-
-    return SVGCreator;
-  }(AnimationCreator));
-
-  /**
-   * @fileOverview Svg-text-animate is a JavaScript library for convert text to SVG stroke animations in the browser.
-   * @author oubenruing
-   * @version 1.3.2
-   */
-  var SVGTextAnimate = function SVGTextAnimate(fontfile, options, stroke, creator) {
-    this.loaded = false;
-    this.fontfile = fontfile;
-    switch (creator) {
-      case "svg":
-        this.creator = new SVGCreator(options);
-        break;
-      default:
-        this.creator = new CSSCreator(options);
-    }
-    this.stroke = Tools.deepCopy(DEFAULT_STROKE);
-    this.setStroke(stroke);
-    this.fatherdom = null;
-  };
-
-  /**
-   * Load a font file from a given path
-   * Asynchronous method
-   *
-   * @param {String} fontfile
-   * @returns {Promise} A promise Object
-   *
-   */
-  SVGTextAnimate.prototype.setFont = function setFont (fontfile) {
-      var this$1$1 = this;
-
-    return new Promise(function (resove, reject) {
-      load(fontfile || this$1$1.fontfile, function (err, openfont) {
-        if (err) {
-          console.error("font could not be loaded :(");
-          reject();
-        } else {
-          this$1$1.font = openfont;
-          this$1$1.loaded = true;
-          resove(true);
-        }
-      });
-    }).catch(function(reason) {
-      console.log("catch:", reason);
-    });
-  };
+      /**
+       * Animate each path
+       */
+      setAllPathsAnimation() {
+          if (!this.paths)
+              return;
+          this.paths.forEach((path, i) => {
+              this.setPathStroke(path);
+              this.setPathAnimation(path, i);
+          });
+      }
+      /**
+       * Set the path stroke
+       * @param path - SVG path element
+       */
+      setPathStroke(path) {
+          const pathLength = Math.ceil(path.getTotalLength());
+          const stroke = `stroke-dasharray:${pathLength - 1} ${pathLength + 1};stroke-dashoffset:${pathLength};`;
+          path.style.cssText += stroke;
+      }
+      /**
+       * Create animated SVG
+       * @param svgDom - SVG DOM element
+       * @returns Animated svgDom
+       */
+      create(svgDom) {
+          this.setSVGDom(svgDom);
+          this.setSVGAnimation();
+          this.setAllPathsAnimation();
+          return svgDom;
+      }
+  }
 
   /**
-   * Load a font file from an ArrayBuffer
-   * 
-   *
-   * @param {ArrayBuffer} buffer
-   * @returns {SVGTextAnimate} current instance
+   * CSS-based animation creator
+   * @extends AnimationCreator
    */
-  SVGTextAnimate.prototype.setFontFromBuffer = function setFontFromBuffer (buffer) {
-    this.font = parseBuffer(buffer);
-    this.loaded = true;
-    return this
-  };
+  class CSSCreator extends AnimationCreator {
+      /**
+       * Creates an instance of CSSCreator.
+       * @param options - Animation options
+       */
+      constructor(options) {
+          super(options);
+      }
+      /**
+       * Function to set the SVG animation, using CSS animation
+       */
+      setSVGAnimation() {
+          if (!this.svgDom)
+              return;
+          let style = this.svgDom.querySelector('style');
+          if (style != null) {
+              style.innerHTML = '';
+          }
+          else {
+              style = document.createElement('style');
+          }
+          style.innerHTML = '@keyframes STAdraw{to{stroke-dashoffset:0;fill-opacity:1;}}';
+          this.svgDom.appendChild(style);
+      }
+      /**
+       * Function to set the path animation, using CSS animation
+       * @param path - SVG path element
+       * @param i - Index of paths
+       */
+      setPathAnimation(path, i) {
+          let animation = '';
+          const _options = this.options;
+          switch (_options.mode) {
+              case 'sync':
+                  animation = `animation: STAdraw ${_options['duration']}ms ${_options['timing-function']} 0ms ${_options['fill-mode']} ${_options['direction']} ${_options['iteration-count']};`;
+                  break;
+              case 'delay':
+                  animation = `animation: STAdraw ${_options['duration']}ms ${_options['timing-function']} ${_options.delay * i}ms ${_options['fill-mode']} ${_options['direction']} ${_options['iteration-count']};`;
+                  break;
+              case 'onebyone':
+                  animation = `animation: STAdraw ${_options['duration']}ms ${_options['timing-function']} ${_options['duration'] * i}ms ${_options['fill-mode']} ${_options['direction']} ${_options['iteration-count']};`;
+                  break;
+          }
+          path.style.cssText += animation;
+      }
+      /**
+       * Function to format Options, using default options
+       * @param options - Options of creator
+       * @returns Formatted options
+       */
+      formatOptions(options) {
+          return options;
+      }
+  }
 
   /**
-   * set options of current instance
-   *
-   * @param {Object} options
-   * @returns {SVGTextAnimate} current instance
-   *
+   * SVG-based animation creator
+   * @extends AnimationCreator
    */
-  SVGTextAnimate.prototype.setOptions = function setOptions (options) {
-    this.creator.setOptions(options);
-    return this;
-  };
+  class SVGCreator extends AnimationCreator {
+      /**
+       * Creates an instance of SVGCreator.
+       * @param options - Animation options
+       */
+      constructor(options) {
+          super(options);
+      }
+      /**
+       * Function to set the SVG animation, using SVG animate elements
+       */
+      setSVGAnimation() {
+          // No additional SVG-level animation needed
+      }
+      /**
+       * Function to set the path animation, using SVG animate elements
+       * @param path - SVG path element
+       * @param i - Index of paths
+       */
+      setPathAnimation(path, i) {
+          const _options = this.options;
+          const animateDom = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+          animateDom.setAttributeNS(null, 'attributeName', 'stroke-dashoffset');
+          animateDom.setAttributeNS(null, 'to', '0');
+          animateDom.setAttributeNS(null, 'dur', _options['duration'] + 'ms');
+          animateDom.setAttributeNS(null, 'calcMode', _options['timing-function']);
+          animateDom.setAttributeNS(null, 'repeatCount', String(_options['iteration-count']));
+          animateDom.setAttributeNS(null, 'fill', _options['fill-mode']);
+          switch (_options.mode) {
+              case 'sync':
+                  animateDom.setAttributeNS(null, 'begin', '0ms');
+                  break;
+              case 'delay':
+                  animateDom.setAttributeNS(null, 'begin', _options.delay * (i + 1) + 'ms');
+                  break;
+              case 'onebyone':
+                  animateDom.setAttributeNS(null, 'begin', _options['duration'] * i + 'ms');
+                  break;
+              default:
+                  animateDom.setAttributeNS(null, 'begin', _options.mode);
+                  break;
+          }
+          const fillAnimate = animateDom.cloneNode();
+          fillAnimate.setAttributeNS(null, 'attributeName', 'fill-opacity');
+          fillAnimate.setAttributeNS(null, 'to', '1');
+          path.appendChild(animateDom);
+          path.appendChild(fillAnimate);
+      }
+      /**
+       * Function to format Options, using default options
+       * @param options - Options of creator
+       * @returns Formatted options
+       */
+      formatOptions(options) {
+          if (!options)
+              return options;
+          const formatted = Object.assign({}, options);
+          if (formatted['timing-function']) {
+              formatted['timing-function'] = 'linear';
+          }
+          if (formatted['iteration-count'] === 'infinite') {
+              formatted['iteration-count'] = 'indefinite';
+          }
+          if (formatted['fill-mode']) {
+              if (formatted['fill-mode'] === 'none') {
+                  formatted['fill-mode'] = 'remove';
+              }
+              else {
+                  formatted['fill-mode'] = 'freeze';
+              }
+          }
+          return formatted;
+      }
+  }
 
-  /**
-   * set stroke of current instance
-   *
-   * @param {Object} stroke
-   * @returns {SVGTextAnimate} current instance
-   *
-   */
-  SVGTextAnimate.prototype.setStroke = function setStroke (stroke) {
-    Object.assign(this.stroke, stroke);
-    return this;
-  };
-
-  /**
-   * Calculate the image boundary of a given path array
-   *
-   * @param {Array<Path>} paths
-   * @returns {Object} boundary{x1, y1, x2, y2}
-   * @memberof SVGTextAnimate
-   *
-   */
-  SVGTextAnimate.prototype.getBounding = function getBounding (paths) {
-    if (paths.length == 0) {
-      console.error("path does not exist");
-      return { x1: 0, y1: 0, x2: 0, y2: 0 };
-    }
-    var x2 = paths[paths.length - 1].getBoundingBox().x2;
-    var y2 = paths
-      .reduce(function (r, c) {
-        return r.getBoundingBox().y2 >= c.getBoundingBox().y2 ? r : c;
-      })
-      .getBoundingBox().y2;
-    return { x1: 0, y1: 0, x2: x2, y2: y2 };
-  };
-
-  /**
-   *Generate svg animation from the stroked path of the given string
-   *clear selector and inserts it into the DOM of the selector
-   *
-   * @param {String} text
-   * @param {String} selector
-   * @returns {SVGTextAnimate} current instance
-   *
-   */
-  SVGTextAnimate.prototype.create = function create (text, selector) {
-    if (!this.loaded) {
-      console.error("Fontfile does not loaded");
-      return;
-    }
-    var fatherdom =document.querySelector(selector);
-    var svgDom = this.createSVGDom(text);
-    fatherdom.innerHTML = "";
-    fatherdom.appendChild(svgDom);
-    return this;
-  };
-
-  /**
-   *
-   * Generate svg animation from the stroked path of the given string
-   *and inserts it into the DOM of the selector
-   *
-   * @param {String} text
-   * @param {String} selector
-   * @returns {SVGTextAnimate} current instance
-   */
-  SVGTextAnimate.prototype.add = function add (text, selector) {
-    if (!this.loaded) {
-      console.error("Fontfile does not loaded");
-      return;
-    }
-    var fatherdom = document.querySelector(selector);
-    if (fatherdom == null) {
-      console.error("no such fatherdom");
-      return;
-    }
-    var svgDom = this.createSVGDom(text);
-    fatherdom.appendChild(svgDom);
-    return this;
-  };
-
-  /**
-   *
-   *
-   * @param {Sting} text
-   * @returns {DOM} svgDom
-   */
-  SVGTextAnimate.prototype.createSVGDom = function createSVGDom (text) {
-    var svgDom = null;
-    var svgpath = "";
-    var _div = document.createElement("div");
-    var paths = this.font.getPaths(
-      text,
-      0,
-      this.stroke["font-size"],
-      this.stroke["font-size"]
-    );
-    var box = this.getBounding(paths);
-    //remove the unit;
-    var end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
-    var strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
-
-    var svg = 
-      "<svg width=\"" + (box.x2 - box.x1 +strokeWidth) + "\" \n            height=\"" + (box.y2 - box.y1) + "\" \n            viewBox=\"" + (box.x1) + " " + (box.y1) + " " + (box.x2 + strokeWidth) + " " + (box.y2 +strokeWidth) + "\"\n            xmlns=\"http://www.w3.org/2000/svg\" style=\"vertical-align: text-top; \">\n          <g id=\"svgGroup\" stroke-linecap=\"round\" stroke=\"#000\" fill=" + (this.stroke["fill-color"]) + " style=\"fill:" + (this.stroke["fill-color"]) + "; fill-opacity:0;\n            stroke:" + (this.stroke.stroke) + ";\n            stroke-width:" + (this.stroke["stroke-width"]) + ";\">\n          </g>\n      </svg>";
-
-    _div.innerHTML = svg;
-    svgDom = _div.querySelector("svg");
-
-    paths.forEach(function (path) {
-      svgpath += path.toSVG(2);
-    });
-    svgDom.querySelector("g").innerHTML = svgpath;
-    return this.creator.create(svgDom);
-  };
+  class SVGTextAnimate {
+      /**
+       * Creates an instance of SVGTextAnimate.
+       * @param fontfile - Path of fontfile
+       * @param options - Animation options {duration,timing-function,iteration-count,direction,fill-mode,delay,mode}
+       * @param stroke - Stroke options {stroke,stroke-width,font-size}
+       * @param creator - The mode of animation, use CSSCreator by default.
+       */
+      constructor(fontfile, options, stroke, creator) {
+          this.loaded = false;
+          this.fontfile = fontfile;
+          switch (creator) {
+              case "svg":
+                  this.creator = new SVGCreator(options);
+                  break;
+              default:
+                  this.creator = new CSSCreator(options);
+          }
+          this.stroke = Tools.deepCopy(DEFAULT_STROKE);
+          this.setStroke(stroke);
+      }
+      /**
+       * Load a font file from a given path
+       * Asynchronous method
+       * @param fontfile - Path to font file
+       * @returns A promise Object
+       */
+      setFont(fontfile) {
+          return new Promise((resolve, reject) => {
+              load(fontfile || this.fontfile, (err, openfont) => {
+                  if (err) {
+                      console.error("font could not be loaded :(");
+                      reject(err);
+                  }
+                  else {
+                      this.font = openfont;
+                      this.loaded = true;
+                      resolve(true);
+                  }
+              });
+          }).catch((reason) => {
+              console.log("catch:", reason);
+              return false;
+          });
+      }
+      /**
+       * Load a font file from an ArrayBuffer
+       * @param buffer - ArrayBuffer containing font data
+       * @returns Current instance
+       */
+      setFontFromBuffer(buffer) {
+          this.font = parseBuffer(buffer);
+          this.loaded = true;
+          return this;
+      }
+      /**
+       * Set options of current instance
+       * @param options - Animation options
+       * @returns Current instance
+       */
+      setOptions(options) {
+          this.creator.setOptions(options);
+          return this;
+      }
+      /**
+       * Set stroke of current instance
+       * @param stroke - Stroke options
+       * @returns Current instance
+       */
+      setStroke(stroke) {
+          if (stroke) {
+              Object.assign(this.stroke, stroke);
+          }
+          return this;
+      }
+      /**
+       * Calculate the image boundary of a given path array
+       * @param paths - Array of opentype.js Path objects
+       * @returns Boundary {x1, y1, x2, y2}
+       */
+      getBounding(paths) {
+          if (paths.length === 0) {
+              console.error("path does not exist");
+              return { x1: 0, y1: 0, x2: 0, y2: 0 };
+          }
+          const x2 = paths[paths.length - 1].getBoundingBox().x2;
+          const y2 = paths
+              .reduce((r, c) => {
+              return r.getBoundingBox().y2 >= c.getBoundingBox().y2 ? r : c;
+          })
+              .getBoundingBox().y2;
+          return { x1: 0, y1: 0, x2, y2 };
+      }
+      /**
+       * Generate svg animation from the stroked path of the given string
+       * Clear selector and inserts it into the DOM of the selector
+       * @param text - Text to animate
+       * @param selector - CSS selector
+       * @returns Current instance
+       */
+      create(text, selector) {
+          if (!this.loaded) {
+              console.error("Fontfile does not loaded");
+              return;
+          }
+          const fatherdom = document.querySelector(selector);
+          if (!fatherdom) {
+              console.error("no such fatherdom");
+              return;
+          }
+          const svgDom = this.createSVGDom(text);
+          fatherdom.innerHTML = "";
+          fatherdom.appendChild(svgDom);
+          return this;
+      }
+      /**
+       * Generate svg animation from the stroked path of the given string
+       * And inserts it into the DOM of the selector
+       * @param text - Text to animate
+       * @param selector - CSS selector
+       * @returns Current instance
+       */
+      add(text, selector) {
+          if (!this.loaded) {
+              console.error("Fontfile does not loaded");
+              return;
+          }
+          const fatherdom = document.querySelector(selector);
+          if (fatherdom == null) {
+              console.error("no such fatherdom");
+              return;
+          }
+          const svgDom = this.createSVGDom(text);
+          fatherdom.appendChild(svgDom);
+          return this;
+      }
+      /**
+       * Create SVG DOM element from text
+       * @param text - Text to convert to SVG
+       * @returns SVG DOM element
+       */
+      createSVGDom(text) {
+          if (!this.font) {
+              throw new Error("Font not loaded");
+          }
+          let svgpath = "";
+          const _div = document.createElement("div");
+          const paths = this.font.getPaths(text, 0, this.stroke["font-size"], this.stroke["font-size"]);
+          const box = this.getBounding(paths);
+          // Remove the unit
+          const end = this.stroke["stroke-width"].search(/[A-Za-z]+$/);
+          const strokeWidth = Number(this.stroke["stroke-width"].substring(0, end));
+          const svg = `<svg width="${box.x2 - box.x1 + strokeWidth}" 
+          height="${box.y2 - box.y1}" 
+          viewBox="${box.x1} ${box.y1} ${box.x2 + strokeWidth} ${box.y2 + strokeWidth}"
+          xmlns="http://www.w3.org/2000/svg" style="vertical-align: text-top; ">
+        <g id="svgGroup" stroke-linecap="round" stroke="#000" fill=${this.stroke["fill-color"]} style="fill:${this.stroke["fill-color"]}; fill-opacity:0;
+          stroke:${this.stroke.stroke};
+          stroke-width:${this.stroke["stroke-width"]};">
+        </g>
+    </svg>`;
+          _div.innerHTML = svg;
+          const svgDom = _div.querySelector("svg");
+          if (!svgDom) {
+              throw new Error("Failed to create SVG element");
+          }
+          paths.forEach((path) => {
+              svgpath += path.toSVG(2);
+          });
+          const gElement = svgDom.querySelector("g");
+          if (gElement) {
+              gElement.innerHTML = svgpath;
+          }
+          return this.creator.create(svgDom);
+      }
+  }
 
   return SVGTextAnimate;
 

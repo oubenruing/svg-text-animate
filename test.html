@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Text Animate - TypeScript Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Text Animate - TypeScript Version Test</h1>
+    
+    <div class="info">
+        <strong>Status:</strong> Testing TypeScript refactored version
+    </div>
+    
+    <div id="container"></div>
+    
+    <div class="info">
+        <p><strong>Note:</strong> This is a basic test to verify the TypeScript build works correctly.</p>
+        <p>The library has been successfully refactored from JavaScript to TypeScript with:</p>
+        <ul>
+            <li>Full type safety with TypeScript</li>
+            <li>Type declarations (.d.ts files)</li>
+            <li>Abstract base class pattern</li>
+            <li>Proper interface definitions</li>
+        </ul>
+    </div>
+
+    <script src="dist/svg-text-animate.min.js"></script>
+    <script>
+        // Test the TypeScript build
+        console.log('SVGTextAnimate loaded:', typeof SVGTextAnimate);
+        
+        // Note: Actual font loading test would require a font file
+        // This just verifies the build output is valid JavaScript
+        if (typeof SVGTextAnimate !== 'undefined') {
+            document.querySelector('.info strong').textContent = 'Status: ✓ Build Successful';
+            document.querySelector('.info strong').style.color = 'green';
+        }
+    </script>
+</body>
+</html>
